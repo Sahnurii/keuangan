@@ -1,0 +1,50 @@
+<?php Flasher::flash(); ?>
+<div class="container-fluid">
+
+    <div class="card card-info">
+        <div class="card-header bg-primary">
+            <h3 class="card-title text-center text-white">Saldo</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div class="mb-3">
+                    <a href="<?= BASEURL; ?>/saldo/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> Tambah Saldo</a>
+                </div>
+                <table id="example" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>TIPE BUKU</th>
+                            <th>SALDO AWAL</th>
+                            <th>KETERANGAN</th>
+                            <th>TANGGAL </th>
+                            <th>AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($data['sldo'] as $saldo) : ?>
+                            <tr>
+                                <td><?= $i++; ?></td>
+                                <td><?= $saldo['tipe_buku']; ?></td>
+                                <td><?= uang_indo($saldo['saldo_awal']); ?></td>
+                                <td><?= $saldo['keterangan']; ?></td>
+                                <td><?= $saldo['tanggal']; ?></td>
+                                <td>
+                                    <a href="<?= BASEURL; ?>/saldo/edit/<?= $saldo['id']; ?>" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </a>
+                                    <a href="<?= BASEURL; ?>/saldo/hapus/<?= $saldo['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                        <i class="fa fa-trash"></i> Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
