@@ -1,14 +1,10 @@
 <?php
 
-
-setlocale(LC_TIME, 'id_ID.utf8');
-
 $selectedTahun = $_GET['tahun'] ?? date('Y'); // Gunakan tahun sekarang jika tidak ada yang dipilih
 $selectedBulan = $_GET['bulan'] ?? date('m'); // Gunakan bulan sekarang jika tidak ada yang dipilih
 
 // Format bulan untuk menampilkan nama bulan
-$bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
-// Ambil data yang sudah disiapkan oleh Controller
+$bulanNama = bulanIndonesia((int)$selectedBulan);
 
 ?>
 
@@ -23,11 +19,11 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
 
 
 <div class="card-header">
-    <h3 class="card-title text-center ">Laporan Buku Kas</h3>
+    <h3 class="card-title text-center ">Laporan Pemasukan & Pengeluaran </h3>
     <h3 class="card-title text-center ">Bulan : <?= $bulanNama ?> </h3>
 </div>
 <div class="card-body">
-    <table class="table table-bordered" style="width: 50%; margin: left auto;">
+    <table style="width: 50%; margin: left auto; border: none;">
         <tr>
             <th>Nama Perguruan Tinggi</th>
             <th>:</th>
@@ -54,23 +50,23 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
         </tr>
     </table>
 
+    <div class="table-responsive mt-5">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">PEMASUKAN</th>
+                    <th class="text-center">PENGELUARAN</th>
+                </tr>
+            </thead>
+            <tbody id="transaksi-body">
+                <tr>
+                    <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
+                    <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-</div>
-<div class="table-responsive">
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th class="text-center">PEMASUKAN</th>
-                <th class="text-center">PENGELUARAN</th>
-            </tr>
-        </thead>
-        <tbody id="transaksi-body">
-            <tr>
-                <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
-                <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
-            </tr>
-        </tbody>
-    </table>
 </div>
 
 

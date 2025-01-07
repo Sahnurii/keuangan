@@ -6,8 +6,9 @@ setlocale(LC_TIME, 'id_ID.utf8');
 $selectedTahun = $_GET['tahun'] ?? date('Y'); // Gunakan tahun sekarang jika tidak ada yang dipilih
 $selectedBulan = $_GET['bulan'] ?? date('m'); // Gunakan bulan sekarang jika tidak ada yang dipilih
 
+$bulanNama = bulanIndonesia((int)$selectedBulan);
 // Format bulan untuk menampilkan nama bulan
-$bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
+// $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
 // Ambil data yang sudah disiapkan oleh Controller
 
 ?>
@@ -27,7 +28,7 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
     <h3 class="card-title text-center ">Bulan : <?= $bulanNama ?> </h3>
 </div>
 <div class="card-body">
-    <table class="table table-bordered" style="width: 50%; margin: left auto;">
+    <table style="width: 50%; margin: left auto; border: none;">
         <tr>
             <th>Nama Perguruan Tinggi</th>
             <th>:</th>
@@ -54,46 +55,40 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
         </tr>
     </table>
 
-</div>
-</div>
-<div class="table-responsive">
-    <table id="dataTable" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th rowspan="2" width="1%">NO</th>
-                <th rowspan="2" class="text-center">TIPE BUKU</th>
-                <th rowspan="2" class="text-center">TANGGAL</th>
-                <th rowspan="2" class="text-center">NO BUKTI</th>
-                <th rowspan="2" class="text-center">KETERANGAN</th>
-                <th rowspan="2" class="text-center">KATEGORI</th>
-                <th rowspan="2" class="text-center">JENIS TRANSAKSI</th>
-                <th colspan="3" class="text-center">JENIS</th>
-            </tr>
-            <tr>
-                <th class="text-center">PEMASUKAN</th>
-                <th class="text-center">PENGELUARAN</th>
-                <th class="text-center">SALDO</th>
-            </tr>
-        </thead>
-        <tbody id="transaksi-body">
-            <?php $i = 1; ?>
-            <?php foreach ($data['transaksi'] as $transaksi) : ?>
+    <div class="table-responsive mt-5">
+        <table id="dataTable" class="table table-bordered table-hover">
+            <thead>
                 <tr>
-                    <td><?= $i++; ?></td>
-                    <td><?= $transaksi['tipe_buku']; ?></td>
-                    <td><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
-                    <td><?= $transaksi['no_bukti']; ?></td>
-                    <td><?= $transaksi['keterangan']; ?></td>
-                    <td><?= $transaksi['kategori']; ?></td>
-                    <td><?= $transaksi['tipe_kategori']; ?></td>
-                    <td><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                    <td><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                    <td class="saldo-cell" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
-
+                    <th rowspan="2" width="1%" class="align-content-center">NO</th>
+                    <th rowspan="2" class="text-center align-content-center">TANGGAL</th>
+                    <th rowspan="2" class="text-center align-content-center">NO BUKTI</th>
+                    <th rowspan="2" class="text-center align-content-center">URAIAN</th>
+                    <th colspan="3" class="text-center">JENIS</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                <tr>
+                    <th class="text-center">PEMASUKAN</th>
+                    <th class="text-center">PENGELUARAN</th>
+                    <th class="text-center">SALDO</th>
+                </tr>
+            </thead>
+            <tbody id="transaksi-body">
+                <?php $i = 1; ?>
+                <?php foreach ($data['transaksi'] as $transaksi) : ?>
+                    <tr>
+                        <td class="text-center align-content-center"><?= $i++; ?></td>
+                        <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
+                        <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
+                        <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>
+                        <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
+                        <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
+                        <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
+    
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>
 
 <script>

@@ -33,7 +33,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login">Logout</a>
+                    <a class="btn btn-primary" href="<?=BASEURL; ?>/auth/logout">Logout</a>
                 </div>
             </div>
         </div>
@@ -64,6 +64,29 @@
     <!-- Page level custom scripts -->
     <script src="<?=BASEURL;?>/js/demo/datatables-demo.js"></script>
     <script src="<?=BASEURL;?>/js/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript">
+		window.onload = function() {
+			jam();
+		}
+
+		function jam() {
+			var e = document.getElementById('jam'),
+				d = new Date(),
+				h, m, s;
+			h = d.getHours();
+			m = set(d.getMinutes());
+			s = set(d.getSeconds());
+
+			e.innerHTML = h + ':' + m + ':' + s;
+
+			setTimeout('jam()', 1000);
+		}
+
+		function set(e) {
+			e = e < 10 ? '0' + e : e;
+			return e;
+		}
+	</script>
 </body>
 
 </html>

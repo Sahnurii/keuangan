@@ -2,6 +2,11 @@
 
 class Laporan extends Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
+    
     public function index()
     {
 
@@ -187,7 +192,7 @@ class Laporan extends Controller
         $data['transaksi'] = $transaksi;
         $data['saldo_awal'] = $saldoAwal ?? 0;
 
-        $this->view('buku_bank/cetak_print', $data);
+        $this->view('buku_kas_umum/cetak_print', $data);
     }
 
     public function cetakSaldo()

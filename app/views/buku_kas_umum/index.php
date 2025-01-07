@@ -54,7 +54,7 @@
                             <th rowspan="2" class="text-center">TIPE BUKU</th>
                             <th width="10%" rowspan="2" class="text-center">TANGGAL</th>
                             <th rowspan="2" class="text-center">NO BUKTI</th>
-                            <th rowspan="2" class="text-center">KETERANGAN</th>
+                            <th rowspan="2" class="text-center">URAIAN</th>
                             <th rowspan="2" class="text-center">KATEGORI</th>
                             <th rowspan="2" class="text-center">JENIS TRANSAKSI</th>
                             <th colspan="3" class="text-center">JENIS</th>
@@ -69,16 +69,16 @@
                         <?php $i = 1; ?>
                         <?php foreach ($data['transaksi'] as $transaksi) : ?>
                             <tr>
-                                <td><?= $i++; ?></td>
-                                <td><?= $transaksi['tipe_buku']; ?></td>
-                                <td><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
-                                <td><?= $transaksi['no_bukti']; ?></td>
-                                <td><?= $transaksi['keterangan']; ?></td>
-                                <td><?= $transaksi['kategori']; ?></td>
-                                <td><?= $transaksi['tipe_kategori']; ?></td>
-                                <td><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td class="saldo-cell" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
+                                <td class="text-center align-content-center"><?= $i++; ?></td>
+                                <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_buku']; ?></td>
+                                <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
+                                <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
+                                <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>
+                                <td class="text-center align-content-center"><?= $transaksi['kategori']; ?></td>
+                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori']; ?></td>
+                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
+                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
+                                <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -2,7 +2,10 @@
 
 class Transaksi extends Controller
 {
-
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
 
     public function index()
     {

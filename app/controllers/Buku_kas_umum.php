@@ -1,7 +1,12 @@
-<?php 
+<?php
 
 class Buku_kas_umum extends Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
+
     public function index()
     {
         $data['judul'] = 'Buku Kas Umum';
@@ -52,12 +57,11 @@ class Buku_kas_umum extends Controller
         $tahun = $_GET['tahun'] ?? date('Y');
         $bulan = $_GET['bulan'] ?? date('m');
 
-        
+
 
         $data['saldo_awal'] = $saldoAwal ?? 0; // Jika saldo tidak ditemukan, set ke 0
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         $this->view('buku_kas_umum/cetak');
     }
-
 }

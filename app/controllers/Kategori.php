@@ -2,6 +2,11 @@
 
 class Kategori extends Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
+
     public function index()
     {
         $data['judul'] = 'Kategori';
@@ -75,6 +80,4 @@ class Kategori extends Controller
             echo json_encode(['status' => 'error', 'message' => 'Metode tidak valid']);
         }
     }
-
-    
 }

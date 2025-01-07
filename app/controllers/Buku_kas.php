@@ -2,6 +2,11 @@
 
 class Buku_kas extends Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
+
     public function index()
     {
         $data['judul'] = 'Buku Kas';

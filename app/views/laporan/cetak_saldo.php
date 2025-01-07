@@ -42,30 +42,34 @@
                     </div>
                 </div>
             </form>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="text-center">BUKU KAS</th>
+                            <th class="text-center">BUKU BANK</th>
+                            <th class="text-center">BUKU KAS UMUM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Kas']); ?></td>
+                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Bank']); ?></td>
+                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Kas Umum']); ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div class="table-responsive">
-        <table id="dataTable" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th class="text-center">BUKU KAS</th>
-                    <th class="text-center">BUKU BANK</th>
-                    <th class="text-center">BUKU KAS UMUM</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Kas'], 0, ',', '.'); ?></td>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Bank'], 0, ',', '.'); ?></td>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Kas Umum'], 0, ',', '.'); ?></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="card-footer">
+        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
     </div>
+</div>
 </div>
 
 <script>
-     const tahunSelect = document.getElementById('tahun');
+    const tahunSelect = document.getElementById('tahun');
     const bulanSelect = document.getElementById('bulan');
     document.addEventListener('DOMContentLoaded', function() {
 

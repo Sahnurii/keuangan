@@ -42,23 +42,26 @@
                     </div>
                 </div>
             </form>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="text-center">PEMASUKAN</th>
+                            <th class="text-center">PENGELUARAN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transaksi-body">
+                        <tr>
+                            <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
+                            <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th class="text-center">PEMASUKAN</th>
-                    <th class="text-center">PENGELUARAN</th>
-                </tr>
-            </thead>
-            <tbody id="transaksi-body">
-                <tr>
-                    <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
-                    <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="card-footer">
+        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
     </div>
 </div>
 </div>

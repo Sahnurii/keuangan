@@ -2,25 +2,10 @@
 
 class Buku_bank extends Controller
 {
-    // public function index()
-    // {
-    //     $data['judul'] = 'Buku Bank';
-
-    //     // Ambil data Buku Bank dari model
-    //     $transaksiBank = $this->model('Transaksi_model')->getTransaksiByTipeBuku('Bank');
-
-    //     // Urutkan berdasarkan tanggal
-    //     usort($transaksiBank, function ($a, $b) {
-    //         return strtotime($a['tanggal']) - strtotime($b['tanggal']);
-    //     });
-
-    //     // Kirim data ke view
-    //     $data['transaksi'] = $transaksiBank;
-
-    //     $this->view('templates/header', $data);
-    //     $this->view('buku_bank/index', $data);
-    //     $this->view('templates/footer');
-    // }
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
 
     public function index()
     {

@@ -2,6 +2,11 @@
 
 class Saldo extends Controller
 {
+    public function __construct()
+    {
+        AuthMiddleware::isAuthenticated();
+    }
+
     public function index()
     {
         $data['judul'] = 'Saldo';

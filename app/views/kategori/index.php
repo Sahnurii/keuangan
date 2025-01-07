@@ -11,7 +11,7 @@
                 </div>
                 <table id="example" class="table table-bordered table-hover">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>NO</th>
                             <th>NAMA KATEGORI</th>
                             <th>TIPE KATEGORI</th>
@@ -22,7 +22,7 @@
                         <?php $i = 1; ?>
                         <?php foreach ($data['ktg'] as $kategori) : ?>
                             <tr>
-                                <td><?= $i++; ?></td>
+                                <td class="text-center"><?= $i++; ?></td>
                                 <td><?= $kategori['nama_kategori']; ?></td>
                                 <td><?= $kategori['tipe_kategori']; ?></td>
                                 <td>

@@ -12,7 +12,7 @@
                 </div>
                 <table id="example" class="table table-bordered table-hover">
                     <thead>
-                        <tr>
+                        <tr class="text-center">
                             <th>NO</th>
                             <th>TIPE BUKU</th>
                             <th>SALDO AWAL</th>
@@ -24,11 +24,11 @@
                     <tbody>
                         <?php $i = 1; ?>
                         <?php foreach ($data['sldo'] as $saldo) : ?>
-                            <tr>
+                            <tr class="text-center">
                                 <td><?= $i++; ?></td>
                                 <td><?= $saldo['tipe_buku']; ?></td>
                                 <td><?= uang_indo($saldo['saldo_awal']); ?></td>
-                                <td><?= $saldo['keterangan']; ?></td>
+                                <td class="text-left"><?= $saldo['keterangan']; ?></td>
                                 <td><?= $saldo['tanggal']; ?></td>
                                 <td>
                                     <a href="<?= BASEURL; ?>/saldo/edit/<?= $saldo['id']; ?>" class="btn btn-warning btn-sm">

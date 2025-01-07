@@ -1,14 +1,11 @@
 <?php
 
 
-setlocale(LC_TIME, 'id_ID.utf8');
-
 $selectedTahun = $_GET['tahun'] ?? date('Y'); // Gunakan tahun sekarang jika tidak ada yang dipilih
 $selectedBulan = $_GET['bulan'] ?? date('m'); // Gunakan bulan sekarang jika tidak ada yang dipilih
 
 // Format bulan untuk menampilkan nama bulan
-$bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
-// Ambil data yang sudah disiapkan oleh Controller
+$bulanNama = bulanIndonesia((int)$selectedBulan);
 
 ?>
 
@@ -23,11 +20,11 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
 
 
 <div class="card-header">
-    <h3 class="card-title text-center ">Laporan Buku Kas</h3>
+    <h3 class="card-title text-center ">Laporan Saldo</h3>
     <h3 class="card-title text-center ">Bulan : <?= $bulanNama ?> </h3>
 </div>
 <div class="card-body">
-    <table class="table table-bordered" style="width: 50%; margin: left auto;">
+    <table style="width: 50%; margin: left auto; border: none;">
         <tr>
             <th>Nama Perguruan Tinggi</th>
             <th>:</th>
@@ -54,10 +51,8 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
         </tr>
     </table>
 
-</div>
-</div>
-<div class="table-responsive">
-<table id="dataTable" class="table table-bordered table-hover">
+    <div class="table-responsive mt-5" >
+        <table id="dataTable" class="table table-bordered table-hover">
             <thead>
                 <tr>
                     <th class="text-center">BUKU KAS</th>
@@ -67,17 +62,19 @@ $bulanNama = ucfirst(date('F', strtotime("$selectedTahun-$selectedBulan-01")));
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Kas'], 0, ',', '.'); ?></td>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Bank'], 0, ',', '.'); ?></td>
-                    <td class="text-right">Rp <?= number_format($data['saldo_akhir']['Kas Umum'], 0, ',', '.'); ?></td>
+                    <td class="text-center"><?= uang_indo($data['saldo_akhir']['Kas']); ?></td>
+                    <td class="text-center"><?= uang_indo($data['saldo_akhir']['Bank']); ?></td>
+                    <td class="text-center"><?= uang_indo($data['saldo_akhir']['Kas Umum']); ?></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
 </div>
 
 
-<!-- <script>
+<script>
     window.onload = function() {
         window.print(); // Otomatis cetak saat halaman terbuka
     };
-</script> -->
+</script>
