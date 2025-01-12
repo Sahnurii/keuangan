@@ -1,3 +1,7 @@
+<?php
+$flashData = Flasher::flash();  // Ambil data flash
+?>
+<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
 
     <div class="card card-info">
@@ -25,7 +29,7 @@
                                 <td class="text-center"><?= $i++; ?></td>
                                 <td><?= $kategori['nama_kategori']; ?></td>
                                 <td><?= $kategori['tipe_kategori']; ?></td>
-                                <td>
+                                <td class="text-center">
                                     <a href="<?= BASEURL; ?>/kategori/edit/<?= $kategori['id']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>

@@ -24,7 +24,9 @@ class kategori_model
 
     public function getAllKategori()
     {
-        $this->db->query("SELECT * FROM " . $this->table);
+        // $this->db->query("SELECT * FROM " . $this->table);
+        // return $this->db->resultSet();
+        $this->db->query("SELECT * FROM " . $this->table . " ORDER BY tipe_kategori ASC");
         return $this->db->resultSet();
     }
 
@@ -69,5 +71,11 @@ class kategori_model
         $this->db->execute();
 
         return $this->db->rowCount();
+    }
+
+    public function getTotalKategori()
+    {
+        $this->db->query("SELECT COUNT(*) as total FROM " . $this->table);
+        return $this->db->single();
     }
 }

@@ -1,0 +1,50 @@
+@media print {
+
+    /* Set orientasi halaman menjadi landscape */
+    @page {
+        size: landscape;
+        margin: 5mm;
+        /* Atur margin agar tidak melebihi halaman */
+    }
+
+    /* Menyembunyikan elemen yang tidak perlu di print */
+    body {
+        font-family: 'Nunito', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Mengatur margin konten untuk halaman cetak */
+    .container,
+    .card-header,
+    .card-body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Mengatur ukuran dan styling tabel */
+
+   
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Atur lebar kolom untuk teks yang lebih panjang */
+    td.text-wrap {
+        max-width: 500px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Menyembunyikan tombol atau elemen non-cetak */
+    .no-print {
+        display: none;
+    }
+    
+}

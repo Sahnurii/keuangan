@@ -51,6 +51,9 @@ class Buku_bank extends Controller
         $data['Bank'] = $this->model('Transaksi_model')->getTransaksiById($id);
         $data['judul'] = 'Edit Bank';
 
+        $data['pemasukan'] = $this->model('Kategori_model')->getKategoriByTipe('Pemasukan');
+        $data['pengeluaran'] = $this->model('Kategori_model')->getKategoriByTipe('Pengeluaran');
+        
         $this->view('templates/header', $data);
         $this->view('buku_bank/edit', $data);
         $this->view('templates/footer');
@@ -61,12 +64,12 @@ class Buku_bank extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($this->model('Transaksi_model')->editDataTransaksi($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
-                Flasher::setFlash('berhasil', 'diubah', 'success');
+                Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/buku_bank');
                 exit;
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Data gagal diperbarui']);
-                Flasher::setFlash('gagal', 'diubah', 'danger');
+                Flasher::setFlash('Ubah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/buku_bank');
                 exit;
             }

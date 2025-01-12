@@ -1,3 +1,7 @@
+<?php
+$flashData = Flasher::flash();  // Ambil data flash
+?>
+<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
@@ -47,20 +51,20 @@
             <!-- End Form Filter -->
             <div class="table-responsive">
                 <div class="mb-3">
-                    <a href="<?= BASEURL; ?>/kategori/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
-                    <a href="<?= BASEURL; ?>/kategori/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
+                    <a href="<?= BASEURL; ?>/laporan/cetakBank" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
+                    <a href="<?= BASEURL; ?>/laporan/cetakBank_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                        class="btn btn-success ml-2" target="_blank">CETAK</a>
+                    <a href="<?= BASEURL; ?>/transaksi" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
                 </div>
-                
-                <table id="dataTable" class="table table-bordered table-hover">
+
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
                         <tr>
                             <th rowspan="2" width="1%" class="align-content-center">NO</th>
-                            <th rowspan="2" class="text-center align-content-center">TIPE BUKU</th>
                             <th rowspan="2" class="text-center align-content-center">TANGGAL</th>
                             <th rowspan="2" class="text-center align-content-center">NO BUKTI</th>
                             <th rowspan="2" class="text-center align-content-center">URAIAN</th>
                             <th rowspan="2" class="text-center align-content-center">KATEGORI</th>
-                            <th rowspan="2" class="text-center align-content-center">JENIS TRANSAKSI</th>
                             <th colspan="3" class="text-center">JENIS</th>
                             <th rowspan="2" width="10%" class="text-center align-content-center ">OPSI</th>
                         </tr>
@@ -75,17 +79,15 @@
                         <?php foreach ($data['transaksi'] as $transaksi) : ?>
                             <tr>
                                 <td class="align-content-center"><?= $i++; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_buku']; ?></td>
                                 <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
                                 <td><?= $transaksi['keterangan']; ?></td>
                                 <td class="text-left align-content-center"><?= $transaksi['kategori']; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori']; ?></td>
                                 <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
                                 <td class="text-center align-content-center">
-                                    <a href="<?= BASEURL; ?>/transaksi/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
+                                    <a href="<?= BASEURL; ?>/buku_bank/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                     <a href="<?= BASEURL; ?>/transaksi/hapusBank/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
@@ -133,7 +135,7 @@
 
         // Data bulan yang tersedia berdasarkan tahun
         const bulanData = <?= json_encode($data['bulan_tahun']); ?>;
-
+        const selectedBulan = "<?= $selectedBulan; ?>";
         // Fungsi untuk update bulan sesuai dengan tahun yang dipilih
         function updateBulan(tahun) {
             // Kosongkan opsi bulan
@@ -148,6 +150,9 @@
                     option.textContent = new Date(0, bulanStr - 1).toLocaleString('id-ID', {
                         month: 'long'
                     });
+                    if (bulanStr === selectedBulan) {
+                        option.selected = true; // Tetapkan opsi yang sesuai sebagai selected
+                    }
                     bulanSelect.appendChild(option);
                 });
             }

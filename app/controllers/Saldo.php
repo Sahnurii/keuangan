@@ -25,18 +25,18 @@ class Saldo extends Controller
 
             // Periksa duplikasi saldo
             if ($this->model('Saldo_model')->cekSaldoDuplikat($_POST['tipe_buku'], $bulan, $tahun)) {
-                Flasher::setFlash('gagal', 'ditambahkan. Saldo untuk tipe buku ini di bulan yang sama sudah ada.', 'danger');
+                Flasher::setFlash('Tambah Data Gagal', 'Saldo untuk tipe buku ini di bulan yang sama sudah ada.', 'error');
                 header('Location: ' . BASEURL . '/saldo/tambah');
                 exit;
             }
 
             // Proses tambah saldo jika tidak duplikat
             if ($this->model('Saldo_model')->tambahDataSaldo($_POST) > 0) {
-                Flasher::setFlash('berhasil', 'ditambahkan', 'success');
+                Flasher::setFlash('Tambah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/saldo');
                 exit;
             } else {
-                Flasher::setFlash('gagal', 'ditambahkan', 'danger');
+                Flasher::setFlash('Tambah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/saldo');
                 exit;
             }
@@ -52,11 +52,11 @@ class Saldo extends Controller
     public function hapus($id)
     {
         if ($this->model('Saldo_model')->hapusDataSaldo($id) > 0) {
-            Flasher::setFlash('berhasil', 'dihapus', 'success');
+            Flasher::setFlash('Hapus Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/saldo');
             exit;
         } else {
-            Flasher::setFlash('gagal', 'dihapus', 'danger');
+            Flasher::setFlash('Hapus Data Gagal', '', 'error');
             header('Location: ' . BASEURL . '/saldo');
             exit;
         }
@@ -81,18 +81,18 @@ class Saldo extends Controller
 
             // Periksa duplikasi saldo saat edit
             if ($this->model('Saldo_model')->cekSaldoDuplikatEdit($_POST['id'], $_POST['tipe_buku'], $bulan, $tahun)) {
-                Flasher::setFlash('gagal', 'diubah. Saldo untuk tipe buku ini di bulan yang sama sudah ada.', 'danger');
+                Flasher::setFlash('Ubah Data Gagal', 'Saldo untuk tipe buku ini di bulan yang sama sudah ada.', 'error');
                 header('Location: ' . BASEURL . '/saldo');
                 exit;
             }
 
             // Proses update saldo jika tidak ada duplikasi
             if ($this->model('Saldo_model')->editDataSaldo($_POST) > 0) {
-                Flasher::setFlash('berhasil', 'diubah', 'success');
+                Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/saldo');
                 exit;
             } else {
-                Flasher::setFlash('gagal', 'diubah', 'danger');
+                Flasher::setFlash('Ubah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/saldo');
                 exit;
             }

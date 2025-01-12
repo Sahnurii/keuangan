@@ -47,7 +47,6 @@
                     <thead class="font">
                         <tr>
                             <th rowspan="2" width="1%" class="align-content-center">NO</th>
-                            <th rowspan="2" class="text-center align-content-center">TIPE BUKU</th>
                             <th rowspan="2" class="text-center align-content-center">TANGGAL</th>
                             <th rowspan="2" class="text-center align-content-center">NO BUKTI</th>
                             <th rowspan="2" class="text-center align-content-center">URAIAN</th>
@@ -64,7 +63,6 @@
                         <?php foreach ($data['transaksi'] as $transaksi) : ?>
                             <tr>
                                 <td class="align-content-center"><?= $i++; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_buku']; ?></td>
                                 <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
                                 <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>
@@ -74,6 +72,12 @@
 
                             </tr>
                         <?php endforeach; ?>
+                    <tfoot id="transaksi-body">
+                        <tr>
+                            <th colspan="6" class="text-right align-content-center">SALDO AKHIR BULAN</th>
+                            <td class="saldo-cell text-right align-content-center"></td>
+                        </tr>
+                    </tfoot>
                     </tbody>
                 </table>
             </div>
@@ -118,7 +122,7 @@
 
         // Data bulan yang tersedia berdasarkan tahun
         const bulanData = <?= json_encode($data['bulan_tahun']); ?>;
-
+        const selectedBulan = "<?= $selectedBulan; ?>";
         // Fungsi untuk update bulan sesuai dengan tahun yang dipilih
         function updateBulan(tahun) {
             // Kosongkan opsi bulan
@@ -133,6 +137,9 @@
                     option.textContent = new Date(0, bulanStr - 1).toLocaleString('id-ID', {
                         month: 'long'
                     });
+                    if (bulanStr === selectedBulan) {
+                        option.selected = true; // Tetapkan opsi yang sesuai sebagai selected
+                    }
                     bulanSelect.appendChild(option);
                 });
             }

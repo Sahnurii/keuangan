@@ -64,6 +64,7 @@
     <!-- Page level custom scripts -->
     <script src="<?=BASEURL;?>/js/demo/datatables-demo.js"></script>
     <script src="<?=BASEURL;?>/js/dist/sweetalert2.all.min.js"></script>
+    <script src="<?=BASEURL; ?>/js/script.js"></script>
     <script type="text/javascript">
 		window.onload = function() {
 			jam();

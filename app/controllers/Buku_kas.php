@@ -65,12 +65,12 @@ class Buku_kas extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($this->model('Transaksi_model')->editDataTransaksi($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
-                Flasher::setFlash('berhasil', 'diubah', 'success');
+                Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/buku_kas');
                 exit;
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Data gagal diperbarui']);
-                Flasher::setFlash('gagal', 'diubah', 'danger');
+                Flasher::setFlash('Ubah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/buku_kas');
                 exit;
             }

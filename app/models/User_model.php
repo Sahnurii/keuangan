@@ -20,7 +20,8 @@ class User_model
     {
         $this->db->query("SELECT * FROM " . $this->table . " WHERE username=:username");
         $this->db->bind('username', $username);
-        return $this->db->single();
+        $result = $this->db->single();
+        return $result;
     }
 
     public function getUserByEmail($email)

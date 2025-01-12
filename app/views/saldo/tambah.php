@@ -1,10 +1,13 @@
-<?php Flasher::flash(); ?>
+<?php
+$flashData = Flasher::flash();  // Ambil data flash
+?>
+<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
 
     <!-- Horizontal Form -->
     <div class="card card-info">
-        <div class="card-header">
-            <h3 class="card-title">Tambah Data Saldo</h3>
+        <div class="card-header bg-primary">
+            <h3 class="card-title text-center text-white">Tambah Data Saldo</h3>
         </div>
         <!-- /.card-header -->
 

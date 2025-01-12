@@ -1,6 +1,9 @@
-<?php Flasher::flash(); ?>
+<?php
+$flashData = Flasher::flash();  // Ambil data flash
+?>
+<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
-
+    
     <div class="card card-info">
         <div class="card-header bg-primary">
             <h3 class="card-title text-center text-white">Saldo</h3>

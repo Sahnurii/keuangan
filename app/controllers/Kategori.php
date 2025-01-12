@@ -19,11 +19,11 @@ class Kategori extends Controller
     public function hapus($id)
     {
         if ($this->model('Kategori_model')->HapusDataKategori($id) > 0) {
-            Flasher::setFlash('berhasil', 'dihapus', 'success');
+            Flasher::setFlash('Hapus Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/kategori');
             exit;
         } else {
-            Flasher::setFlash('gagal', 'dihapus', 'danger');
+            Flasher::setFlash('Hapus Data Gagal', '', 'error');
             header('Location: ' . BASEURL . '/kategori');
             exit;
         }
@@ -35,11 +35,11 @@ class Kategori extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Proses data POST
             if ($this->model('Kategori_model')->tambahDataKategori($_POST) > 0) {
-                Flasher::setFlash('berhasil', 'ditambahkan', 'success');
+                Flasher::setFlash('Tambah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/kategori');
                 exit;
             } else {
-                Flasher::setFlash('gagal', 'ditambahkan', 'danger');
+                Flasher::setFlash('Tambah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/kategori');
                 exit;
             }
@@ -67,12 +67,12 @@ class Kategori extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($this->model('Kategori_model')->editDataKategori($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
-                Flasher::setFlash('berhasil', 'diubah', 'success');
+                Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/kategori');
                 exit;
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Data gagal diperbarui']);
-                Flasher::setFlash('gagal', 'diubah', 'danger');
+                Flasher::setFlash('Ubah Data Gagal', '', 'error');
                 header('Location: ' . BASEURL . '/kategori');
                 exit;
             }

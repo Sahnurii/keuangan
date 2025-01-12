@@ -33,11 +33,11 @@ class Transaksi extends Controller
 
         if ($this->model('Transaksi_model')->tambahDataTransaksi($data)) {
 
-            Flasher::setFlash('Berhasil', 'ditambahkan', 'success');
+            Flasher::setFlash('Tambah Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/transaksi');
             exit;
         } else {
-            Flasher::setFlash('Gagal', 'ditambahkan', 'danger');
+            Flasher::setFlash('Tambah Data Gagal', '', 'error');
             header('Location: ' . BASEURL . '/transaksi');
             exit;
         }
@@ -46,11 +46,11 @@ class Transaksi extends Controller
     public function hapusKas($id)
     {
         if ($this->model('Transaksi_model')->hapusDataTransaksi($id) > 0) {
-            Flasher::setFlash('berhasil', 'dihapus', 'success');
+            Flasher::setFlash('Hapus Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/buku_kas');
             exit;
         } else {
-            Flasher::setFlash('gagal', 'dihapus', 'danger');
+            Flasher::setFlash('Hapus Data Gagal', '', 'error');
             header('Location: ' . BASEURL . '/buku_kas');
             exit;
         }
@@ -58,11 +58,11 @@ class Transaksi extends Controller
     public function hapusBank($id)
     {
         if ($this->model('Transaksi_model')->hapusDataTransaksi($id) > 0) {
-            Flasher::setFlash('berhasil', 'dihapus', 'success');
+            Flasher::setFlash('Hapus Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/buku_bank');
             exit;
         } else {
-            Flasher::setFlash('gagal', 'dihapus', 'danger');
+            Flasher::setFlash('Hapus Data Gagal', '', 'error');
             header('Location: ' . BASEURL . '/buku_bank');
             exit;
         }

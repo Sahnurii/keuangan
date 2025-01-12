@@ -75,7 +75,7 @@
 
         // Data bulan yang tersedia berdasarkan tahun
         const bulanData = <?= json_encode($data['bulan_tahun']); ?>;
-
+        const selectedBulan = "<?= $selectedBulan; ?>";
         // Fungsi untuk update bulan sesuai dengan tahun yang dipilih
         function updateBulan(tahun) {
             // Kosongkan opsi bulan
@@ -90,6 +90,9 @@
                     option.textContent = new Date(0, bulanStr - 1).toLocaleString('id-ID', {
                         month: 'long'
                     });
+                    if (bulanStr === selectedBulan) {
+                        option.selected = true; // Tetapkan opsi yang sesuai sebagai selected
+                    }
                     bulanSelect.appendChild(option);
                 });
             }

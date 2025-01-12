@@ -37,26 +37,26 @@
                             ?>
                         </select>
                     </div>
-                    <div class="col-md-4 d-flex align-items-end">
+                    <div class="col-md-4 d-flex align-items-end ">
                         <button type="submit" class="btn btn-primary" id="tes">Filter</button>
                     </div>
                 </div>
             </form>
             <div class="table-responsive">
                 <div class="mb-3">
-                    <a href="" class="btn btn-primary" onclick=""><i class="fa fa-edit"></i> CETAK</a>
-                    <a href="<?= BASEURL; ?>/kategori/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
+                    <a href="<?= BASEURL; ?>/kategori/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
+                    <a href="<?= BASEURL; ?>/laporan/cetakKasUmum_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                            class="btn btn-success ml-2" target="_blank">CETAK</a>
                 </div>
-                <table id="dataTable" class="table table-bordered table-hover" id="">
+
+                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
                         <tr>
                             <th width="1%" rowspan="2">NO</th>
-                            <th rowspan="2" class="text-center">TIPE BUKU</th>
                             <th width="10%" rowspan="2" class="text-center">TANGGAL</th>
                             <th rowspan="2" class="text-center">NO BUKTI</th>
                             <th rowspan="2" class="text-center">URAIAN</th>
                             <th rowspan="2" class="text-center">KATEGORI</th>
-                            <th rowspan="2" class="text-center">JENIS TRANSAKSI</th>
                             <th colspan="3" class="text-center">JENIS</th>
                         </tr>
                         <tr>
@@ -70,12 +70,10 @@
                         <?php foreach ($data['transaksi'] as $transaksi) : ?>
                             <tr>
                                 <td class="text-center align-content-center"><?= $i++; ?></td>
-                                <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_buku']; ?></td>
                                 <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
                                 <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['kategori']; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori']; ?></td>
+                                <td class="align-content-center"><?= $transaksi['kategori']; ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
@@ -95,7 +93,7 @@
         let saldoAwal = <?= $data['saldo_awal']; ?>;
         let saldo = saldoAwal;
 
-        const rows = document.querySelectorAll('tbody tr'); 
+        const rows = document.querySelectorAll('tbody tr');
         rows.forEach(row => {
             const saldoCell = row.querySelector('.saldo-cell');
             const jenis = saldoCell.getAttribute('data-jenis');
@@ -120,7 +118,7 @@
 
         // Data bulan yang tersedia berdasarkan tahun
         const bulanData = <?= json_encode($data['bulan_tahun']); ?>;
-
+        const selectedBulan = "<?= $selectedBulan; ?>";
         // Fungsi untuk update bulan sesuai dengan tahun yang dipilih
         function updateBulan(tahun) {
             // Kosongkan opsi bulan
@@ -135,6 +133,9 @@
                     option.textContent = new Date(0, bulanStr - 1).toLocaleString('id-ID', {
                         month: 'long'
                     });
+                    if (bulanStr === selectedBulan) {
+                        option.selected = true; // Tetapkan opsi yang sesuai sebagai selected
+                    }
                     bulanSelect.appendChild(option);
                 });
             }
@@ -148,6 +149,4 @@
             updateBulan(tahunSelect.value);
         });
     });
-
-    
 </script>

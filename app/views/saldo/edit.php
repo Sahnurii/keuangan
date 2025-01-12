@@ -2,8 +2,8 @@
 
     <!-- Horizontal Form -->
     <div class="card card-info">
-        <div class="card-header">
-            <h3 class="card-title">Edit Data Saldo</h3>
+        <div class="card-header bg-primary">
+            <h3 class="card-title text-center text-white">Edit Data Saldo</h3>
         </div>
         <!-- /.card-header -->
 

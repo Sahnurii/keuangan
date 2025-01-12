@@ -110,7 +110,7 @@ class Transaksi_model
     {
         $kodeBukti = ($tipe_buku === 'Kas') ? 'BPK' : 'BPB';
 
-        $query = "SELECT MAX(SUBSTRING(no_bukti, 4)) AS nomor_terakhir 
+        $query = "SELECT MAX(CAST(SUBSTRING(no_bukti, 4) AS UNSIGNED)) AS nomor_terakhir
               FROM transaksi 
               WHERE tipe_buku = :tipe_buku 
                 AND MONTH(tanggal) = :bulan 
@@ -126,7 +126,7 @@ class Transaksi_model
 
         // Nomor berikutnya
         $nomorBerikutnya = (int)$nomorTerakhir + 1;
-
+        
         return $kodeBukti . $nomorBerikutnya;
     }
 

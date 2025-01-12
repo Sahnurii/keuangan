@@ -1,9 +1,13 @@
 <div class="container-fluid">
-<?php Flasher::flash(); ?>
+    <?php
+    $flashData = Flasher::flash();  // Ambil data flash
+    ?>
+    <div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
+
     <!-- Horizontal Form -->
     <div class="card card-info">
-        <div class="card-header">
-            <h3 class="card-title">Tambah Data Transaksi</h3>
+        <div class="card-header bg-primary">
+            <h3 class="card-title text-center text-white">Tambah Data Transaksi</h3>
         </div>
         <!-- /.card-header -->
 
@@ -64,8 +68,8 @@
                         <input type="input" class="form-control" id="nominal_transaksi" name="nominal_transaksi" placeholder="Masukkan Nominal" required>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Tambah</button>
             </div>
-            <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Tambah</button>
         </form>
     </div>
 </div>
