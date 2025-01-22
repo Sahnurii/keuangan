@@ -1,155 +1,124 @@
 <?php
 
+require_once 'lib/fpdf.php'; // Panggil library FPDF
 
-$selectedTahun = $_GET['tahun'] ?? date('Y'); // Gunakan tahun sekarang jika tidak ada yang dipilih
-$selectedBulan = $_GET['bulan'] ?? date('m'); // Gunakan bulan sekarang jika tidak ada yang dipilih
-
-// Format bulan untuk menampilkan nama bulan
+// Data dari controller
+setlocale(LC_TIME, 'id_ID.utf8');
+$selectedTahun = $_GET['tahun'] ?? date('Y');
+$selectedBulan = $_GET['bulan'] ?? date('m');
 $bulanNama = bulanIndonesia((int)$selectedBulan);
+$tgl = date('Y-m-d');
 
-?>
+// Membuat instance FPDF
+$pdf = new FPDF('L', 'mm', 'A4');
+$pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 12);
 
-<head>
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+// Header
+$pdf->Image('img/Logo.png', 10, 10, 15); // Logo
+$pdf->Cell(0, 8, 'POLITEKNIK BATULICIN', 0, 1, 'C');
+$pdf->SetFont('Arial', '', 10);
+$pdf->Cell(0, 7, 'Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin Kec. Batulicin', 0, 1, 'C');
+$pdf->Cell(0, 7, 'Kab. Tanah Bumbu Prov. Kalimantan Selatan Kode Pos 72271', 0, 1, 'C');
+$pdf->Cell(0, 7, 'E-mail: Politeknikbatulicin@gmail.com', 0, 1, 'C');
+$pdf->Ln(5);
+$pdf->Cell(0, 0, '', 'T', 1, 'C');
+$pdf->Ln(5);
 
-    <!-- Custom styles for this template-->
-    <link href="<?= BASEURL; ?>/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="<?= BASEURL; ?>/css/cetak.css" rel="stylesheet">
-</head>
+// Judul laporan
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(0, 8, 'Laporan Buku Kas', 0, 1, 'C');
+$pdf->Cell(0, 8, 'Bulan : ' . $bulanNama . ' ' . $selectedTahun, 0, 1, 'C');
+$pdf->Ln(5);
 
+// Informasi tambahan
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(50, 7, 'Nama Perguruan Tinggi', 0, 0);
+$pdf->Cell(5, 7, ':', 0, 0);
+$pdf->Cell(0, 7, 'Politeknik Batulicin', 0, 1);
 
-<div class="card-header text-center" style="display: flex; align-items: center; border-bottom: 5px solid black; padding-bottom: 15px;">
-    <img src="<?= BASEURL; ?>/img/Logo.png" alt="Logo" style="width: 60px; height: auto; margin-right: 15px;">
-    <div class="header-text" style="flex-grow: 1;">
-        <div><b>
-                <font size="5">POLITEKNIK BATULICIN</font>
-            </b></div>
-        <div>
-            <font size="4">Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin Kec. Batulicin</font>
-        </div>
-        <div>
-            <font size="4">Kab. Tanah Bumbu Prov. Kalimantan Selatan Kode Pos 72271</font>
-        </div>
-        <div>
-            <font size="4">E-mail: Politeknikbatulicin@gmail.com</font>
-        </div>
-    </div>
-</div>
-<div class="card-body mt-3 mb-3">
-    <div class="card-title text-center ">
-        <h4>Laporan Buku Kas</h4>
-        <h4>Bulan : <?= $bulanNama ?> </h4>
-    </div>
-    <table style="width: 50%; margin: left auto; border: none;">
-        <tr>
-            <th>Nama Perguruan Tinggi</th>
-            <th>:</th>
-            <td>Politeknik Batulicin</td>
-        </tr>
-        <tr>
-            <th>Desa/Kecamatan</th>
-            <th>:</th>
-            <td>Batulicin</td>
-        </tr>
-        <tr>
-            <th>Kabupaten</th>
-            <th>:</th>
-            <td>
-                Tanah Bumbu
-            </td>
-        </tr>
-        <tr>
-            <th>Provinsi</th>
-            <th>:</th>
-            <td>
-                Kalimantan Selatan
-            </td>
-        </tr>
-    </table>
+$pdf->Cell(50, 7, 'Desa/Kecamatan', 0, 0);
+$pdf->Cell(5, 7, ':', 0, 0);
+$pdf->Cell(0, 7, 'Batulicin', 0, 1);
 
-    <div class="table-responsive mt-5">
-        <table id="dataTable" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th rowspan="2" width="1%" class="align-content-center">NO</th>
-                    <th rowspan="2" class="text-center align-content-center">TANGGAL</th>
-                    <th rowspan="2" class="text-center align-content-center">NO BUKTI</th>
-                    <th rowspan="2" class="text-center align-content-center">URAIAN</th>
-                    <th colspan="3" class="text-center">JENIS</th>
-                </tr>
-                <tr>
-                    <th class="text-center">PEMASUKAN</th>
-                    <th class="text-center">PENGELUARAN</th>
-                    <th class="text-center">SALDO</th>
-                </tr>
-            </thead>
-            <tbody id="transaksi-body">
-                <?php $i = 1; ?>
-                <?php foreach ($data['transaksi'] as $transaksi) : ?>
-                    <tr>
-                        <td class="text-center align-content-center"><?= $i++; ?></td>
-                        <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
-                        <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
-                        <td class="text-wrap"><?= $transaksi['keterangan']; ?></td>
-                        <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                        <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                        <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
+$pdf->Cell(50, 7, 'Kabupaten', 0, 0);
+$pdf->Cell(5, 7, ':', 0, 0);
+$pdf->Cell(0, 7, 'Tanah Bumbu', 0, 1);
 
-                    </tr>
-                <?php endforeach; ?>
-            <tfoot id="transaksi-body">
-                <tr>
-                    <th colspan="6" class="text-right align-content-center">SALDO AKHIR BULAN</th>
-                    <td class="saldo-cell text-right align-content-center"></td>
-                </tr>
-            </tfoot>
-            <?php $tgl = date('Y-m-d'); ?>
-            <table width="100%">
-                <tr>
-                    <td align="center"></td>
-                    <td align="center" width="200px" style="line-height: 1.5; white-space: nowrap;">
-                        <span style="display: inline;">Tanah Bumbu, <?php echo tglIndonesia(date('d F Y', strtotime($tgl))); ?></span>
-                        <br />Bendahara,
-                        <br /><br /><br />
-                        <b><u>Nurul Hatmah, S.Pd.</u><br />19911027 202301 2 050</b>
-                    </td>
-                </tr>
-            </table>
-            </tbody>
-        </table>
-    </div>
-</div>
-</div>
+$pdf->Cell(50, 7, 'Provinsi', 0, 0);
+$pdf->Cell(5, 7, ':', 0, 0);
+$pdf->Cell(0, 7, 'Kalimantan Selatan', 0, 1);
+$pdf->Ln(10);
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let saldoAwal = <?= $data['saldo_awal']; ?>;
-        // console.log(saldoAwal)
-        let saldo = saldoAwal;
+// Header tabel
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->SetFillColor(200, 200, 200);
+$pdf->Cell(10, 10, 'No', 1, 0, 'C', true);
+$pdf->Cell(30, 10, 'Tanggal', 1, 0, 'C', true);
+$pdf->Cell(30, 10, 'No Bukti', 1, 0, 'C', true);
+$pdf->Cell(100, 10, 'Uraian', 1, 0, 'C', true);
+$pdf->Cell(30, 10, 'Pemasukan', 1, 0, 'C', true);
+$pdf->Cell(30, 10, 'Pengeluaran', 1, 0, 'C', true);
+$pdf->Cell(40, 10, 'Saldo', 1, 1, 'C', true);
 
-        const rows = document.querySelectorAll('#transaksi-body tr');
-        rows.forEach(row => {
-            const jenis = row.querySelector('.saldo-cell').getAttribute('data-jenis');
-            const nominal = parseFloat(row.querySelector('.saldo-cell').getAttribute('data-nominal'));
+// Data transaksi
+$pdf->SetFont('Arial', '', 10);
+$saldo = $data['saldo_awal'];
+$i = 1;
 
-            if (jenis === 'Pemasukan') {
-                saldo += nominal;
-            } else if (jenis === 'Pengeluaran') {
-                saldo -= nominal;
-            }
+// Tambahkan Saldo Awal ke dalam tabel
+$pdf->Cell(10, 8, $i++, 1, 0, 'C'); // Nomor
+$pdf->Cell(30, 8, !empty($data['saldo_awal_tanggal']) ? date('d M Y', strtotime($data['saldo_awal_tanggal'])) : '-', 1, 0, 'C'); // Tanggal dari database
+$pdf->Cell(30, 8, '-', 1, 0, 'C'); // No Bukti kosong
+$pdf->Cell(100, 8, $data['saldo_awal_keterangan'], 1, 0, 'L'); // Uraian saldo awal
+$pdf->Cell(30, 8, uang_indo($data['saldo_awal']), 1, 0, 'R'); // Pemasukan saldo awal
+$pdf->Cell(30, 8, '-', 1, 0, 'R'); // Pengeluaran kosong
+$pdf->Cell(40, 8, uang_indo($saldo), 1, 1, 'R'); // Saldo awal
 
-            row.querySelector('.saldo-cell').textContent = saldo.toLocaleString('id-ID', {
-                style: 'currency',
-                currency: 'IDR'
-            });
-        });
-    });
-</script>
+foreach ($data['transaksi'] as $transaksi) {
+    $pemasukan = $transaksi['tipe_kategori'] === 'Pemasukan' ? $transaksi['nominal_transaksi'] : 0;
+    $pengeluaran = $transaksi['tipe_kategori'] === 'Pengeluaran' ? $transaksi['nominal_transaksi'] : 0;
+    $saldo += $pemasukan - $pengeluaran;
 
-<script>
-    window.onload = function() {
-        window.print(); // Otomatis cetak saat halaman terbuka
-    };
-</script>
+    // Tentukan tinggi maksimum berdasarkan kolom "Uraian"
+    $uraianHeight = $pdf->GetStringWidth($transaksi['keterangan']) > 100 
+                    ? ceil($pdf->GetStringWidth($transaksi['keterangan']) / 100) * 8 
+                    : 8;
+
+    // Tentukan tinggi maksimum dari semua kolom (jika ada kolom lain yang lebih tinggi)
+    $rowHeight = max(8, $uraianHeight);
+
+    // Output semua kolom
+    $pdf->Cell(10, $rowHeight, $i++, 1, 0, 'C');
+    $pdf->Cell(30, $rowHeight, date('d M Y', strtotime($transaksi['tanggal'])), 1, 0, 'C');
+    $pdf->Cell(30, $rowHeight, $transaksi['no_bukti'], 1, 0, 'C');
+
+    // Output kolom "Uraian" dengan MultiCell
+    $x = $pdf->GetX();
+    $y = $pdf->GetY();
+    $pdf->MultiCell(100, 8, $transaksi['keterangan'], 1, 'L');
+    $pdf->SetXY($x + 100, $y);
+
+    $pdf->Cell(30, $rowHeight, $pemasukan > 0 ? uang_indo($pemasukan) : '-', 1, 0, 'R');
+    $pdf->Cell(30, $rowHeight, $pengeluaran > 0 ? uang_indo($pengeluaran) : '-', 1, 0, 'R');
+    $pdf->Cell(40, $rowHeight, uang_indo($saldo), 1, 1, 'R');
+}
+
+// Saldo akhir bulan
+$pdf->SetFont('Arial', 'B', 10);
+$pdf->Cell(230, 8, 'Saldo Akhir Bulan', 1, 0, 'R', true);
+$pdf->Cell(40, 8, uang_indo($saldo), 1, 1, 'R', true);
+
+// Tanda tangan
+$pdf->Ln(10);
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(0, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'R');
+$pdf->Cell(0, 8, 'Kabag. Program dan Keuangan,', 0, 1, 'R');
+$pdf->Ln(15);
+$pdf->SetFont('Arial', 'B', 12);
+$pdf->Cell(0, 8, 'Nurul Hatmah, S.Pd.', 0, 1, 'R');
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(0, 8, '19911027 202301 2 050', 0, 1, 'R');
+
+// Output PDF
+$pdf->Output('I', 'Laporan_Buku_Kas.pdf');

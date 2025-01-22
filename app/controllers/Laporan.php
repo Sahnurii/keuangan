@@ -6,7 +6,7 @@ class Laporan extends Controller
     {
         AuthMiddleware::isAuthenticated();
     }
-    
+
     public function index()
     {
 
@@ -59,6 +59,8 @@ class Laporan extends Controller
         $data['bulan'] = $bulan;
         $data['transaksi'] = $transaksiKas;
         $data['saldo_awal'] = $saldoAwal['saldo_awal'] ?? 0; // 
+        $data['saldo_awal_keterangan'] = $saldoAwal['keterangan'] ?? '-'; // Default keterangan "-"
+        $data['saldo_awal_tanggal'] = $saldoAwal['tanggal'] ?? '-'; // Default tanggal "-"
 
         $this->view('buku_kas/cetak_print', $data);
     }
@@ -115,6 +117,8 @@ class Laporan extends Controller
         $data['bulan'] = $bulan;
         $data['transaksi'] = $transaksiBank;
         $data['saldo_awal'] = $saldoAwal['saldo_awal'] ?? 0; // 
+        $data['saldo_awal_keterangan'] = $saldoAwal['keterangan'] ?? '-'; // Default keterangan "-"
+        $data['saldo_awal_tanggal'] = $saldoAwal['tanggal'] ?? '-'; // Default tanggal "-"
 
         $this->view('buku_bank/cetak_print', $data);
     }
@@ -175,110 +179,66 @@ class Laporan extends Controller
         $bulan = $_GET['bulan'] ?? date('m');
         // Ambil data dari model
         $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
+
         // Ambil saldo awal untuk bulan dan tahun tertentu
+        // Ambil saldo awal untuk Bank dan Kas
         $saldoBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun);
-        $bank = $saldoBank['saldo_awal'] ?? 0;
-        // print_r($saldoBank);
         $saldoKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun);
-        $kas = $saldoKas['saldo_awal'] ?? 0;
-        // print_r($saldoKas);
-        $saldoAwal = $bank + $kas;
-        // print_r($saldoAwal);
-        error_log(print_r($saldoAwal, true)); // Debug saldo_awal
 
+        // Set data saldo Bank
+        $data['saldo_bank'] = $saldoBank['saldo_awal'] ?? 0; // Nilai default jika tidak ditemukan
+        $data['saldo_bank_keterangan'] = $saldoBank['keterangan'] ?? '-';
+        $data['saldo_bank_tanggal'] = $saldoBank['tanggal'] ?? null;
 
+        // Set data saldo Kas
+        $data['saldo_kas'] = $saldoKas['saldo_awal'] ?? 0; // Nilai default jika tidak ditemukan
+        $data['saldo_kas_keterangan'] = $saldoKas['keterangan'] ?? '-';
+        $data['saldo_kas_tanggal'] = $saldoKas['tanggal'] ?? null;
+
+        // Gabungkan saldo awal
+        $data['saldo_awal'] = $data['saldo_kas'] + $data['saldo_bank'];
+
+        // Debugging data
+        error_log(print_r($data, true)); // Untuk melihat apakah data sesuai dengan ekspektasi
+
+        // Tambahkan data lain
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         $data['transaksi'] = $transaksi;
-        $data['saldo_awal'] = $saldoAwal ?? 0;
 
+        // Panggil view
         $this->view('buku_kas_umum/cetak_print', $data);
     }
 
     public function cetakSaldo()
-{
-    $data['judul'] = 'Cetak Saldo';
-    $bulanTahun = $this->model('Transaksi_model')->getUniqueMonthsAndYearsUniversal();
-
-    $groupedBulanTahun = [];
-    foreach ($bulanTahun as $bt) {
-        $groupedBulanTahun[$bt['tahun']][] = $bt['bulan'];
-    }
-
-    $data['bulan_tahun'] = $groupedBulanTahun;
-
-    // Ambil filter dari GET
-    $tahun = $_GET['tahun'] ?? date('Y');
-    $bulan = $_GET['bulan'] ?? date('m');
-
-    // Ambil data saldo awal
-    $saldoAwalBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun)['saldo_awal'] ?? 0;
-    $saldoAwalKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun)['saldo_awal'] ?? 0;
-    $saldoAwalKasUmum = $saldoAwalBank + $saldoAwalKas;
-
-    // Ambil transaksi
-    $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
-
-    // Hitung saldo akhir berdasarkan tipe buku
-    $saldoBank = $saldoAwalBank;
-    $saldoKas = $saldoAwalKas;
-    $saldoKasUmum = $saldoAwalKasUmum;
-
-    foreach ($transaksi as $trx) {
-        if ($trx['tipe_buku'] === 'Bank') {
-            $saldoBank += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-        } elseif ($trx['tipe_buku'] === 'Kas') {
-            $saldoKas += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-        }
-        $saldoKasUmum += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-    }
-
-    // Simpan hasil ke dalam $data
-    $data['saldo_akhir'] = [
-        'Bank' => $saldoBank,
-        'Kas' => $saldoKas,
-        'Kas Umum' => $saldoKasUmum,
-    ];
-
-    $data['tahun'] = $tahun;
-    $data['bulan'] = $bulan;
-    $data['transaksi'] = $transaksi;
-
-    $this->view('templates/header', $data);
-    $this->view('laporan/cetak_saldo', $data);
-    $this->view('templates/footer');
-}
-
-
-    public function cetakSaldo_print()
     {
         $data['judul'] = 'Cetak Saldo';
         $bulanTahun = $this->model('Transaksi_model')->getUniqueMonthsAndYearsUniversal();
-    
+
         $groupedBulanTahun = [];
         foreach ($bulanTahun as $bt) {
             $groupedBulanTahun[$bt['tahun']][] = $bt['bulan'];
         }
-    
+
         $data['bulan_tahun'] = $groupedBulanTahun;
-    
+
         // Ambil filter dari GET
         $tahun = $_GET['tahun'] ?? date('Y');
         $bulan = $_GET['bulan'] ?? date('m');
-    
+
         // Ambil data saldo awal
         $saldoAwalBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun)['saldo_awal'] ?? 0;
         $saldoAwalKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun)['saldo_awal'] ?? 0;
         $saldoAwalKasUmum = $saldoAwalBank + $saldoAwalKas;
-    
+
         // Ambil transaksi
         $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
-    
+
         // Hitung saldo akhir berdasarkan tipe buku
         $saldoBank = $saldoAwalBank;
         $saldoKas = $saldoAwalKas;
         $saldoKasUmum = $saldoAwalKasUmum;
-    
+
         foreach ($transaksi as $trx) {
             if ($trx['tipe_buku'] === 'Bank') {
                 $saldoBank += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
@@ -287,18 +247,73 @@ class Laporan extends Controller
             }
             $saldoKasUmum += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
         }
-    
+
         // Simpan hasil ke dalam $data
         $data['saldo_akhir'] = [
             'Bank' => $saldoBank,
             'Kas' => $saldoKas,
             'Kas Umum' => $saldoKasUmum,
         ];
-    
+
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
         $data['transaksi'] = $transaksi;
-    
+
+        $this->view('templates/header', $data);
+        $this->view('laporan/cetak_saldo', $data);
+        $this->view('templates/footer');
+    }
+
+
+    public function cetakSaldo_print()
+    {
+        $data['judul'] = 'Cetak Saldo';
+        $bulanTahun = $this->model('Transaksi_model')->getUniqueMonthsAndYearsUniversal();
+
+        $groupedBulanTahun = [];
+        foreach ($bulanTahun as $bt) {
+            $groupedBulanTahun[$bt['tahun']][] = $bt['bulan'];
+        }
+
+        $data['bulan_tahun'] = $groupedBulanTahun;
+
+        // Ambil filter dari GET
+        $tahun = $_GET['tahun'] ?? date('Y');
+        $bulan = $_GET['bulan'] ?? date('m');
+
+        // Ambil data saldo awal
+        $saldoAwalBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun)['saldo_awal'] ?? 0;
+        $saldoAwalKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun)['saldo_awal'] ?? 0;
+        $saldoAwalKasUmum = $saldoAwalBank + $saldoAwalKas;
+
+        // Ambil transaksi
+        $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
+
+        // Hitung saldo akhir berdasarkan tipe buku
+        $saldoBank = $saldoAwalBank;
+        $saldoKas = $saldoAwalKas;
+        $saldoKasUmum = $saldoAwalKasUmum;
+
+        foreach ($transaksi as $trx) {
+            if ($trx['tipe_buku'] === 'Bank') {
+                $saldoBank += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+            } elseif ($trx['tipe_buku'] === 'Kas') {
+                $saldoKas += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+            }
+            $saldoKasUmum += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+        }
+
+        // Simpan hasil ke dalam $data
+        $data['saldo_akhir'] = [
+            'Bank' => $saldoBank,
+            'Kas' => $saldoKas,
+            'Kas Umum' => $saldoKasUmum,
+        ];
+
+        $data['tahun'] = $tahun;
+        $data['bulan'] = $bulan;
+        $data['transaksi'] = $transaksi;
+
 
         $this->view('laporan/cetak_saldo_print', $data);
     }

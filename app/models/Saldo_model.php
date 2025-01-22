@@ -24,22 +24,21 @@ class Saldo_model
     }
 
     public function tambahDataSaldo($data)
-    { {
+    {
 
-            $query = "INSERT INTO saldo (tipe_buku, saldo_awal, keterangan, tanggal) 
+        $query = "INSERT INTO saldo (tipe_buku, saldo_awal, keterangan, tanggal) 
                       VALUES (:tipe_buku, :saldo_awal, :keterangan, :tanggal)";
-            $this->db->query($query);
+        $this->db->query($query);
 
-            // Bind parameter ke query
-            $this->db->bind('tipe_buku', $data['tipe_buku']);
-            $this->db->bind('saldo_awal', $data['saldo_awal']);
-            $this->db->bind('keterangan',  $data['keterangan']);
-            $this->db->bind('tanggal', $data['tanggal']);
+        // Bind parameter ke query
+        $this->db->bind('tipe_buku', $data['tipe_buku']);
+        $this->db->bind('saldo_awal', $data['saldo_awal']);
+        $this->db->bind('keterangan',  $data['keterangan']);
+        $this->db->bind('tanggal', $data['tanggal']);
 
-            $this->db->execute();
+        $this->db->execute();
 
-            return $this->db->rowCount();
-        }
+        return $this->db->rowCount();
     }
 
     public function hapusDataSaldo($id)
@@ -69,18 +68,34 @@ class Saldo_model
         return $this->db->rowCount();
     }
 
+    // public function getSaldoAwalByTipeBukuDanTanggal($tipeBuku, $bulan, $tahun)
+    // {
+    //     $query = "SELECT saldo_awal FROM saldo WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun";
+    //     $this->db->query($query);
+    //     $this->db->bind('tipe_buku', $tipeBuku);
+    //     $this->db->bind('bulan', $bulan);
+    //     $this->db->bind('tahun', $tahun);
+    //     // print_r(gettype($tahun));
+    //     // print_r($tahun);
+
+    //     return $this->db->single();
+    // }
     public function getSaldoAwalByTipeBukuDanTanggal($tipeBuku, $bulan, $tahun)
     {
-        $query = "SELECT saldo_awal FROM saldo WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun";
+        $query = "SELECT saldo_awal, keterangan, tanggal 
+              FROM saldo 
+              WHERE tipe_buku = :tipe_buku 
+                AND MONTH(tanggal) = :bulan 
+                AND YEAR(tanggal) = :tahun 
+              LIMIT 1"; // Gunakan LIMIT untuk memastikan hanya 1 data yang diambil
         $this->db->query($query);
         $this->db->bind('tipe_buku', $tipeBuku);
         $this->db->bind('bulan', $bulan);
         $this->db->bind('tahun', $tahun);
-        // print_r(gettype($tahun));
-        // print_r($tahun);
 
-        return $this->db->single();
+        return $this->db->single(); // Mengembalikan data saldo awal, keterangan, dan tanggal
     }
+
 
     public function cekSaldoDuplikat($tipe_buku, $bulan, $tahun)
     {

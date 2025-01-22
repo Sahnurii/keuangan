@@ -74,7 +74,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                 <div class="form-group row">
                     <label for="nominal_transaksi" class="col-sm-2 col-form-label">NOMINAL</label>
                     <div class="col-sm-10">
-                        <input type="input" class="form-control" id="nominal_transaksi" name="nominal_transaksi" value="<?= $data['kas']['nominal_transaksi']; ?>" placeholder="Masukkan Nominal" required>
+                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" value="<?= $data['kas']['nominal_transaksi']; ?>" placeholder="Masukkan Nominal" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Simpan</button>

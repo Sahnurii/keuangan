@@ -63,7 +63,7 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="<?= BASEURL; ?>/kategori">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-fw fa-list"></i>
                     <span>Data Kategori</span></a>
             </li
 
@@ -79,7 +79,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-fw fa-book"></i>
                     <span>Buku</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -94,7 +94,7 @@
             <!-- Nav Item - Saldo -->
             <li class="nav-item">
                 <a class="nav-link" href="<?= BASEURL; ?>/saldo">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-fw fa-wallet"></i>
                     <span>Saldo</span></a>
             </li>
 
@@ -106,7 +106,7 @@
             <!-- Nav Item - Menu Transaksi -->
             <li class="nav-item">
                 <a class="nav-link" href="<?= BASEURL; ?>/transaksi">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i class="fas fa-fw fa-exchange-alt"></i>
                     <span>Transaksi</span></a>
             </li>
 
@@ -122,7 +122,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
+                    <i class="fas fa-fw fa-chart-bar"></i>
                     <span>Laporan</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
@@ -213,17 +213,9 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="<?= BASEURL; ?>/user/edit/<?=  $_SESSION['user_id']; ?>">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="<?= BASEURL; ?>/auth/logout" data-toggle="modal" data-target="#logoutModal">

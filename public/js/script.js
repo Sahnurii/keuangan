@@ -12,21 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+$('.tombol-hapus').on('click', function (e) {
 
-
-
-// document.getElementById('yourButtonId').addEventListener('click', function() {
-//     fetch('<?= BASEURL; ?>/core/flasher') // Path ke fungsi flash Anda
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log(data);
-//             if (data.pesan) {
-// Swal.fire({
-//     title: data.pesan,
-//     text: data.aksi,
-//     icon: data.tipe,
-//     confirmButtonText: 'OK'
-// });
-//             }
-//         });
-// });
+    e.preventDefault();
+    const href = $(this).attr('href');
+    Swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Hapus Data!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.location.href = href;
+        }
+    });
+});

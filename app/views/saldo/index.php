@@ -37,7 +37,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                                     <a href="<?= BASEURL; ?>/saldo/edit/<?= $saldo['id']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
-                                    <a href="<?= BASEURL; ?>/saldo/hapus/<?= $saldo['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                    <a href="<?= BASEURL; ?>/saldo/hapus/<?= $saldo['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">
                                         <i class="fa fa-trash"></i> Hapus
                                     </a>
                                 </td>

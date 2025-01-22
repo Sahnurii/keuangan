@@ -18,7 +18,7 @@ class Auth extends Controller
             $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
             $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
 
-            // Validasi login
+            // Ambil user berdasarkan username atau email
             $user = $this->model('User_model')->getUserByUsernameOrEmail($username);
 
             if (!$user) {
@@ -28,7 +28,8 @@ class Auth extends Controller
                 exit;
             }
 
-            if ($user && $password === $user['password']) {
+            // Verifikasi password dengan hash
+            if ($user && password_verify($password, $user['password'])) {
                 // Login berhasil, set session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];

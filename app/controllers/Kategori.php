@@ -33,6 +33,15 @@ class Kategori extends Controller
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nama_kategori = $_POST['nama_kategori'];
+            $tipe_kategori = $_POST['tipe_kategori'];
+
+            // Validasi untuk mengecek duplikat data
+            if ($this->model('Kategori_model')->cekKategoriDuplikat($nama_kategori, $tipe_kategori)) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan nama dan tipe kategori yang sama', 'error');
+                header('Location: ' . BASEURL . '/kategori');
+                exit;
+            }
             // Proses data POST
             if ($this->model('Kategori_model')->tambahDataKategori($_POST) > 0) {
                 Flasher::setFlash('Tambah Data Berhasil', '', 'success');

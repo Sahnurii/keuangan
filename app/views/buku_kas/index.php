@@ -40,8 +40,10 @@ $flashData = Flasher::flash();  // Ambil data flash
                             ?>
                         </select>
                     </div>
-                    <div class="col-md-4 d-flex align-items-end justify-content-between">
+                    <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary" id="tes">Filter</button>
+                        <a href="<?= BASEURL; ?>/laporan/cetak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                        class="btn btn-success ml-2" target="_blank">CETAK</a>
                     </div>
                 </div>
             </form>
@@ -52,8 +54,7 @@ $flashData = Flasher::flash();  // Ambil data flash
             <div class="table-responsive">
                 <div class="mb-3">
                     <a href="<?= BASEURL; ?>/laporan" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
-                    <a href="<?= BASEURL; ?>/laporan/cetak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
-                        class="btn btn-success ml-2" target="_blank">CETAK</a>
+                    
                     <a href="<?= BASEURL; ?>/transaksi" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
                 </div>
                 <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
@@ -89,7 +90,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                                     <a href="<?= BASEURL; ?>/buku_kas/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
-                                    <a href="<?= BASEURL; ?>/transaksi/hapusKas/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                    <a href="<?= BASEURL; ?>/transaksi/hapusKas/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">
                                         <i class="fa fa-trash"></i> Hapus
                                     </a>
                                 </td>
