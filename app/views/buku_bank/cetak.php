@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">LAPORAN BUKU BANK</h3>
+            <h3 class="card-title text-center text-white">LAPORAN BUKU PEMBANTU BANK</h3>
         </div>
         <div class="card-body">
             <form method="GET" action="<?= BASEURL; ?>/laporan/cetakBank" class="mb-3">

@@ -52,3 +52,19 @@ $flashData = Flasher::flash();  // Ambil data flash
 <!-- /.card -->
 </div>
 <!-- /.container -->
+
+<script>
+    // Menangani perubahan pilihan tipe saldo
+    document.getElementById('tipe_buku').addEventListener('change', function() {
+        var tipeSaldo = this.value;
+        var keteranganField = document.getElementById('keterangan');
+
+        if (tipeSaldo === 'Kas') {
+            keteranganField.value = 'Sisa Kas Tunai bulan lalu'; // Isi otomatis jika Kas dipilih
+        } else if (tipeSaldo === 'Bank') {
+            keteranganField.value = 'Sisa Uang di Bank bulan lalu'; // Isi otomatis jika Bank dipilih
+        } else {
+            keteranganField.value = ''; // Kosongkan jika tidak ada pilihan
+        }
+    });
+</script>

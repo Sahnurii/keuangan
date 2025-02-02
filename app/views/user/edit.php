@@ -4,8 +4,8 @@ $flashData = Flasher::flash();  // Ambil data flash
 <div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
     <div class="card card-info">
-        <div class="card-header bg-gradient-purple">
-            <h3 class="card-title text-center text-white">Edit User</h3>
+        <div class="card-header bg-gradient-purple bg-primary">
+            <h3 class="card-title text-center text-white ">Edit User</h3>
         </div>
         <div class="card-body">
             <form method="POST" action="<?= BASEURL; ?>/user/update" id="editUserForm">                
@@ -41,5 +41,6 @@ $flashData = Flasher::flash();  // Ambil data flash
             </form>
         </div>
     </div>
+</div>
 </div>
 

@@ -1,15 +1,10 @@
-<?php
-$flashData = Flasher::flash();  // Ambil data flash
-?>
-<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Data Buku Kas</h3>
+            <h3 class="card-title text-center text-white">LAPORAN PENGELUARAN & PEMASUKAN</h3>
         </div>
         <div class="card-body">
-            <!-- Form Filter -->
-            <form method="GET" action="<?= BASEURL; ?>/buku_kas/index" class="mb-3">
+            <form method="GET" action="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran" class="mb-3">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="tahun">Pilih Tahun</label>
@@ -41,69 +36,35 @@ $flashData = Flasher::flash();  // Ambil data flash
                         </select>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary" id="tes">Filter</button>
-                        <a href="<?= BASEURL; ?>/laporan/cetak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
-                        class="btn btn-success ml-2" target="_blank">CETAK</a>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                            class="btn btn-success ml-2" target="_blank">CETAK</a>
                     </div>
                 </div>
             </form>
-
-
-
-            <!-- End Form Filter -->
             <div class="table-responsive">
-                <div class="mb-3">
-                    <a href="<?= BASEURL; ?>/laporan" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
-                    
-                    <a href="<?= BASEURL; ?>/transaksi" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
-                </div>
-                <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
+                <table class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
-                        <tr>
-                            <th rowspan="2" width="1%">NO</th>
-                            <th rowspan="2" class="text-center">TANGGAL</th>
-                            <th rowspan="2" class="text-center">NO BUKTI</th>
-                            <th rowspan="2" class="text-center">URAIAN</th>
-                            <th rowspan="2" class="text-center">KATEGORI</th>
-                            <th colspan="3" class="text-center">JENIS</th>
-                            <th rowspan="2" width="10%" class="text-center">OPSI</th>
-                        </tr>
                         <tr>
                             <th class="text-center">PEMASUKAN</th>
                             <th class="text-center">PENGELUARAN</th>
-                            <th class="text-center">SALDO</th>
                         </tr>
                     </thead>
                     <tbody id="transaksi-body">
-                        <?php $i = 1; ?>
-                        <?php foreach ($data['transaksi'] as $transaksi) : ?>
-                            <tr>
-                                <td class="text-center align-content-center"><?= $i++; ?></td>
-                                <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
-                                <td class="text-wrap"><?= $transaksi['keterangan']; ?></td>
-                                <td class="align-content-center" style="max-width: 50px;"><?= $transaksi['kategori']; ?></td>
-                                <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td class="saldo-cell text-right" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
-                                <td class="text-center align-content-center">
-                                    <a href="<?= BASEURL; ?>/buku_kas/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                    <a href="<?= BASEURL; ?>/transaksi/hapusKas/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">
-                                        <i class="fa fa-trash"></i> Hapus
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <tr>
+                            <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
+                            <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <div class="card-footer">
+        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
+    </div>
 </div>
 </div>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -13,6 +13,51 @@ function tglIndonesia($str)
     return $str;
 }
 
+function tglLengkapIndonesia($str)
+{
+    // Array konversi nama hari
+    $hari = array(
+        'Sunday' => 'Minggu',
+        'Monday' => 'Senin',
+        'Tuesday' => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday' => 'Kamis',
+        'Friday' => 'Jumat',
+        'Saturday' => 'Sabtu'
+    );
+
+    // Array konversi nama bulan
+    $bulan = array(
+        'January' => 'Januari',
+        'February' => 'Februari',
+        'March' => 'Maret',
+        'April' => 'April',
+        'May' => 'Mei',
+        'June' => 'Juni',
+        'July' => 'Juli',
+        'August' => 'Agustus',
+        'September' => 'September',
+        'October' => 'Oktober',
+        'November' => 'November',
+        'December' => 'Desember'
+    );
+
+    // Konversi nama hari dan bulan
+    $namaHari = date('l', strtotime($str)); // Nama hari bahasa Inggris
+    $namaBulan = date('F', strtotime($str)); // Nama bulan bahasa Inggris
+
+    // Ganti nama hari dan bulan dengan bahasa Indonesia
+    $hariIndonesia = $hari[$namaHari] ?? $namaHari;
+    $bulanIndonesia = $bulan[$namaBulan] ?? $namaBulan;
+
+    // Format ulang tanggal
+    return str_replace(
+        array($namaHari, $namaBulan),
+        array($hariIndonesia, $bulanIndonesia),
+        date('l, d F Y', strtotime($str))
+    );
+}
+
 
 function bulanIndonesia($bulan)
 {

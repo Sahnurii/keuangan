@@ -1,48 +1,48 @@
 <div class="container-fluid">
-    <div class="card card-info">
-        <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">LAPORAN PENGELUARAN & PEMASUKAN</h3>
-        </div>
-        <div class="card-body">
-            <form method="GET" action="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran" class="mb-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="tahun">Pilih Tahun</label>
-                        <select id="tahun" name="tahun" class="form-control">
-                            <?php
-                            $selectedTahun = $_GET['tahun'] ?? $data['tahun'];
-                            foreach ($data['bulan_tahun'] as $tahun => $bulanList) :
-                                $selected = $selectedTahun == $tahun ? 'selected' : '';
-                                echo "<option value='$tahun' $selected>$tahun</option>";
-                            endforeach;
-                            ?>
-                        </select>
+    <div class="table-responsive">
+        <div class="card card-info">
+            <div class="card-header bg-primary">
+                <h3 class="card-title text-center text-white">LAPORAN PEMASUKAN DAN PENGELUARAN</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran" class="mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="tahun">Pilih Tahun</label>
+                            <select id="tahun" name="tahun" class="form-control">
+                                <?php
+                                $selectedTahun = $_GET['tahun'] ?? $data['tahun'];
+                                foreach ($data['bulan_tahun'] as $tahun => $bulanList) :
+                                    $selected = $selectedTahun == $tahun ? 'selected' : '';
+                                    echo "<option value='$tahun' $selected>$tahun</option>";
+                                endforeach;
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="bulan">Pilih Bulan</label>
+                            <select id="bulan" name="bulan" class="form-control">
+                                <?php
+                                $selectedBulan = $_GET['bulan'] ?? $data['bulan'];
+                                foreach ($data['bulan_tahun'] as $tahun => $bulanList) :
+                                    if ($tahun == $selectedTahun) { // Hanya tampilkan bulan untuk tahun yang dipilih
+                                        foreach ($bulanList as $bulan) :
+                                            $bulanStr = str_pad($bulan, 2, '0', STR_PAD_LEFT); // Format dua digit
+                                            $selected = $selectedBulan == $bulanStr ? 'selected' : '';
+                                            echo "<option value='$bulanStr' $selected>" . ucfirst(strftime('%B', strtotime("$tahun-$bulan-01"))) . "</option>";
+                                        endforeach;
+                                    }
+                                endforeach;
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <a href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                                class="btn btn-success ml-2" target="_blank">CETAK</a>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label for="bulan">Pilih Bulan</label>
-                        <select id="bulan" name="bulan" class="form-control">
-                            <?php
-                            $selectedBulan = $_GET['bulan'] ?? $data['bulan'];
-                            foreach ($data['bulan_tahun'] as $tahun => $bulanList) :
-                                if ($tahun == $selectedTahun) { // Hanya tampilkan bulan untuk tahun yang dipilih
-                                    foreach ($bulanList as $bulan) :
-                                        $bulanStr = str_pad($bulan, 2, '0', STR_PAD_LEFT); // Format dua digit
-                                        $selected = $selectedBulan == $bulanStr ? 'selected' : '';
-                                        echo "<option value='$bulanStr' $selected>" . ucfirst(strftime('%B', strtotime("$tahun-$bulan-01"))) . "</option>";
-                                    endforeach;
-                                }
-                            endforeach;
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
-                            class="btn btn-success ml-2" target="_blank">CETAK</a>
-                    </div>
-                </div>
-            </form>
-            <div class="table-responsive">
+                </form>
                 <table class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
                         <tr>
@@ -50,18 +50,61 @@
                             <th class="text-center">PENGELUARAN</th>
                         </tr>
                     </thead>
-                    <tbody id="transaksi-body">
+                    <tbody>
                         <tr>
-                            <td class="text-center"><?= uang_indo($data['total_pemasukan']); ?></td>
-                            <td class="text-center"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                            <!-- Kolom Rincian Pemasukan -->
+                            <td>
+                                <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>Kategori</th>
+                                            <th>Nominal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($data['rincian_pemasukan'] as $kategori => $nominal) : ?>
+                                            <tr>
+                                                <td class="text-left"><?= $kategori; ?></td>
+                                                <td class="text-right"><?= uang_indo($nominal); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        <tr>
+                                            <td class="text-center font-weight-bold">Total Pemasukan</td>
+                                            <td class="text-right font-weight-bold"><?= uang_indo($data['total_pemasukan']); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+
+                            <!-- Kolom Rincian Pengeluaran -->
+                            <td>
+                                <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>Kategori</th>
+                                            <th>Nominal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($data['rincian_pengeluaran'] as $kategori => $nominal) : ?>
+                                            <tr>
+                                                <td class="text-left"><?= $kategori; ?></td>
+                                                <td class="text-right"><?= uang_indo($nominal); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        <tr>
+                                            <td class="text-center font-weight-bold">Total Pengeluaran</td>
+                                            <td class="text-right font-weight-bold"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+
             </div>
         </div>
-    </div>
-    <div class="card-footer">
-        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
     </div>
 </div>
 </div>
@@ -127,4 +170,4 @@
             updateBulan(tahunSelect.value);
         });
     });
-</script>
+</script> 

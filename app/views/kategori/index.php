@@ -13,7 +13,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                 <div class="mb-3">
                     <a href="<?= BASEURL; ?>/kategori/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> Tambah Kategori</a>
                 </div>
-                <table id="example" class="table table-bordered table-hover">
+                <table id="dataTable" class="table table-bordered table-hover">
                     <thead>
                         <tr class="text-center">
                             <th>NO</th>
