@@ -2,7 +2,7 @@
  <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Keuangan 2024</span>
+                        <span>Copyright &copy; Keuangan Politeknik Batulicin</span>
                     </div>
                 </div>
             </footer>

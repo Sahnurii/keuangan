@@ -22,6 +22,12 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label for="tanggal" class="col-sm-2 col-form-label">TANGGAL</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukkan Tanggal" value="<?= $data['saldo']['tanggal']; ?>" required>
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="saldo_awal" class="col-sm-2 col-form-label">SALDO AWAL</label>
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="saldo_awal" name="saldo_awal" step="0.01" placeholder="Masukkan Saldo" value="<?= $data['saldo']['saldo_awal']; ?>" required>
@@ -31,12 +37,6 @@
                     <label for="keterangan" class="col-sm-2 col-form-label">KETERANGAN</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Keterangan" value="<?= $data['saldo']['keterangan']; ?>" required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="tanggal" class="col-sm-2 col-form-label">TANGGAL</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukkan Tanggal" value="<?= $data['saldo']['tanggal']; ?>" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Edit</button>

@@ -169,13 +169,13 @@
                     <ul class="navbar-nav ml-auto">
 
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <!-- <div class="d-flex justify-content-center align-items-center" >
+                        <div class="d-flex justify-content-center align-items-center" >
 
-                            <span class="mr-2"><i class="nav-icon fas fa-calendar-alt"></i></span>
+                            <!-- <span class="mr-2"><i class="nav-icon fas fa-calendar-alt"></i></span>
                             <?php $tgl = date('Y-m-d'); ?>
                            <span><b><?php echo tglIndonesia(date('d F Y', strtotime($tgl))) ?> |</b></span> 
-                            <b><span id="jam"></span></b>
-                        </div> -->
+                            <b><span id="jam"></span></b> -->
+                        </div>
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -208,12 +208,12 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Halo, <span style="font-weight: bold;"><?= $_SESSION['nama'] ?> </span></span>
                                 <img class="img-profile rounded-circle"
-                                    src="<?= BASEURL; ?>/img/undraw_profile.svg">
+                                    src="<?= BASEURL; ?>/img/undraw_profile_1.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="<?= BASEURL; ?>/user/edit/<?=  $_SESSION['user_id']; ?>">
+                                <a class="dropdown-item" href="<?= BASEURL; ?>/user/edit/<?= $_SESSION['user_id']; ?>">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>

@@ -15,18 +15,18 @@ $saldoAkhir = [
 $tgl = date('Y-m-d');
 
 // Membuat instance FPDF
-$pdf = new FPDF('L', 'mm', 'A4');
+$pdf = new FPDF('P', 'mm', 'A4');
 $pdf->SetMargins(15, 30, 15);  // Set margin kiri, atas, kanan
 $pdf->SetAutoPageBreak(true, 15);  // Set margin bawah dan aktifkan auto page break
 
 $pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 35);
+$pdf->SetFont('Arial', 'B', 25);
 
 // Header
-$pdf->Image('img/Logo.png', 15, 30, 15); // Logo
+$pdf->Image('img/Logo.png', 15, 30, 12); // Logo
 $pdf->Cell(0, 8, 'POLITEKNIK BATULICIN', 0, 1, 'C');
-$pdf->Ln(4);
-$pdf->SetFont('Arial', '', 10);
+$pdf->Ln(2);
+$pdf->SetFont('Arial', '', 8);
 $pdf->Cell(0, 4, 'Izin Pendirian dari Menteri Pendidikan dan Kebudayaan Republik Indonesia', 0, 1, 'C');
 $pdf->Cell(0, 4, 'Nomor : 568/E/O/2014, Tanggal 17 Oktober 2014', 0, 1, 'C');
 $pdf->Cell(0, 4, 'Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin, Kec. Batulicin, Kab. Tanah Bumbu', 0, 1, 'C');
@@ -99,40 +99,39 @@ $pdf->Ln(15); // Jarak atas sebelum tanda tangan
 $pdf->SetFont('Arial', '', 10);
 
 // Baris lokasi dan tanggal
-$pdf->Cell(450, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'C');
-$pdf->Ln(10); // Jarak setelah tanggal
+$pdf->Cell(300, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'C');
+$pdf->Ln(7); // Jarak setelah tanggal
 
 // Kolom tanda tangan
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, 'Mengetahui,', 0, 0, 'C'); // Posisi kiri
-$pdf->Cell(90, 8, '', 0, 0, 'C');           // Posisi tengah (kosong)
-$pdf->Cell(90, 8, '', 0, 1, 'C');           // Posisi kanan (kosong)
+$pdf->Cell(60, 8, 'Mengetahui,', 0, 0, 'C'); // Posisi kiri
+$pdf->Cell(60, 8, '', 0, 0, 'C');           // Posisi tengah (kosong)
+$pdf->Cell(60, 8, '', 0, 1, 'C');           // Posisi kanan (kosong)
 
 // Baris kedua posisi jabatan
-$pdf->Cell(90, 8, 'Direktur,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Kabag. Program dan Keuangan,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Bendahara Umum,', 0, 1, 'C');
+$pdf->Cell(60, 8, 'Direktur,', 0, 0, 'C');
+$pdf->Cell(60, 8, 'Kabag. Program dan Keuangan,', 0, 0, 'C');
+$pdf->Cell(60, 8, 'Bendahara Umum,', 0, 1, 'C');
 
 // Tambahkan jarak untuk tanda tangan
 $pdf->Ln(20);
 
 // Baris tanda tangan kosong
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Direktur (kosong untuk tanda tangan)
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '', 0, 1, 'C'); // Bendahara Umum
+$pdf->Cell(60, 8, '', 0, 0, 'C'); // Direktur (kosong untuk tanda tangan)
+$pdf->Cell(60, 8, '', 0, 0, 'C'); // Kabag Program dan Keuangan
+$pdf->Cell(60, 8, '', 0, 1, 'C'); // Bendahara Umum
 
 // Baris nama pejabat
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(90, 8, 'Drs. H. M. Idjra\'i, M.Pd.', 0, 0, 'C'); // Direktur
-$pdf->Cell(90, 8, 'Nurul Hatmah, S.Pd.', 0, 0, 'C');       // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, 'Sugeng Ludiyono, S.E., M.M.', 0, 1, 'C'); // Bendahara Umum
+$pdf->Cell(60, 8, 'Drs. H. M. Idjra\'i, M.Pd.', 0, 0, 'C'); // Direktur
+$pdf->Cell(60, 8, 'Nurul Hatmah, S.Pd.', 0, 0, 'C');       // Kabag Program dan Keuangan
+$pdf->Cell(60, 8, 'Sugeng Ludiyono, S.E., M.M.', 0, 1, 'C'); // Bendahara Umum
 
 // Baris NIP pejabat
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, '19590904 201510 1 003', 0, 0, 'C'); // NIP Direktur
-$pdf->Cell(90, 8, '19911027 202301 2 050', 0, 0, 'C'); // NIP Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '19930914 201910 1 028', 0, 1, 'C'); // NIP Bendahara Umum
+$pdf->Cell(60, 8, '19590904 201510 1 003', 0, 0, 'C'); // NIP Direktur
+$pdf->Cell(60, 8, '19911027 202301 2 050', 0, 0, 'C'); // NIP Kabag Program dan Keuangan
+$pdf->Cell(60, 8, '19930914 201910 1 028', 0, 1, 'C'); // NIP Bendahara Umum
 
 // Output PDF
 $pdf->Output('I', 'Laporan_Saldo.pdf');
-?>

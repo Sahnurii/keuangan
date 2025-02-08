@@ -1,167 +1,178 @@
 <?php
 
-require_once 'lib/fpdf.php'; // Panggil library FPDF
+use Mpdf\Mpdf;
 
-// Data dari controller
+require_once $_SERVER['DOCUMENT_ROOT'] . '/keuangan/public/vendor/autoload.php'; // Panggil library MPDF
+
 setlocale(LC_TIME, 'id_ID.utf8');
-$selectedTahun = $_GET['tahun'] ?? date('Y');
-$selectedBulan = $_GET['bulan'] ?? date('m');
-$bulanNama = bulanIndonesia((int)$selectedBulan);
-$tgl = date('Y-m-d');
 
-// Membuat instance FPDF
-$pdf = new FPDF('L', 'mm', 'A4');
-$pdf->SetMargins(5, 30, 10);  // Set margin kiri, atas, kanan
-$pdf->SetAutoPageBreak(true, 10);  // Set margin bawah dan aktifkan auto page break
+// Ambil data yang sudah disiapkan oleh Controller
+$selectedTahun = $_GET['tahun'] ?? date('Y'); // Gunakan tahun sekarang jika tidak ada yang dipilih
+$selectedBulan = $_GET['bulan'] ?? date('m'); // Gunakan bulan sekarang jika tidak ada yang dipilih
 
-$pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 35);
+$bulanNama = bulanIndonesia((int)$selectedBulan); // Format bulan untuk menampilkan nama bulan
+$tgl = date('Y-m-d'); // Tanggal hari ini
 
-// Header
-$pdf->Image('img/Logo.png', 15, 30, 15); // Logo
-$pdf->Cell(0, 8, 'POLITEKNIK BATULICIN', 0, 1, 'C');
-$pdf->Ln(4);
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(0, 4, 'Izin Pendirian dari Menteri Pendidikan dan Kebudayaan Republik Indonesia', 0, 1, 'C');
-$pdf->Cell(0, 4, 'Nomor : 568/E/O/2014, Tanggal 17 Oktober 2014', 0, 1, 'C');
-$pdf->Cell(0, 4, 'Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin, Kec. Batulicin, Kab. Tanah Bumbu', 0, 1, 'C');
-$pdf->Cell(0, 4, 'Prov. Kalimantan Selatan Kode Pos: 72273, E-mail: Politeknikbatulicin@gmail.com, Website: www.politeknikbatulicin.ac.id', 0, 1, 'C');
-$pdf->Ln(5); // Tambahkan jarak sebelumnya
-$pdf->SetLineWidth(1.5); // Atur ketebalan garis menjadi 0.5 (default adalah 0.2)
-$pdf->Cell(0, 0, '', 'T', 1, 'C');
-$pdf->SetLineWidth(0.2); // Kembalikan ke ketebalan default jika diperlukan untuk elemen lain
-$pdf->Ln(5); // Tambahkan jarak setelah garis
+// Membuat instance MPDF
+$mpdf = new \Mpdf\Mpdf([
+    'orientation' => 'L',   // Landscape orientation
+    'format' => 'A4'
+]);
+$mpdf->SetMargins(5, 30, 30);
 
-// Judul laporan
-$pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(0, 8, 'Laporan Buku Pembantu Bank', 0, 1, 'C');
-$pdf->Cell(0, 8, 'Bulan : ' . $bulanNama . ' ' . $selectedTahun, 0, 1, 'C');
-$pdf->Ln(5);
+$imageUrl = 'http://localhost/keuangan/public/img/Logo.png';
 
-// Informasi tambahan
-$pdf->SetFont('Arial', '', 12);
-$pdf->Cell(50, 7, 'Nama Perguruan Tinggi', 0, 0);
-$pdf->Cell(5, 7, ':', 0, 0);
-$pdf->Cell(0, 7, 'Politeknik Batulicin', 0, 1);
+$html = '<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 10pt; }
+        .header { text-align: center; font-size: 14pt; font-weight: bold; }
+        .sub-header { text-align: center; font-size: 10pt; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .table th, .table td { border: 1px solid black; padding: 5px; text-align: center; }
+        .footer { text-align: center; font-size: 10pt; margin-top: 30px; }
+        .signature-table { page-break-inside: avoid; }
+        .spacer { margin-top: 20px; }
+        .saldo-akhir {
+            background-color:rgb(187, 189, 188); /* Warna hijau muda */
+            font-weight: bold;
+        }
 
-$pdf->Cell(50, 7, 'Desa/Kecamatan', 0, 0);
-$pdf->Cell(5, 7, ':', 0, 0);
-$pdf->Cell(0, 7, 'Batulicin', 0, 1);
+    </style>
+</head>
+<body>
+<table width="100%">
+    <tr>
+        <td width="10%" style="text-align: left;">
+            <img src="' . $imageUrl . '" width="50">
+        </td>
+        <td width="90%" style="text-align: center; padding-left: -100px;">
+            <div class="header" style="font-size: 33pt;">POLITEKNIK BATULICIN</div>
+            <div class="sub-header">Izin Pendirian dari Menteri Pendidikan dan Kebudayaan Republik Indonesia</div>
+            <div class="sub-header">Nomor : 568/E/O/2014, Tanggal 17 Oktober 2014</div>
+            <div class="sub-header">Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin, Kec. Batulicin, Kab. Tanah Bumbu</div>
+            <div class="sub-header">Prov. Kalimantan Selatan Kode Pos: 72273, E-mail: Politeknikbatulicin@gmail.com, Website: www.politeknikbatulicin.ac.id</div>
+        </td>
+    </tr>
+</table>
+<hr style="height: 5px; background-color: black; border: none;">
 
-$pdf->Cell(50, 7, 'Kabupaten', 0, 0);
-$pdf->Cell(5, 7, ':', 0, 0);
-$pdf->Cell(0, 7, 'Tanah Bumbu', 0, 1);
+<div class="spacer"></div>    
+<div class="header" style="font-size: 15pt;">Laporan Buku Pembantu Bank</div>
+    <div class="sub-header" style="font-weight: bold; font-size: 15pt;">Bulan: ' . $bulanNama . '</div>
+    <div class="spacer"></div>';
 
-$pdf->Cell(50, 7, 'Provinsi', 0, 0);
-$pdf->Cell(5, 7, ':', 0, 0);
-$pdf->Cell(0, 7, 'Kalimantan Selatan', 0, 1);
-$pdf->Ln(10);
+    $html .= '<table width="100%">
+            <tr>
+                <td width="10%">Nama Perguruan Tinggi</td>
+                <td width="5%">:</td>
+                <td width="75%">Politeknik Batulicin</td>
+            </tr>
+            <tr>
+                <td>Desa/Kecamatan</td>
+                <td>:</td>
+                <td>Batulicin</td>
+            </tr>
+            <tr>
+                <td>Kabupaten</td>
+                <td>:</td>
+                <td>Tanah Bumbu</td>
+            </tr>
+            <tr>
+                <td>Provinsi</td>
+                <td>:</td>
+                <td>Kalimantan Selatan</td>
+            </tr>
+        </table>
+        <br><br>';
+        
+    $html .= '<div class="spacer"></div>
+    <table class="table">
+        <thead>
+            <tr class="saldo-akhir">
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>No Bukti</th>
+                <th>Uraian</th>
+                <th>Pemasukan</th>
+                <th>Pengeluaran</th>
+                <th>Saldo</th>
+            </tr>
+        </thead>
+        <tbody>';
 
-// Header tabel
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->SetFillColor(200, 200, 200);
-$pdf->Cell(10, 10, 'No', 1, 0, 'C', true);
-$pdf->Cell(30, 10, 'Tanggal', 1, 0, 'C', true);
-$pdf->Cell(30, 10, 'No Bukti', 1, 0, 'C', true);
-$pdf->Cell(115, 10, 'Uraian', 1, 0, 'C', true);
-$pdf->Cell(30, 10, 'Pemasukan', 1, 0, 'C', true);
-$pdf->Cell(30, 10, 'Pengeluaran', 1, 0, 'C', true);
-$pdf->Cell(40, 10, 'Saldo', 1, 1, 'C', true);
-
-// Data transaksi
-$pdf->SetFont('Arial', '', 10);
 $saldo = $data['saldo_awal'];
 $i = 1;
-
-// Tambahkan Saldo Awal ke dalam tabel
-$pdf->Cell(10, 8, $i++, 1, 0, 'C'); // Nomor
-$pdf->Cell(30, 8, !empty($data['saldo_awal_tanggal']) ? date('d M Y', strtotime($data['saldo_awal_tanggal'])) : '-', 1, 0, 'C'); // Tanggal dari database
-$pdf->Cell(30, 8, '-', 1, 0, 'C'); // No Bukti kosong
-$pdf->Cell(115, 8, $data['saldo_awal_keterangan'], 1, 0, 'L'); // Uraian saldo awal
-$pdf->Cell(30, 8, uang_indo($data['saldo_awal']), 1, 0, 'R'); // Pemasukan saldo awal
-$pdf->Cell(30, 8, '-', 1, 0, 'R'); // Pengeluaran kosong
-$pdf->Cell(40, 8, uang_indo($saldo), 1, 1, 'R'); // Saldo awal
-
-
-// Iterasi Data Transaksi
+$html .= '<tr>
+            <td>' . $i++ . '</td>
+            <td>' . (!empty($data['saldo_awal_tanggal']) ? date('d M Y', strtotime($data['saldo_awal_tanggal'])) : '-') . '</td>
+            <td>-</td>
+            <td style="text-align: left;">' . $data['saldo_awal_keterangan'] . '</td>
+            <td>' . uang_indo($data['saldo_awal']) . '</td>
+            <td>-</td>
+            <td>' . uang_indo($saldo) . '</td>
+        </tr>';
 foreach ($data['transaksi'] as $transaksi) {
     $pemasukan = $transaksi['tipe_kategori'] === 'Pemasukan' ? $transaksi['nominal_transaksi'] : 0;
     $pengeluaran = $transaksi['tipe_kategori'] === 'Pengeluaran' ? $transaksi['nominal_transaksi'] : 0;
     $saldo += $pemasukan - $pengeluaran;
 
-    // Tentukan tinggi maksimum berdasarkan kolom "Uraian"
-    $uraianHeight = $pdf->GetStringWidth($transaksi['keterangan']) > 115 
-                    ? ceil($pdf->GetStringWidth($transaksi['keterangan']) / 115) * 8 
-                    : 8;
-
-    // Tentukan tinggi maksimum dari semua kolom (jika ada kolom lain yang lebih tinggi)
-    $rowHeight = max(8, $uraianHeight);
-
-    // Output semua kolom
-    $pdf->Cell(10, $rowHeight, $i++, 1, 0, 'C');
-    $pdf->Cell(30, $rowHeight, date('d M Y', strtotime($transaksi['tanggal'])), 1, 0, 'C');
-    $pdf->Cell(30, $rowHeight, $transaksi['no_bukti'], 1, 0, 'C');
-
-    // Output kolom "Uraian" dengan MultiCell
-    $x = $pdf->GetX();
-    $y = $pdf->GetY();
-    $pdf->MultiCell(115, 8, $transaksi['keterangan'], 1, 'L');
-    $pdf->SetXY($x + 115, $y);
-
-    $pdf->Cell(30, $rowHeight, $pemasukan > 0 ? uang_indo($pemasukan) : '-', 1, 0, 'R');
-    $pdf->Cell(30, $rowHeight, $pengeluaran > 0 ? uang_indo($pengeluaran) : '-', 1, 0, 'R');
-    $pdf->Cell(40, $rowHeight, uang_indo($saldo), 1, 1, 'R');
+    $html .= '<tr>
+                                <td>' . $i++ . '</td>
+                                <td>' . date('d M Y', strtotime($transaksi['tanggal'])) . '</td>
+                                <td >' . $transaksi['no_bukti'] . '</td>
+                                <td style="text-align: left;">' . $transaksi['keterangan'] . '</td>
+                                <td>' . ($pemasukan > 0 ? uang_indo($pemasukan) : '-') . '</td>
+                                <td>' . ($pengeluaran > 0 ? uang_indo($pengeluaran) : '-') . '</td>
+                                <td>' . uang_indo($saldo) . '</td>
+                            </tr>';
 }
 
+$html .= '   <tr class="saldo-akhir">
+                                <td colspan="6" style="text-align: right; font-weight: bold;">Saldo Akhir Bulan</td>
+                                <td style="font-weight: bold;">' . uang_indo($saldo) . '</td>
+                            </tr>
+                        </tbody>
+                    </table>';
 
-// Saldo akhir bulan
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(245, 8, 'Saldo Akhir Bulan', 1, 0, 'R', true);
-$pdf->Cell(40, 8, uang_indo($saldo), 1, 1, 'R', true);
+// Tambahkan pemisah halaman jika bagian berikutnya tidak muat
+$html .= '<div style="page-break-before: always;"></div>';
 
-$tandaTanganSpace = 100; // Estimasi tinggi tanda tangan
-if ($pdf->GetY() + $tandaTanganSpace > $pdf->GetPageHeight() - 10) {
-    // Jika tidak cukup ruang, buat halaman baru
-    $pdf->AddPage();
-}
-// Tanda tangan
-$pdf->Ln(15); // Jarak atas sebelum tanda tangan
-$pdf->SetFont('Arial', '', 10);
+$html .= '<br><br>'; // Tambahkan jarak sebelum bagian baru
+$html .= "<p>Pada hari ini, " . tglLengkapIndonesia(date('d F Y')) . ", Buku Pembantu Bank Ditutup dengan Saldo Akhir Sebesar " . uang_indo($saldo) . "</p><br>";
 
-// Baris lokasi dan tanggal
-$pdf->Cell(450, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'C');
-$pdf->Ln(10); // Jarak setelah tanggal
+$html .= '<br><br><table class="signature-table" width="100%" border="0" cellpadding="5" align="center">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="center">Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))) . '</td>
+                </tr>
+                <tr>
+                    <td align="center">Mengetahui,</td>
+                    <td></td>
+                    <td align="center"></td>
+                </tr>
+                <tr>
+                    <td align="center">Direktur,</td>
+                    <td align="center">Kabag. Program dan Keuangan,</td>
+                    <td align="center">Bendahara Umum,</td>
+                </tr>
+                <tr><td colspan="3" height="100"></td></tr> <!-- Jarak untuk tanda tangan -->
+                <tr>
+                    <td align="center"><strong>Drs. H. M. Idjra\'i, M.Pd.</strong></td>
+                    <td align="center"><strong>Nurul Hatmah, S.Pd.</strong></td>
+                    <td align="center"><strong>Sugeng Ludiyono, S.E., M.M.</strong></td>
+                </tr>
+                <tr>
+                    <td align="center">19590904 201510 1 003</td>
+                    <td align="center">19911027 202301 2 050</td>
+                    <td align="center">19930914 201910 1 028</td>
+                </tr>
+            </table>';
 
-// Kolom tanda tangan
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, 'Mengetahui,', 0, 0, 'C'); // Posisi kiri
-$pdf->Cell(90, 8, '', 0, 0, 'C');           // Posisi tengah (kosong)
-$pdf->Cell(90, 8, '', 0, 1, 'C');           // Posisi kanan (kosong)
+$html .= '</body>
+            </html>';
 
-// Baris kedua posisi jabatan
-$pdf->Cell(90, 8, 'Direktur,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Kabag. Program dan Keuangan,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Bendahara Umum,', 0, 1, 'C');
 
-// Tambahkan jarak untuk tanda tangan
-$pdf->Ln(20);
-
-// Baris tanda tangan kosong
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Direktur (kosong untuk tanda tangan)
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '', 0, 1, 'C'); // Bendahara Umum
-
-// Baris nama pejabat
-$pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(90, 8, 'Drs. H. M. Idjra\'i, M.Pd.', 0, 0, 'C'); // Direktur
-$pdf->Cell(90, 8, 'Nurul Hatmah, S.Pd.', 0, 0, 'C');       // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, 'Sugeng Ludiyono, S.E., M.M.', 0, 1, 'C'); // Bendahara Umum
-
-// Baris NIP pejabat
-$pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, '19590904 201510 1 003', 0, 0, 'C'); // NIP Direktur
-$pdf->Cell(90, 8, '19911027 202301 2 050', 0, 0, 'C'); // NIP Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '19930914 201910 1 028', 0, 1, 'C'); // NIP Bendahara Umum
-
-// Output PDF
-$pdf->Output('I', 'Laporan_Buku_Bank.pdf');
+$mpdf->WriteHTML($html);
+$mpdf->Output('Laporan_Buku_Pembantu_Bank.pdf', 'I');

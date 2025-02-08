@@ -83,3 +83,36 @@ function bulanIndonesia($bulan)
     // Jika bulan tidak valid, kembalikan string kosong
     return '';
 }
+
+function tglBiasaIndonesia($str)
+{
+
+    // Array konversi nama bulan
+    $bulan = array(
+        'January' => 'Januari',
+        'February' => 'Februari',
+        'March' => 'Maret',
+        'April' => 'April',
+        'May' => 'Mei',
+        'June' => 'Juni',
+        'July' => 'Juli',
+        'August' => 'Agustus',
+        'September' => 'September',
+        'October' => 'Oktober',
+        'November' => 'November',
+        'December' => 'Desember'
+    );
+
+    // Konversi nama hari dan bulan
+    $namaBulan = date('F', strtotime($str)); // Nama bulan bahasa Inggris
+
+    // Ganti nama hari dan bulan dengan bahasa Indonesia
+    $bulanIndonesia = $bulan[$namaBulan] ?? $namaBulan;
+
+    // Format ulang tanggal
+    return str_replace(
+        array($namaBulan),
+        array($bulanIndonesia),
+        date('d F Y', strtotime($str))
+    );
+}

@@ -6,14 +6,14 @@ $flashData = Flasher::flash();  // Ambil data flash
     
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Saldo</h3>
+            <h3 class="card-title text-center text-white">Data Saldo</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <div class="mb-3">
                     <a href="<?= BASEURL; ?>/saldo/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> Tambah Saldo</a>
                 </div>
-                <table id="example" class="table table-bordered table-hover">
+                <table id="dataTable" class="table table-bordered table-hover">
                     <thead>
                         <tr class="text-center">
                             <th>NO</th>
@@ -32,7 +32,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                                 <td><?= $saldo['tipe_buku']; ?></td>
                                 <td><?= uang_indo($saldo['saldo_awal']); ?></td>
                                 <td class="text-left"><?= $saldo['keterangan']; ?></td>
-                                <td><?= $saldo['tanggal']; ?></td>
+                                <td><?= tglBiasaIndonesia($saldo['tanggal']); ?></td>
                                 <td>
                                     <a href="<?= BASEURL; ?>/saldo/edit/<?= $saldo['id']; ?>" class="btn btn-warning btn-sm">
                                         <i class="fa fa-edit"></i> Edit

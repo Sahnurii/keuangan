@@ -36,7 +36,7 @@
       <form action="<?= BASEURL; ?>/auth/process" method="POST" class="user">
         <div class="field">
           <span class="fa fa-user"></span>
-          <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username">
+          <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username/Email">
         </div>
         <div class="field space">
           <span class="fa fa-lock"></span>

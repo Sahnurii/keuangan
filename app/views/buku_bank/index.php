@@ -5,7 +5,7 @@ $flashData = Flasher::flash();  // Ambil data flash
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Data Buku Bank</h3>
+            <h3 class="card-title text-center text-white">Data Buku Pembantu Bank</h3>
         </div>
         <div class="card-body">
             <!-- Form Filter -->
@@ -52,9 +52,7 @@ $flashData = Flasher::flash();  // Ambil data flash
 
             <!-- End Form Filter -->
             <div class="table-responsive">
-                <div class="mb-3">
-                    <a href="<?= BASEURL; ?>/laporan/cetakBank" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
-                    
+                <div class="mb-3">                    
                     <a href="<?= BASEURL; ?>/transaksi" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
                 </div>
 

@@ -45,11 +45,6 @@
                 </div>
             </form>
             <div class="table-responsive">
-                <div class="mb-3">
-                    <a href="<?= BASEURL; ?>/laporan/cetakKasUmum/" class="btn btn-primary"><i class="fa fa-edit"></i> CETAK</a>
-                    
-                </div>
-
                 <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
                         <tr>

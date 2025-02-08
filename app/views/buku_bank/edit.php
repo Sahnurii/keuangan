@@ -3,7 +3,7 @@
     <!-- Horizontal Form -->
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Edit Buku Bank</h3>
+            <h3 class="card-title text-center text-white">Edit Buku Pembantu Bank</h3>
         </div>
         <!-- /.card-header -->
 
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="keterangan" class="col-sm-2 col-form-label">KETERANGAN</label>
+                    <label for="keterangan" class="col-sm-2 col-form-label">URAIAN</label>
                     <div class="col-sm-10">
                         <input type="input" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Keterangan" value="<?= $data['Bank']['keterangan']; ?>" required>
                     </div>
@@ -70,10 +70,10 @@
                 <div class="form-group row">
                     <label for="nominal_transaksi" class="col-sm-2 col-form-label">NOMINAL</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" value="<?= $data['Bank']['nominal_transaksi']; ?>" placeholder="Masukkan Nominal" required>
+                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" value="<?= $data['Bank']['nominal_transaksi']; ?>" placeholder="Masukkan Nominal" step="0.01" required>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Simpan</button>
+                <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Edit</button>
             </div>
         </form>
     </div>

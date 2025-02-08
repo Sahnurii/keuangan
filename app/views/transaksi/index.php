@@ -7,7 +7,7 @@
     <!-- Horizontal Form -->
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Tambah Data Transaksi</h3>
+            <h3 class="card-title text-center text-white">Transaksi</h3>
         </div>
         <!-- /.card-header -->
 
@@ -65,7 +65,7 @@
                 <div class="form-group row">
                     <label for="nominal_transaksi" class="col-sm-2 col-form-label">NOMINAL</label>
                     <div class="col-sm-10">
-                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" placeholder="Masukkan Nominal" required>
+                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" placeholder="Masukkan Nominal" step="0.01" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Tambah</button>
