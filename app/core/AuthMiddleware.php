@@ -20,6 +20,24 @@ class AuthMiddleware
         }
     }
 
+    public static function requireRole($roles = [])
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['role'])) {
+            header('Location: ' . BASEURL . '/auth');
+            exit;
+        }
+
+        if (!in_array($_SESSION['role'], $roles)) {
+            // Jika tidak punya role yang sesuai, lempar ke halaman tidak diizinkan
+            header('Location: ' . BASEURL . '/auth');
+            exit;
+        }
+    }
+
     private static function getCurrentController()
     {
         $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';

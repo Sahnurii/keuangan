@@ -1,6 +1,6 @@
 <?php
 
-define('BASEURL', 'http://localhost/keuangan/public');
+define('BASEURL', 'http://localhost/Skripsi/keuangan/public');
 
 //DB
 

@@ -2,10 +2,7 @@
 
 class User extends Controller
 {
-    public function __construct()
-    {
-        AuthMiddleware::isAuthenticated();
-    }
+    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
 
     public function index()
     {
@@ -15,6 +12,40 @@ class User extends Controller
 
         $this->view('templates/header', $data);
         $this->view('user/index', $data);
+        $this->view('templates/footer');
+    }
+
+    public function tambah()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($this->model('User_model')->cekUsernameDuplikat($_POST['username'])) {
+                Flasher::setFlash('Username sudah digunakan.', '', 'error');
+                header('Location: ' . BASEURL . '/user/tambah');
+                exit;
+            }
+
+            if ($_POST['password'] !== $_POST['confirm_password']) {
+                Flasher::setFlash('Password dan konfirmasi tidak cocok.', '', 'error');
+                header('Location: ' . BASEURL . '/user/tambah');
+                exit;
+            }
+
+            $_POST['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+            if ($this->model('User_model')->tambahDataUser($_POST) > 0) {
+                Flasher::setFlash('Berhasil', 'ditambahkan', 'success');
+                header('Location: ' . BASEURL . '/user');
+                exit;
+            } else {
+                Flasher::setFlash('Gagal', 'ditambahkan', 'error');
+                header('Location: ' . BASEURL . '/user/tambah');
+                exit;
+            }
+        }
+
+        $data['judul'] = 'Tambah User';
+        $this->view('templates/header', $data);
+        $this->view('user/tambah');
         $this->view('templates/footer');
     }
 
@@ -28,61 +59,59 @@ class User extends Controller
         $this->view('templates/footer');
     }
 
-    public function update()
+    public function hapus($id)
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = trim($_POST['id']);
-            $username = trim($_POST['username']);
-            $nama = trim($_POST['nama']);
-            $email = trim($_POST['email']);
-            $oldpassword = trim($_POST['password'] ?? '');
-            $newPass = $_POST['newPass'];
-            $confirmPassword = trim($_POST['confirm_password'] ?? '');
+        if ($this->model('User_model')->hapusDataUser($id) > 0) {
+            Flasher::setFlash('Hapus Data Berhasil', '', 'success');
+            header('Location: ' . BASEURL . '/user');
+            exit;
+        } else {
+            Flasher::setFlash('Hapus Data Gagal', '', 'error');
+            header('Location: ' . BASEURL . '/user');
+            exit;
+        }
+    }
 
-            // Validasi input nama dan email
-            if (empty($nama) || empty($email)) {
-                Flasher::setFlash('Nama dan email tidak boleh kosong.', '', 'error');
-                header('Location: ' . BASEURL . '/user/edit/' . $username);
-                exit;
-            }
+    public function update($id)
+    {
+        $userModel = $this->model('User_model');
+        $existingUser = $userModel->getUserById($id);
+        $oldpassword = $existingUser['password'];
 
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                Flasher::setFlash('Format email tidak valid.', '', 'error');
-                header('Location: ' . BASEURL . '/user/edit/' . $username);
-                exit;
-            }
-
-            // Validasi password jika diisi
-            if (!empty($newPass) && $newPass !== $confirmPassword) {
-                Flasher::setFlash('Password dan konfirmasi password tidak cocok.', '', 'error');
-                header('Location: ' . BASEURL . '/user/edit/' . $username);
-                exit;
-            }
-
-            $userModel = $this->model('User_model');
-
-            // Jika password diisi, hash password-nya, jika tidak, biarkan null
-            $hashedPassword = !empty($newPass) ? password_hash($newPass, PASSWORD_BCRYPT) : $oldpassword;
-
-            $updateData = [
-                'password' => $hashedPassword,
-                'nama' => $nama,
-                'email' => $email,
-                'id' => $id
-            ];
-
-            // Lakukan update
-            if ($userModel->updateUser($username, $updateData)) {
-                Flasher::setFlash('User berhasil diperbarui!', '', 'success');
-                header('Location: ' . BASEURL . '/dashboard');
-                exit;
-            } else {
-                echo "Debugging: Update query gagal.";
-                exit;
-                Flasher::setFlash('Gagal memperbarui user.', '', 'error');
-                header('Location: ' . BASEURL . '/user/edit/' . $username);
+        if ($_POST['username'] !== $existingUser['username']) {
+            if ($userModel->cekUsernameDuplikat($_POST['username'])) {
+                Flasher::setFlash('Username sudah digunakan.', '', 'error');
+                header('Location: ' . BASEURL . '/user/edit/' . $id);
                 exit;
             }
         }
+
+        $newpassword = $_POST['newPass'];
+        if (!empty($newpassword)) {
+            if ($newpassword !== $_POST['confirm_password']) {
+                Flasher::setFlash('Password dan konfirmasi tidak cocok.', '', 'error');
+                header('Location: ' . BASEURL . '/user/edit/' . $id);
+                exit;
+            }
+            $_POST['password'] = password_hash($newpassword, PASSWORD_BCRYPT);
+        } else {
+            $_POST['password'] = $oldpassword;
+        }
+
+        if ($userModel->updateUser($id, $_POST) > 0) {
+            Flasher::setFlash('Berhasil', 'diupdate', 'success');
+        } else {
+            Flasher::setFlash('Gagal', 'diupdate', 'error');
+        }
+
+        header('Location: ' . BASEURL . '/user');
+        exit;
+    }
+
+
+    public function cekUsernameDuplikat($username)
+    {
+        $jumlah = $this->model('User_model')->cekUsernameDuplikat($username);
+        echo json_encode(['jumlah' => $jumlah]);
     }
 }

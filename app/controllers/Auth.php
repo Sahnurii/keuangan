@@ -13,7 +13,7 @@ class Auth extends Controller
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
             $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
@@ -35,6 +35,7 @@ class Auth extends Controller
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['nama'] = $user['nama'];
                 $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
 
                 Flasher::setFlash('Login Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/dashboard');

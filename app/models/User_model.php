@@ -37,18 +37,45 @@ class User_model
         return $this->db->single();
     }
 
-    public function updateUser($username, $data)
+    // public function updateUser($username, $data)
+    // {
+    //     $query = "UPDATE user SET username = :username, password = :password, nama = :nama, email = :email WHERE id = :id";
+    //     $this->db->query($query);
+    //     $this->db->bind('username', $username);
+    //     $this->db->bind('password', $data['password']);
+    //     $this->db->bind('nama', $data['nama']);
+    //     $this->db->bind('email', $data['email']);
+    //     $this->db->bind('id', $data['id']);
+
+    //     $this->db->execute();
+
+    //     return $this->db->rowCount();
+    // }
+
+    public function updateUser($id, $data)
     {
-        $query = "UPDATE user SET username = :username, password = :password, nama = :nama, email = :email WHERE id = :id";
+        // Update password hanya jika diberikan
+        $setPassword = '';
+        if (!empty($data['password'])) {
+            $setPassword = ", password = :password";
+        }
+
+        $query = "UPDATE {$this->table} 
+                  SET username = :username, nama = :nama, email = :email, role = :role{$setPassword}
+                  WHERE id = :id";
+
         $this->db->query($query);
-        $this->db->bind('username', $username);
-        $this->db->bind('password', $data['password']);
+        $this->db->bind('username', $data['username']);
         $this->db->bind('nama', $data['nama']);
         $this->db->bind('email', $data['email']);
-        $this->db->bind('id', $data['id']);
+        $this->db->bind('role', $data['role']);
+        $this->db->bind('id', $id);
+
+        if (!empty($data['password'])) {
+            $this->db->bind('password', $data['password']);
+        }
 
         $this->db->execute();
-
         return $this->db->rowCount();
     }
 
@@ -58,5 +85,40 @@ class User_model
         $this->db->bind('id', $id);
         $result = $this->db->single();
         return $result;
+    }
+
+    public function hapusDataUser($id)
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $this->db->query($query);
+        $this->db->bind('id', $id);
+
+        $this->db->execute();
+
+        return $this->db->rowCount();
+    }
+
+    public function tambahDataUser($data)
+    {
+        $query = "INSERT INTO user (username, password, nama, email, role) VALUES (:username, :password, :nama, :email, :role)";
+        $this->db->query($query);
+        $this->db->bind('username', $data['username']);
+        $this->db->bind('password', $data['password']);
+        $this->db->bind('nama', $data['nama']);
+        $this->db->bind('email', $data['email']);
+        $this->db->bind('role', $data['role']);
+
+        $this->db->execute();
+
+        return $this->db->rowCount();
+    }
+
+    public function cekUsernameDuplikat($username)
+    {
+        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE username = :username";
+        $this->db->query($query);
+        $this->db->bind('username', $username);
+        $result = $this->db->single();
+        return $result['total'] > 0; // Mengembalikan true jika ada duplikat
     }
 }

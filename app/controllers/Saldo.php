@@ -2,10 +2,7 @@
 
 class Saldo extends Controller
 {
-    public function __construct()
-    {
-        AuthMiddleware::isAuthenticated();
-    }
+    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
 
     public function index()
     {

@@ -21,6 +21,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                             <option value="" selected disabled>-- Pilih Tipe Buku --</option>
                             <option value="Bank">Bank</option>
                             <option value="Kas">Kas</option>
+                            <option value="Pajak">Pajak</option>
                         </select>
                     </div>
                 </div>
@@ -63,6 +64,8 @@ $flashData = Flasher::flash();  // Ambil data flash
             keteranganField.value = 'Sisa Kas Tunai bulan lalu'; // Isi otomatis jika Kas dipilih
         } else if (tipeSaldo === 'Bank') {
             keteranganField.value = 'Sisa Uang di Bank bulan lalu'; // Isi otomatis jika Bank dipilih
+        } else if (tipeSaldo === 'Pajak') {
+            keteranganField.value = 'Pajak yang belum terbayarkan bulan lalu'; // Isi otomatis jika Pajak dipilih
         } else {
             keteranganField.value = ''; // Kosongkan jika tidak ada pilihan
         }

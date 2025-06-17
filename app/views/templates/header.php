@@ -21,6 +21,11 @@
     <!-- Custom styles for this template-->
     <link href="<?= BASEURL; ?>/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="<?= BASEURL; ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+
+
 
 
 </head>
@@ -65,9 +70,33 @@
                 <a class="nav-link" href="<?= BASEURL; ?>/kategori">
                     <i class="fas fa-fw fa-list"></i>
                     <span>Data Kategori</span></a>
-            </li
+            </li>
 
-                <!-- Divider -->
+            <!-- Nav Item - bidang -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= BASEURL; ?>/bidang">
+                    <i class="fas fa-fw fa-solid fa-sitemap"></i>
+                    <span>Data Bidang</span></a>
+            </li>
+
+            <!-- Nav Item - Pegawai -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= BASEURL; ?>/pegawai">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Data Pegawai</span></a>
+            </li>
+
+            <!-- Nav Item - Jenis Pajak -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= BASEURL; ?>/jenis_pajak">
+                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                    <span>Jenis Pajak</span></a>
+            </li>
+
+            <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
@@ -87,6 +116,7 @@
                         <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas_umum">KAS UMUM</a>
                         <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas">PEMBANTU KAS</a>
                         <a class="collapse-item" href="<?= BASEURL; ?>/buku_bank">PEMBANTU BANK</a>
+                        <a class="collapse-item" href="<?= BASEURL; ?>/buku_pajak">PEMBANTU PAJAK</a>
                     </div>
                 </div>
             </li>
@@ -96,6 +126,13 @@
                 <a class="nav-link" href="<?= BASEURL; ?>/saldo">
                     <i class="fas fa-fw fa-wallet"></i>
                     <span>Saldo</span></a>
+            </li>
+
+            <!-- Nav Item - Gaji -->
+            <li class="nav-item">
+                <a class="nav-link" href="<?= BASEURL; ?>/gaji">
+                    <i class="fas fa-fw fa-solid fa-money-bill"></i>
+                    <span>Gaji</span></a>
             </li>
 
             <!-- Heading -->
@@ -110,35 +147,52 @@
                     <span>Transaksi</span></a>
             </li>
 
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
+            <?php if ($_SESSION['role'] === 'Admin') : ?>
             <div class="sidebar-heading">
                 LAPORAN
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-chart-bar"></i>
-                    <span>Laporan</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakKasUmum">Laporan Buku Kas Umum</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/laporan">Laporan Buku Kas</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakBank">Laporan Buku Bank</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Saldo</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran">Laporan Pemasukan <br> dan Pengeluaran</a>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                        aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-chart-bar"></i>
+                        <span>Laporan</span>
+                    </a>
+                    <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakKasUmum">Laporan Buku Kas Umum</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan">Laporan Buku Kas</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakBank">Laporan Buku Bank</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Buku Pajak</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Saldo</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran">Laporan Pemasukan <br> dan Pengeluaran</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Gaji Pegawai</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Slip Pembayaran <br> Gaji Pegawai</a>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+            <?php endif; ?>
 
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
+
+
+            <div class="sidebar-heading">
+                SETTINGS
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= BASEURL; ?>/user">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Users</span></a>
+            </li>
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
@@ -168,13 +222,12 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <div class="d-flex justify-content-center align-items-center" >
-
-                            <!-- <span class="mr-2"><i class="nav-icon fas fa-calendar-alt"></i></span>
+                        <!-- Tanggal dan Jam -->
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mr-2"><i class="nav-icon fas fa-calendar-alt"></i></span>
                             <?php $tgl = date('Y-m-d'); ?>
-                           <span><b><?php echo tglIndonesia(date('d F Y', strtotime($tgl))) ?> |</b></span> 
-                            <b><span id="jam"></span></b> -->
+                            <span><b><?php echo tglIndonesia(date('d F Y', strtotime($tgl))) ?> |</b></span>
+                            <b><span id="jam"></span></b>
                         </div>
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"

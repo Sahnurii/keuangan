@@ -1,11 +1,8 @@
 <?php
 
-class Dashboard extends Controller
+class Dashboard extends BaseController
 {
-    public function __construct()
-    {
-        AuthMiddleware::isAuthenticated();
-    }
+    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
 
     public function index()
     {
@@ -43,8 +40,10 @@ class Dashboard extends Controller
 
         $saldoAwal = ($saldoBank['saldo_awal'] ?? 0) + ($saldoKas['saldo_awal'] ?? 0);
 
-        $kategoriModel = $this->model('Kategori_model');
-        $totalKategori = $kategoriModel->getTotalKategori();
+        $totalKategori = $this->model('Kategori_model')->getTotalKategori();
+        $totalBidang = $this->model('Bidang_model')->getTotalBidang();
+        $totalPegawai = $this->model('Pegawai_model')->getTotalPegawai();
+        
 
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
@@ -53,6 +52,8 @@ class Dashboard extends Controller
         $data['total_pemasukan'] = $totalPemasukan;
         $data['total_pengeluaran'] = $totalPengeluaran;
         $data['total_kategori'] = $totalKategori['total'];
+        $data['total_bidang'] = $totalBidang['total'];
+        $data['total_pegawai'] = $totalPegawai['total'];
 
         $data['judul'] = 'Dashboard';
         $this->view('templates/header', $data);

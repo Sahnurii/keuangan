@@ -12,7 +12,7 @@ class Transaksi_model
 
     public function tambahDataTransaksi($data)
     {
-        $query = "INSERT INTO transaksi (tipe_buku, tanggal, no_bukti, keterangan, kategori, tipe_kategori, nominal_transaksi) VALUES (:tipe_buku, :tanggal, :no_bukti, :keterangan, :kategori, :tipe_kategori, :nominal_transaksi)";
+        $query = "INSERT INTO transaksi (tipe_buku, tanggal, no_bukti, keterangan, kategori, tipe_kategori, nominal_transaksi, sumber_saldo) VALUES (:tipe_buku, :tanggal, :no_bukti, :keterangan, :kategori, :tipe_kategori, :nominal_transaksi, :sumber_saldo)";
         $this->db->query($query);
         $this->db->bind('tipe_buku', $data['tipe_buku']);
         $this->db->bind('tanggal', $data['tanggal']);
@@ -21,6 +21,7 @@ class Transaksi_model
         $this->db->bind('kategori', $data['nama_kategori']);
         $this->db->bind('tipe_kategori', $data['tipe_kategori']);
         $this->db->bind('nominal_transaksi', $data['nominal_transaksi']);
+        $this->db->bind('sumber_saldo', $data['sumber_saldo']);
 
         $this->db->execute();
 
@@ -66,7 +67,7 @@ class Transaksi_model
 
     public function editDataTransaksi($data)
     {
-        $query = "UPDATE transaksi SET tipe_buku = :tipe_buku, tanggal = :tanggal, no_bukti = :no_bukti, keterangan = :keterangan, kategori = :kategori, tipe_kategori = :tipe_kategori, nominal_transaksi = :nominal_transaksi WHERE id = :id";
+        $query = "UPDATE transaksi SET tipe_buku = :tipe_buku, tanggal = :tanggal, no_bukti = :no_bukti, keterangan = :keterangan, kategori = :kategori, tipe_kategori = :tipe_kategori, nominal_transaksi = :nominal_transaksi, sumber_saldo =:sumber_saldo WHERE id = :id";
         $this->db->query($query);
         $this->db->bind('tipe_buku', $data['tipe_buku']);
         $this->db->bind('tanggal', $data['tanggal']);
@@ -75,6 +76,7 @@ class Transaksi_model
         $this->db->bind('kategori', $data['kategori']);
         $this->db->bind('tipe_kategori', $data['tipe_kategori']);
         $this->db->bind('nominal_transaksi', $data['nominal_transaksi']);
+        $this->db->bind('sumber_saldo', $data['sumber_saldo']);
         $this->db->bind('id', $data['id']);
 
         $this->db->execute();
@@ -108,7 +110,17 @@ class Transaksi_model
 
     public function getNomorBuktiTerakhir($tipe_buku, $bulan, $tahun)
     {
-        $kodeBukti = ($tipe_buku === 'Kas') ? 'BPK' : 'BPB';
+        // $kodeBukti = ($tipe_buku === 'Kas') ? 'BPK' : 'BPB';
+
+        if ($tipe_buku === 'Kas') {
+            $kodeBukti = 'BPK';
+        } elseif ($tipe_buku === 'Bank') {
+            $kodeBukti = 'BPB';
+        } elseif ($tipe_buku === 'Pajak') {
+            $kodeBukti = 'BPJ';
+        } else {
+            $kodeBukti = 'BPX'; // Default atau bisa disesuaikan
+        }
 
         $query = "SELECT MAX(CAST(SUBSTRING(no_bukti, 4) AS UNSIGNED)) AS nomor_terakhir
               FROM transaksi 
@@ -126,7 +138,7 @@ class Transaksi_model
 
         // Nomor berikutnya
         $nomorBerikutnya = (int)$nomorTerakhir + 1;
-        
+
         return $kodeBukti . $nomorBerikutnya;
     }
 
@@ -137,6 +149,7 @@ class Transaksi_model
         $this->db->bind('tahun', $tahun);
         return $this->db->resultSet();
     }
+    
     public function getSaldoAwal($bulan, $tahun)
     {
         $query = "SELECT SUM(nominal_transaksi) AS saldo_awal 

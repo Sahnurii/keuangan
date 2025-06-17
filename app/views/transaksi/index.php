@@ -12,63 +12,154 @@
         <!-- /.card-header -->
 
         <!-- form start -->
-        <form action="<?= BASEURL; ?>/transaksi/tambah" method="POST">
-            <div class="container mt-2">
-                <div class="form-group row">
-                    <label for="tipe_buku" class="col-sm-2 col-form-label">TIPE BUKU</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="tipe_buku" name="tipe_buku" required>
-                            <option value="" selected disabled>-- Pilih Tipe Buku --</option>
-                            <option value="Bank">Bank</option>
-                            <option value="Kas">Kas</option>
-                        </select>
+        <form action="<?= BASEURL; ?>/transaksi/tambah" method="POST" id="form_transaksi_umum">
+            <div class="card card-info">
+                <div class="container mt-2">
+                    <!-- Tipe Buku -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tipe Buku</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="tipe_buku_umum" name="tipe_buku" required>
+                                <option value="" selected disabled>-- Pilih Tipe Buku --</option>
+                                <option value="Bank">Bank</option>
+                                <option value="Kas">Kas</option>
+                                <option value="Pajak">Pajak</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="tanggal" class="col-sm-2 col-form-label">TANGGAL</label>
-                    <div class="col-sm-10">
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukkan Tanggal" required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="no_bukti" class="col-sm-2 col-form-label">NO BUKTI</label>
-                    <div class="col-sm-10">
-                        <input type="input" class="form-control" id="no_bukti" name="no_bukti" placeholder="Masukkan No Bukti" readonly>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="keterangan" class="col-sm-2 col-form-label">KETERANGAN</label>
-                    <div class="col-sm-10">
-                        <input type="input" class="form-control" id="keterangan" name="keterangan" placeholder="Masukkan Keterangan" required>
-                    </div>
-                </div>
 
-                <div class="form-group row">
-                    <label for="tipe_kategori" class="col-sm-2 col-form-label">JENIS TRANSAKSI</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="tipe_kategori" name="tipe_kategori" onchange="updateSelectedData()">
-                            <option value="" selected disabled>-- Pilih Tipe Kategori --</option>
-                            <option value="Pemasukan">Pemasukan</option>
-                            <option value="Pengeluaran">Pengeluaran</option>
-                        </select>
+                    <!-- Form umum -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tanggal</label>
+                        <div class="col-sm-10">
+                            <input type="date" name="tanggal" id="tanggal_umum" class="form-control" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="nama_kategori" class="col-sm-2 col-form-label">NAMA KATEGORI</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="nama_kategori" name="nama_kategori">
-                            <!-- data diisi dari function updateKategoriOptions() -->
-                            <option value="" selected disabled>-- Pilih Nama Kategori --</option>
-                        </select>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">No Bukti</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="no_bukti" id="no_bukti_umum" class="form-control" readonly>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="nominal_transaksi" class="col-sm-2 col-form-label">NOMINAL</label>
-                    <div class="col-sm-10">
-                        <input type="number" class="form-control" id="nominal_transaksi" name="nominal_transaksi" placeholder="Masukkan Nominal" step="0.01" required>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Keterangan</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="keterangan" class="form-control" required>
+                        </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Jenis Transaksi</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="tipe_kategori" id="tipe_kategori_umum">
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="Pemasukan">Pemasukan</option>
+                                <option value="Pengeluaran">Pengeluaran</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Kategori</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="nama_kategori" id="nama_kategori_umum">
+                                <!-- JS akan isi berdasarkan tipe -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Nominal</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="nominal_transaksi" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block mb-4">Simpan Transaksi Umum</button>
                 </div>
-                <button type="submit" class="btn btn-block btn-primary btn-lg mb-4" name="submit">Tambah</button>
+            </div>
+        </form>
+
+        <!-- FORM TRANSAKSI PAJAK -->
+        <form action="<?= BASEURL; ?>/transaksi/tambahPajak" method="POST" id="form_transaksi_pajak" class="d-none">
+            <div class="card card-danger">
+                <div class="container mt-2">
+                    <!-- Form Pajak -->
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tipe Buku</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="tipe_buku_pajak" name="tipe_buku" required>
+                                <option value="" selected disabled>-- Pilih Tipe Buku --</option>
+                                <option value="Bank">Bank</option>
+                                <option value="Kas">Kas</option>
+                                <option value="Pajak">Pajak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tanggal</label>
+                        <div class="col-sm-10">
+                            <input type="date" name="tanggal" id="tanggal_pajak" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">No Bukti</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="no_bukti" id="no_bukti_pajak" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">No Bukti Transaksi</label>
+                        <div class="col-sm-10">
+                            <select class="form-control select2" id="no_bukti_transaksi" name="id_transaksi" required>
+                                <option value="" selected disabled>-- Pilih Transaksi --</option>
+                                <?php foreach ($data['no_bukti_transaksi'] as $trx) : ?>
+                                    <option value="<?= $trx['id']; ?>"><?= $trx['no_bukti']; ?> - <?= $trx['keterangan']; ?> - <?= $trx['nominal_transaksi']; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Jenis Pajak</label>
+                        <div class="col-sm-10">
+                            <select name="id_jenis_pajak" id="id_jenis_pajak" class="form-control select2">
+                                <option value="">-- Pilih Jenis Pajak --</option>
+                                <?php foreach ($data['jenis_pajak'] as $jp) : ?>
+                                    <option
+                                        value="<?= $jp['id']; ?>"
+                                        data-tarif="<?= $jp['tarif_pajak']; ?>">
+                                        <?= $jp['id']; ?> - <?= $jp['tarif_pajak'], ' %'; ?> - <?= $jp['tipe']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Jenis Transaksi</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="tipe_kategori">
+                                <option value="">-- Pilih Jenis --</option>
+                                <option value="Pemasukan">Pemasukan</option>
+                                <option value="Pengeluaran">Pengeluaran</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Keterangan</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="keterangan" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Nominal Transaksi</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="nominal_transaksi" id="nominal_pajak" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Nilai Pajak</label>
+                        <div class="col-sm-10">
+                            <input type="number" name="nilai_pajak" id="nilai_pajak" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-block mb-4">Simpan Transaksi Pajak</button>
+                </div>
             </div>
         </form>
     </div>
@@ -79,77 +170,129 @@
 <!-- /.container -->
 
 <script>
-    // Variabel untuk menyimpan data yang dipilih
-    let selectedTipeKategori = null;
-    let selectedNamaKategori = null;
-
-    function updateSelectedData() {
-        // Menyimpan nilai yang dipilih dari dropdown tipe_kategori
-        selectedTipeKategori = document.getElementById('tipe_kategori').value;
-        // console.log("Tipe Kategori Terpilih:", selectedTipeKategori);
-
-        // Jika tipe kategori sudah dipilih, kita dapat memperbarui dropdown nama_kategori (optional)
-        updateKategoriOptions();
-    }
-
-    function updateKategoriOptions() {
-        // Menyesuaikan pilihan nama_kategori berdasarkan tipe_kategori
-        let namaKategoriDropdown = document.getElementById('nama_kategori');
-
-        // Contoh: jika tipe_kategori adalah "Pemasukan", tampilkan kategori pemasukan
-        if (selectedTipeKategori === 'Pemasukan') {
-            // Isi nama_kategori dengan kategori pemasukan
-            namaKategoriDropdown.innerHTML = `
-            <option value="" selected disabled>-- Pilih Nama Kategori --</option>
-        <?php foreach ($data['pemasukan'] as $kat) : ?>
-                                <option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>
-                            <?php endforeach; ?>
-        `;
-        } else if (selectedTipeKategori === 'Pengeluaran') {
-            // Isi nama_kategori dengan kategori pengeluaran
-            namaKategoriDropdown.innerHTML = `
-            <option value="" selected disabled>-- Pilih Nama Kategori --</option>
-            <?php foreach ($data['pengeluaran'] as $kat) : ?>
-                                <option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>
-                            <?php endforeach; ?>>
-        `;
-        } else {
-            namaKategoriDropdown.innerHTML = `<option value="" selected disabled>-- Pilih Nama Kategori --</option>`;
-        }
-    }
-
-    // Event listener untuk nama_kategori
-    document.getElementById('nama_kategori').addEventListener('change', function() {
-        selectedNamaKategori = this.value;
-        // console.log("Nama Kategori Terpilih:", selectedNamaKategori);
-    });
-
-    //nomor bukti otomatis
-
-    document.getElementById('tipe_buku').addEventListener('change', function() {
-        const tipeBuku = this.value;
-        const tanggal = document.getElementById('tanggal').value;
-
-        if (tipeBuku && tanggal) {
-            fetchNoBukti(tipeBuku, tanggal);
-        }
-    });
-
-    document.getElementById('tanggal').addEventListener('change', function() {
-        const tipeBuku = document.getElementById('tipe_buku').value;
-        const tanggal = this.value;
-
-        if (tipeBuku && tanggal) {
-            fetchNoBukti(tipeBuku, tanggal);
-        }
-    });
-
+    // Fungsi fetch nomor bukti otomatis
     function fetchNoBukti(tipeBuku, tanggal) {
-        fetch(`<?= BASEURL; ?>/transaksi/getNomorBukti/${tipeBuku}/${tanggal}`)
+        const url = tipeBuku === 'Pajak' ?
+            `<?= BASEURL; ?>/transaksi/getNomorBuktiPajak/${tipeBuku}/${tanggal}` :
+            `<?= BASEURL; ?>/transaksi/getNomorBukti/${tipeBuku}/${tanggal}`;
+
+        fetch(url)
             .then(response => response.text())
-            .then(data => {
-                document.getElementById('no_bukti').value = data;
+            .then(noBukti => {
+                const inputId = tipeBuku === 'Pajak' ? 'no_bukti_pajak' : 'no_bukti_umum';
+                document.getElementById(inputId).value = noBukti.trim();
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Gagal fetch nomor bukti:', error));
     }
+
+
+    // Event saat Tipe Buku dipilih
+    document.querySelectorAll('#tipe_buku_umum, #tipe_buku_pajak').forEach(select => {
+        select.addEventListener('change', function() {
+            const tipe = this.value;
+            const formUmum = document.getElementById('form_transaksi_umum');
+            const formPajak = document.getElementById('form_transaksi_pajak');
+
+            // Sinkronisasi nilai ke kedua select
+            document.querySelectorAll('#tipe_buku_umum, #tipe_buku_pajak').forEach(otherSelect => {
+                if (otherSelect !== this) {
+                    otherSelect.value = tipe;
+                }
+            });
+
+            if (tipe === 'Pajak') {
+                formUmum.classList.add('d-none');
+                formUmum.reset(); // reset form umum
+                formPajak.classList.remove('d-none');
+            } else {
+                formUmum.classList.remove('d-none');
+                formPajak.reset(); // reset form pajak
+                formPajak.classList.add('d-none');
+            }
+
+            const tanggal = tipe === 'Pajak' ?
+                document.getElementById('tanggal_pajak').value :
+                document.getElementById('tanggal_umum')?.value;
+
+            if (tipe && tanggal) {
+                fetchNoBukti(tipe, tanggal);
+            }
+        });
+
+    });
+
+
+    document.getElementById('tanggal_umum').addEventListener('change', function() {
+        const tipe = document.getElementById('tipe_buku_umum').value;
+        const tanggal = this.value;
+        if (tipe && tanggal) {
+            fetchNoBukti(tipe, tanggal);
+        }
+    });
+
+    document.getElementById('tanggal_pajak').addEventListener('change', function() {
+        const tipe = document.getElementById('tipe_buku_pajak').value;
+        const tanggal = this.value;
+        if (tipe && tanggal) {
+            fetchNoBukti(tipe, tanggal);
+        }
+    });
+
+
+    // Dropdown kategori berdasarkan tipe kategori (Pemasukan/Pengeluaran)
+    document.getElementById('tipe_kategori_umum').addEventListener('change', function() {
+        const tipe = this.value;
+        const kategoriDropdown = document.getElementById('nama_kategori_umum');
+
+        let options = `<option value="">-- Pilih Kategori --</option>`;
+        if (tipe === 'Pemasukan') {
+            <?php foreach ($data['pemasukan'] as $kat) : ?>
+                options += `<option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>`;
+            <?php endforeach; ?>
+        } else if (tipe === 'Pengeluaran') {
+            <?php foreach ($data['pengeluaran'] as $kat) : ?>
+                options += `<option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>`;
+            <?php endforeach; ?>
+        }
+
+        kategoriDropdown.innerHTML = options;
+    });
+
+    // Fungsi hitung nilai pajak otomatis
+    function hitungPajak() {
+        const tarif = parseFloat(document.getElementById('id_jenis_pajak').selectedOptions[0]?.dataset.tarif || 0);
+        const nominal = parseFloat(document.getElementById('nominal_pajak').value || 0);
+        const pajak = (nominal * tarif / 100).toFixed(2);
+        document.getElementById('nilai_pajak').value = pajak;
+    }
+
+    // Hitung ulang pajak saat jenis pajak atau nominal berubah
+    document.getElementById('id_jenis_pajak').addEventListener('change', hitungPajak);
+    document.getElementById('nominal_pajak').addEventListener('input', hitungPajak);
+
+    // Ambil nominal dari transaksi utama saat No Bukti Transaksi dipilih
+    document.getElementById('no_bukti_transaksi').addEventListener('change', function() {
+        const transaksiId = this.value;
+
+        fetch(`<?= BASEURL; ?>/transaksi_pajak/getNominalById/${transaksiId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data?.nominal) {
+                    document.getElementById('nominal_pajak').value = data.nominal;
+                    hitungPajak(); // panggil ulang fungsi hitung
+                } else {
+                    document.getElementById('nominal_pajak').value = '';
+                    document.getElementById('nilai_pajak').value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Gagal fetch nominal transaksi:', error);
+            });
+    });
+
+
+    // Inisialisasi Select2 (jika Anda pakai)
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
 </script>

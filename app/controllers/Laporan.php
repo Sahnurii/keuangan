@@ -2,9 +2,11 @@
 
 class Laporan extends Controller
 {
+    protected $allowedRoles = ['Admin', 'Pimpinan'];
+
     public function __construct()
     {
-        AuthMiddleware::isAuthenticated();
+        parent::__construct();
     }
 
     public function index()
@@ -179,7 +181,7 @@ class Laporan extends Controller
         $bulan = $_GET['bulan'] ?? date('m');
         // Ambil data dari model
         $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
-        
+
 
         // Ambil saldo awal untuk bulan dan tahun tertentu
         // Ambil saldo awal untuk Bank dan Kas
@@ -202,34 +204,34 @@ class Laporan extends Controller
         // Debugging data
         error_log(print_r($data, true)); // Untuk melihat apakah data sesuai dengan ekspektasi
 
-         // Ambil data saldo awal
-         $saldoAwalBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun)['saldo_awal'] ?? 0;
-         $saldoAwalKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun)['saldo_awal'] ?? 0;
-         $saldoAwalKasUmum = $saldoAwalBank + $saldoAwalKas;
- 
-         // Ambil transaksi
-         $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
- 
-         // Hitung saldo akhir berdasarkan tipe buku
-         $saldoBank = $saldoAwalBank;
-         $saldoKas = $saldoAwalKas;
-         $saldoKasUmum = $saldoAwalKasUmum;
- 
-         foreach ($transaksi as $trx) {
-             if ($trx['tipe_buku'] === 'Bank') {
-                 $saldoBank += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-             } elseif ($trx['tipe_buku'] === 'Kas') {
-                 $saldoKas += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-             }
-             $saldoKasUmum += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
-         }
- 
-         // Simpan hasil ke dalam $data
-         $data['saldo_akhir'] = [
-             'Bank' => $saldoBank,
-             'Kas' => $saldoKas,
-             'Kas Umum' => $saldoKasUmum,
-         ];
+        // Ambil data saldo awal
+        $saldoAwalBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun)['saldo_awal'] ?? 0;
+        $saldoAwalKas = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Kas', $bulan, $tahun)['saldo_awal'] ?? 0;
+        $saldoAwalKasUmum = $saldoAwalBank + $saldoAwalKas;
+
+        // Ambil transaksi
+        $transaksi = $this->model('Transaksi_model')->getAllTransaksi($bulan, $tahun);
+
+        // Hitung saldo akhir berdasarkan tipe buku
+        $saldoBank = $saldoAwalBank;
+        $saldoKas = $saldoAwalKas;
+        $saldoKasUmum = $saldoAwalKasUmum;
+
+        foreach ($transaksi as $trx) {
+            if ($trx['tipe_buku'] === 'Bank') {
+                $saldoBank += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+            } elseif ($trx['tipe_buku'] === 'Kas') {
+                $saldoKas += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+            }
+            $saldoKasUmum += $trx['tipe_kategori'] === 'Pemasukan' ? $trx['nominal_transaksi'] : -$trx['nominal_transaksi'];
+        }
+
+        // Simpan hasil ke dalam $data
+        $data['saldo_akhir'] = [
+            'Bank' => $saldoBank,
+            'Kas' => $saldoKas,
+            'Kas Umum' => $saldoKasUmum,
+        ];
 
         // Tambahkan data lain
         $data['tahun'] = $tahun;
@@ -448,7 +450,7 @@ class Laporan extends Controller
                 $totalPengeluaran += $trx['nominal_transaksi'];
             }
         }
-        
+
 
         // Ambil saldo awal
         $saldoBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun);
@@ -473,7 +475,7 @@ class Laporan extends Controller
     public function cetakPemasukanDanPengeluaran_print()
     {
 
-       $data['judul'] = 'Cetak Pemasukan Dan Pengeluaran';
+        $data['judul'] = 'Cetak Pemasukan Dan Pengeluaran';
         $bulanTahun = $this->model('Transaksi_model')->getUniqueMonthsAndYearsUniversal();
 
         $groupedBulanTahun = [];
@@ -511,7 +513,7 @@ class Laporan extends Controller
                 $totalPengeluaran += $trx['nominal_transaksi'];
             }
         }
-        
+
 
         // Ambil saldo awal
         $saldoBank = $this->model('Saldo_model')->getSaldoAwalByTipeBukuDanTanggal('Bank', $bulan, $tahun);

@@ -2,10 +2,7 @@
 
 class Buku_bank extends Controller
 {
-    public function __construct()
-    {
-        AuthMiddleware::isAuthenticated();
-    }
+    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
 
     public function index()
     {
@@ -53,7 +50,7 @@ class Buku_bank extends Controller
 
         $data['pemasukan'] = $this->model('Kategori_model')->getKategoriByTipe('Pemasukan');
         $data['pengeluaran'] = $this->model('Kategori_model')->getKategoriByTipe('Pengeluaran');
-        
+
         $this->view('templates/header', $data);
         $this->view('buku_bank/edit', $data);
         $this->view('templates/footer');
