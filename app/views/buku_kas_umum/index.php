@@ -69,7 +69,7 @@
                                 <td class="text-center align-content-center"><?= tglSingkatIndonesia($transaksi['tanggal']); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
                                 <td class="text-wrap" style="max-width: 250px;"><?= $transaksi['keterangan']; ?></td>
-                                <td class="align-content-center" style="max-width: 50px;"><?= $transaksi['kategori']; ?></td>
+                                <td class="align-content-center" style="max-width: 50px;"><?= $transaksi['nama_kategori']; ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>

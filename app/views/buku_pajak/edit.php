@@ -9,137 +9,210 @@ $flashData = Flasher::flash();
             <h3 class="card-title text-center text-white">Edit Buku Pembantu Pajak</h3>
         </div>
 
-        <form action="<?= BASEURL; ?>/buku_pajak/update" method="POST">
-        <input type="hidden" name="id" value="<?= $data['transaksi_pajak']['id']; ?>">
+        <form action="<?= BASEURL; ?>/buku_pajak/update" method="POST" id="form_transaksi_pajak">
+            <input type="hidden" name="id" value="<?= $data['transaksi_pajak']['id']; ?>">
+            <input type="hidden" name="id_transaksi_pembayaran" value="<?= $data['transaksi_pajak']['id_transaksi_pembayaran']; ?>">
 
-        <!-- TIPE BUKU -->
-        <select name="tipe_buku" class="form-control" required>
-            <option disabled>-- Pilih Tipe Buku --</option>
-            <option value="Bank" <?= $data['transaksi_pajak']['tipe_buku'] === 'Bank' ? 'selected' : ''; ?>>Bank</option>
-            <option value="Kas" <?= $data['transaksi_pajak']['tipe_buku'] === 'Kas' ? 'selected' : ''; ?>>Kas</option>
-            <option value="Pajak" <?= $data['transaksi_pajak']['tipe_buku'] === 'Pajak' ? 'selected' : ''; ?>>Pajak</option>
-        </select>
+            <div class="container mt-2">
+                <!-- Tipe Buku -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tipe Buku</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="tipe_buku_pajak" name="tipe_buku" required>
+                            <option value="Kas" <?= $data['transaksi_pajak']['tipe_buku'] === 'Kas' ? 'selected' : '' ?>>Kas</option>
+                            <option value="Bank" <?= $data['transaksi_pajak']['tipe_buku'] === 'Bank' ? 'selected' : '' ?>>Bank</option>
+                            <option value="Pajak" <?= $data['transaksi_pajak']['tipe_buku'] === 'Pajak' ? 'selected' : '' ?>>Pajak</option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- TANGGAL -->
-        <input type="date" name="tanggal" class="form-control" value="<?= $data['transaksi_pajak']['tanggal']; ?>" required>
+                <div class="form-group row" id="div_sumber_saldo">
+                    <label class="col-sm-2 col-form-label">Sumber Saldo</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id="sumber_saldo" name="sumber_saldo" required>
+                            <option value="" disabled <?= $data['transaksi_pajak']['sumber_saldo'] == '' ? 'selected' : ''; ?>>-- Pilih Sumber Saldo --</option>
+                            <option value="Kas" <?= $data['transaksi_pajak']['sumber_saldo'] === 'Kas' ? 'selected' : ''; ?>>Kas</option>
+                            <option value="Bank" <?= $data['transaksi_pajak']['sumber_saldo'] === 'Bank' ? 'selected' : ''; ?>>Bank</option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- NO BUKTI TRANSAKSI -->
-        <select name="id_transaksi" class="form-control" required>
-            <?php foreach ($data['no_bukti_transaksi'] as $trx) : ?>
-                <option value="<?= $trx['id']; ?>" <?= $trx['id'] == $data['transaksi_pajak']['id_transaksi'] ? 'selected' : ''; ?>>
-                    <?= $trx['no_bukti']; ?> - <?= $trx['keterangan']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+                <!-- Tanggal -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tanggal</label>
+                    <div class="col-sm-10">
+                        <input type="date" name="tanggal" id="tanggal_pajak" class="form-control" value="<?= $data['transaksi_pajak']['tanggal']; ?>" required>
+                    </div>
+                </div>
 
-        <!-- JENIS PAJAK -->
-        <select name="id_jenis_pajak" class="form-control" id="id_jenis_pajak">
-            <?php foreach ($data['jenis_pajak'] as $jp) : ?>
-                <option value="<?= $jp['id']; ?>"
-                    data-tarif="<?= $jp['tarif_pajak']; ?>"
-                    <?= $jp['id'] == $data['transaksi_pajak']['id_jenis_pajak'] ? 'selected' : ''; ?>>
-                    <?= $jp['id']; ?> - <?= $jp['tarif_pajak']; ?>% - <?= $jp['tipe']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+                <!-- No Bukti -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">No Bukti</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="no_bukti" id="no_bukti_pajak" class="form-control" value="<?= $data['transaksi_pajak']['no_bukti']; ?>" readonly>
+                    </div>
+                </div>
 
-        <!-- NO BUKTI -->
-        <input type="text" name="no_bukti" class="form-control" id="no_bukti" value="<?= $data['transaksi_pajak']['no_bukti']; ?>" readonly>
+                <!-- No Bukti Transaksi -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">No Bukti Transaksi</label>
+                    <div class="col-sm-10">
+                        <select class="form-control select2" id="no_bukti_transaksi" name="id_transaksi" required>
+                            <?php foreach ($data['no_bukti_transaksi'] as $trx) : ?>
+                                <option value="<?= $trx['id']; ?>" <?= $trx['id'] == $data['transaksi_pajak']['id_transaksi_sumber'] ? 'selected' : ''; ?>>
+                                    <?= $trx['no_bukti']; ?> - <?= $trx['keterangan']; ?> - <?= number_format($trx['nominal_transaksi'], 2); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- KETERANGAN -->
-        <input type="text" name="keterangan" class="form-control" value="<?= $data['transaksi_pajak']['keterangan']; ?>" required>
+                <!-- Jenis Pajak -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Jenis Pajak</label>
+                    <div class="col-sm-10">
+                        <select name="id_jenis_pajak" id="id_jenis_pajak" class="form-control select2">
+                            <option value="">-- Pilih Jenis Pajak --</option>
+                            <?php foreach ($data['jenis_pajak'] as $jp) : ?>
+                                <option value="<?= $jp['id']; ?>" data-tarif="<?= $jp['tarif_pajak']; ?>" <?= $jp['id'] == $data['transaksi_pajak']['id_jenis_pajak'] ? 'selected' : ''; ?>>
+                                    <?= $jp['id']; ?> - <?= $jp['tarif_pajak']; ?>% - <?= $jp['tipe']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- TIPE KATEGORI -->
-        <select name="tipe_kategori" class="form-control" id="tipe_kategori" onchange="updateSelectedData()" required>
-            <option disabled>-- Pilih Tipe Kategori --</option>
-            <option value="Pemasukan" <?= $data['transaksi_pajak']['tipe_kategori'] === 'Pemasukan' ? 'selected' : ''; ?>>Pemasukan</option>
-            <option value="Pengeluaran" <?= $data['transaksi_pajak']['tipe_kategori'] === 'Pengeluaran' ? 'selected' : ''; ?>>Pengeluaran</option>
-        </select>
+                <!-- Jenis Transaksi -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Jenis Transaksi</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="tipe_kategori" id="tipe_kategori_pajak" required>
+                            <option value="Pemasukan" <?= $data['transaksi_pajak']['tipe_kategori'] === 'Pemasukan' ? 'selected' : '' ?>>Pemasukan</option>
+                            <option value="Pengeluaran" <?= $data['transaksi_pajak']['tipe_kategori'] === 'Pengeluaran' ? 'selected' : '' ?>>Pengeluaran</option>
+                        </select>
+                    </div>
+                </div>
 
-        <!-- NAMA KATEGORI -->
-        <select name="nama_kategori" id="nama_kategori" class="form-control select2">
-            <?php
-            $kategoriList = $data['transaksi_pajak']['tipe_kategori'] === 'Pemasukan' ? $data['pemasukan'] : $data['pengeluaran'];
-            foreach ($kategoriList as $kat) :
-            ?>
-                <option value="<?= $kat['nama_kategori']; ?>" <?= $kat['nama_kategori'] == $data['transaksi_pajak']['nama_kategori'] ? 'selected' : ''; ?>>
-                    <?= $kat['nama_kategori']; ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+                <!-- Kategori -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Kategori</label>
+                    <div class="col-sm-10">
+                        <select class="form-control select2" name="id_kategori" id="id_kategori_pajak" required>
+                            <!-- opsi diisi via JS -->
+                        </select>
+                    </div>
+                </div>
 
-        <!-- NOMINAL -->
-        <input type="number" step="0.01" name="nominal_transaksi" id="nominal_transaksi" class="form-control" value="<?= $data['transaksi_pajak']['nominal_transaksi']; ?>" readonly>
+                <!-- Keterangan -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Keterangan</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="keterangan" class="form-control" value="<?= $data['transaksi_pajak']['keterangan']; ?>" required>
+                    </div>
+                </div>
 
-        <!-- NILAI PAJAK -->
-        <input type="number" step="0.01" name="nilai_pajak" id="nilai_pajak" class="form-control" value="<?= $data['transaksi_pajak']['nilai_pajak']; ?>" readonly>
+                <!-- Nominal -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nominal Transaksi</label>
+                    <div class="col-sm-10">
+                        <input type="number" step="0.01" name="nominal_transaksi" id="nominal_pajak" class="form-control" value="<?= $data['transaksi_pajak']['nominal_transaksi']; ?>" readonly>
+                    </div>
+                </div>
 
-        <button type="submit" class="btn btn-primary btn-block mt-4">Simpan Perubahan</button>
+                <!-- Nilai Pajak -->
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nilai Pajak</label>
+                    <div class="col-sm-10">
+                        <input type="number" step="0.01" name="nilai_pajak" id="nilai_pajak" class="form-control" value="<?= $data['transaksi_pajak']['nilai_pajak']; ?>" readonly>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block mb-4">Simpan Perubahan</button>
+            </div>
         </form>
     </div>
 </div>
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('.select2').select2({
-            placeholder: "-- Pilih Nama Kategori --",
-            allowClear: true
-        });
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+        let selectedTipeKategori = null;
+        let selectedNamaKategori = null;
 
-    function updateSelectedData() {
-        const tipeKategori = document.getElementById('tipe_kategori').value;
-        const kategoriDropdown = document.getElementById('nama_kategori');
-        let options = `<option value="" disabled>-- Pilih Nama Kategori --</option>`;
-
-        <?php
-        $pemasukanJson = json_encode(array_column($data['pemasukan'], 'nama_kategori'));
-        $pengeluaranJson = json_encode(array_column($data['pengeluaran'], 'nama_kategori'));
-        ?>
-
-        const pemasukan = <?= $pemasukanJson; ?>;
-        const pengeluaran = <?= $pengeluaranJson; ?>;
-
-        const list = tipeKategori === 'Pemasukan' ? pemasukan : pengeluaran;
-        list.forEach(kat => {
-            options += `<option value="${kat}">${kat}</option>`;
-        });
-
-        kategoriDropdown.innerHTML = options;
-        $('.select2').select2({
-            placeholder: "-- Pilih Nama Kategori --",
-            allowClear: true
-        });
-    }
-
-    document.getElementById('tipe_buku').addEventListener('change', function() {
-        const tipeBuku = this.value;
-        const sumberDiv = document.getElementById('div_sumber_saldo');
-        sumberDiv.classList.toggle('d-none', tipeBuku !== 'Pajak');
-        if (tipeBuku !== 'Pajak') {
-            document.getElementById('sumber_saldo').value = '';
+        function updateSelectedData() {
+            selectedTipeKategori = document.getElementById('tipe_kategori_pajak').value;
+            updateKategoriOptions();
         }
 
-        const tanggal = document.getElementById('tanggal').value;
-        if (tipeBuku && tanggal) fetchNoBukti(tipeBuku, tanggal);
+        function updateKategoriOptions() {
+            let namaKategoriDropdown = document.getElementById('id_kategori_pajak');
+            let kategoriOptions = '<option value="" disabled>-- Pilih Nama Kategori --</option>';
+
+            const selectedKategoriId = <?= json_encode($data['transaksi_pajak']['id_kategori']); ?>;
+
+            if (selectedTipeKategori === 'Pemasukan') {
+                kategoriOptions += `<?php foreach ($data['pemasukan'] as $kat): ?>
+                <option value="<?= $kat['id']; ?>" <?= $kat['id'] == $data['transaksi_pajak']['id_kategori'] ? 'selected' : ''; ?>>
+                    <?= $kat['nama_kategori']; ?>
+                </option>
+            <?php endforeach; ?>`;
+            } else if (selectedTipeKategori === 'Pengeluaran') {
+                kategoriOptions += `<?php foreach ($data['pengeluaran'] as $kat): ?>
+                <option value="<?= $kat['id']; ?>" <?= $kat['id'] == $data['transaksi_pajak']['id_kategori'] ? 'selected' : ''; ?>>
+                    <?= $kat['nama_kategori']; ?>
+                </option>
+            <?php endforeach; ?>`;
+            }
+
+            namaKategoriDropdown.innerHTML = kategoriOptions;
+        }
+
+        function hitungPajak() {
+            const tarif = parseFloat(document.getElementById('id_jenis_pajak').selectedOptions[0]?.dataset.tarif || 0);
+            const nominal = parseFloat(document.getElementById('nominal_pajak').value || 0);
+            const pajak = (nominal * tarif / 100).toFixed(2);
+            document.getElementById('nilai_pajak').value = pajak;
+        }
+
+        function isiDropdownKategori(tipe, idKategori) {
+            let namaKategoriDropdown = document.getElementById('id_kategori_pajak');
+            let kategoriOptions = '<option value="" disabled>-- Pilih Nama Kategori --</option>';
+            if (tipe === 'Pemasukan') {
+                kategoriOptions += `<?php foreach ($data['pemasukan'] as $kat): ?>
+                <option value="<?= $kat['id']; ?>" ${<?= $kat['id']; ?> == idKategori ? 'selected' : ''}>
+                    <?= $kat['nama_kategori']; ?>
+                </option>
+            <?php endforeach; ?>`;
+            } else if (tipe === 'Pengeluaran') {
+                kategoriOptions += `<?php foreach ($data['pengeluaran'] as $kat): ?>
+                <option value="<?= $kat['id']; ?>" ${<?= $kat['id']; ?> == idKategori ? 'selected' : ''}>
+                    <?= $kat['nama_kategori']; ?>
+                </option>
+            <?php endforeach; ?>`;
+            }
+            namaKategoriDropdown.innerHTML = kategoriOptions;
+        }
+
+        // Trigger saat pertama kali load
+        updateSelectedData();
+        hitungPajak();
+
+        // Event listeners
+        document.getElementById('id_jenis_pajak').addEventListener('change', hitungPajak);
+        document.getElementById('nominal_pajak').addEventListener('input', hitungPajak);
+
+        document.getElementById('no_bukti_transaksi').addEventListener('change', function() {
+            const transaksiId = this.value;
+            fetch(`<?= BASEURL; ?>/transaksi/getNominalById/${transaksiId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.nominal !== undefined) {
+                        document.getElementById('nominal_pajak').value = data.nominal;
+                        hitungPajak();
+                    }
+                });
+        });
+
+        document.getElementById('tipe_kategori_pajak').addEventListener('change', updateSelectedData);
     });
-
-    document.getElementById('tanggal').addEventListener('change', function() {
-        const tipeBuku = document.getElementById('tipe_buku').value;
-        const tanggal = this.value;
-        if (tipeBuku && tanggal) fetchNoBukti(tipeBuku, tanggal);
-    });
-
-    function fetchNoBukti(tipeBuku, tanggal) {
-        fetch(`<?= BASEURL; ?>/transaksi/getNomorBukti/${tipeBuku}/${tanggal}`)
-            .then(res => res.text())
-            .then(data => {
-                document.getElementById('no_bukti').value = data;
-            })
-            .catch(err => console.error('Gagal ambil no bukti:', err));
-    }
-
-    // Trigger default kategori saat load
-    window.addEventListener('load', updateSelectedData);
 </script>

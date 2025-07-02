@@ -1,6 +1,6 @@
 <?php
 
-class Laporan extends Controller
+class Laporan extends BaseController
 {
     protected $allowedRoles = ['Admin', 'Pimpinan'];
 

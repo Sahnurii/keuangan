@@ -1,8 +1,8 @@
 <?php
 
-class User extends Controller
+class User extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin'];
 
     public function index()
     {

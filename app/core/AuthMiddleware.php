@@ -33,7 +33,7 @@ class AuthMiddleware
 
         if (!in_array($_SESSION['role'], $roles)) {
             // Jika tidak punya role yang sesuai, lempar ke halaman tidak diizinkan
-            header('Location: ' . BASEURL . '/auth');
+            header('Location: ' . BASEURL . '/errorcontroller/index');
             exit;
         }
     }

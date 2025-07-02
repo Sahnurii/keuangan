@@ -57,20 +57,25 @@ $flashData = Flasher::flash();  // Ambil data flash
                 <div class="form-group row">
                     <label for="nama_kategori" class="col-sm-2 col-form-label">NAMA KATEGORI</label>
                     <div class="col-sm-10">
-                        <select class="form-control" id="nama_kategori" name="kategori">
+                        <select class="form-control" id="nama_kategori" name="id_kategori">
                             <option value="" selected disabled>-- Pilih Nama Kategori --</option>
                             <?php if ($data['kas']['tipe_kategori'] === 'Pemasukan'): ?>
                                 <?php foreach ($data['pemasukan'] as $kat): ?>
-                                    <option value="<?= $kat['nama_kategori']; ?>" <?= $kat['nama_kategori'] === $data['kas']['kategori'] ? 'selected' : ''; ?>><?= $kat['nama_kategori']; ?></option>
+                                    <option value="<?= $kat['id']; ?>" <?= $kat['id'] === $data['kas']['id_kategori'] ? 'selected' : ''; ?>>
+                                        <?= $kat['nama_kategori']; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             <?php elseif ($data['kas']['tipe_kategori'] === 'Pengeluaran'): ?>
                                 <?php foreach ($data['pengeluaran'] as $kat): ?>
-                                    <option value="<?= $kat['nama_kategori']; ?>" <?= $kat['nama_kategori'] === $data['kas']['kategori'] ? 'selected' : ''; ?>><?= $kat['nama_kategori']; ?></option>
+                                    <option value="<?= $kat['id']; ?>" <?= $kat['id'] === $data['kas']['id_kategori'] ? 'selected' : ''; ?>>
+                                        <?= $kat['nama_kategori']; ?>
+                                    </option>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </select>
                     </div>
                 </div>
+
                 <div class="form-group row">
                     <label for="nominal_transaksi" class="col-sm-2 col-form-label">NOMINAL</label>
                     <div class="col-sm-10">
@@ -102,22 +107,20 @@ $flashData = Flasher::flash();  // Ambil data flash
 
     function updateKategoriOptions() {
         let namaKategoriDropdown = document.getElementById('nama_kategori');
-        let kategoriOptions = '';
+        let kategoriOptions = '<option value="" selected disabled>-- Pilih Nama Kategori --</option>';
 
         if (selectedTipeKategori === 'Pemasukan') {
-            kategoriOptions = `
-            <option value="" selected disabled>-- Pilih Nama Kategori --</option>
-            <?php foreach ($data['pemasukan'] as $kat): ?>
-                <option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>
-            <?php endforeach; ?>
-        `;
+            kategoriOptions += `<?php foreach ($data['pemasukan'] as $kat): ?>
+            <option value="<?= $kat['id']; ?>" <?= $kat['id'] === $data['kas']['id_kategori'] ? 'selected' : ''; ?>>
+                <?= $kat['nama_kategori']; ?>
+            </option>
+        <?php endforeach; ?>`;
         } else if (selectedTipeKategori === 'Pengeluaran') {
-            kategoriOptions = `
-            <option value="" selected disabled>-- Pilih Nama Kategori --</option>
-            <?php foreach ($data['pengeluaran'] as $kat): ?>
-                <option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>
-            <?php endforeach; ?>
-        `;
+            kategoriOptions += `<?php foreach ($data['pengeluaran'] as $kat): ?>
+            <option value="<?= $kat['id']; ?>" <?= $kat['id'] === $data['kas']['id_kategori'] ? 'selected' : ''; ?>>
+                <?= $kat['nama_kategori']; ?>
+            </option>
+        <?php endforeach; ?>`;
         }
 
         namaKategoriDropdown.innerHTML = kategoriOptions;

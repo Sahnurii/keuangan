@@ -6,12 +6,12 @@ $flashData = Flasher::flash();  // Ambil data flash
 
     <div class="card card-info">
         <div class="card-header  bg-primary">
-            <h3 class="card-title text-center text-white">Data Bidang</h3>
+            <h3 class="card-title text-center text-white">Data Jabatan & Bidang</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <div class="mb-3">
-                    <a href="<?= BASEURL; ?>/bidang/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> Tambah Bidang</a>
+                    <a href="<?= BASEURL; ?>/bidang/tambah/" class="btn btn-primary"><i class="fa fa-edit"></i> Tambah</a>
                 </div>
                 <table id="dataTable" class="table table-bordered table-hover">
                     <thead>

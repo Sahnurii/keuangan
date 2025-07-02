@@ -19,9 +19,9 @@ class Gaji_model
     public function tambahGaji($data)
     {
         $query = "INSERT INTO gaji 
-        (tanggal, id_pegawai, gaji_pokok, insentif, bobot_masa_kerja, pendidikan, beban_kerja, pemotongan) 
+        (tanggal, id_pegawai, gaji_pokok, insentif, bobot_masa_kerja, pendidikan, beban_kerja, pemotongan, status_pembayaran) 
         VALUES 
-        (:tanggal, :id_pegawai, :gaji_pokok, :insentif, :bobot_masa_kerja, :pendidikan, :beban_kerja, :pemotongan)";
+        (:tanggal, :id_pegawai, :gaji_pokok, :insentif, :bobot_masa_kerja, :pendidikan, :beban_kerja, :pemotongan, :status_pembayaran)";
 
         $this->db->query($query);
         $this->db->bind('tanggal', $data['tanggal']);
@@ -32,6 +32,7 @@ class Gaji_model
         $this->db->bind('pendidikan', $data['pendidikan'] ?? '');
         $this->db->bind('beban_kerja', $data['beban_kerja'] ?? '');
         $this->db->bind('pemotongan', $data['pemotongan'] ?? '');
+        $this->db->bind('status_pembayaran', 'pending');
 
         $this->db->execute();
         return $this->db->rowCount();
@@ -114,4 +115,175 @@ class Gaji_model
         $this->db->bind('ref', $reference);
         $this->db->execute();
     }
+
+    public function getDataGajiOtomatis($id_pegawai, $tanggal)
+    {
+        // Ambil semua jabatan bidang aktif pada tanggal tertentu
+        $this->db->query("
+        SELECT pjb.id_jabatan_bidang
+        FROM pegawai_jabatan_bidang pjb
+        WHERE pjb.id_pegawai = :id_pegawai
+          AND pjb.tanggal_mulai <= :tanggal
+          AND (pjb.tanggal_selesai IS NULL OR pjb.tanggal_selesai > :tanggal)
+    ");
+        $this->db->bind('id_pegawai', $id_pegawai);
+        $this->db->bind('tanggal', $tanggal);
+        $jabatanBidangs = $this->db->resultSet();
+
+        $total_gaji_pokok = 0;
+        $total_insentif = 0;
+
+        // Loop semua jabatan aktif, dan total gaji pokok & insentif
+        foreach ($jabatanBidangs as $row) {
+            $this->db->query("SELECT gaji_pokok, insentif FROM template_gaji_jabatan WHERE id_jabatan_bidang = :id");
+            $this->db->bind('id', $row['id_jabatan_bidang']);
+            $template = $this->db->single();
+            if ($template) {
+                $total_gaji_pokok += (float)$template['gaji_pokok'];
+                $total_insentif += (float)$template['insentif'];
+            }
+        }
+
+        // Ambil pendidikan tertinggi dari riwayat_pendidikan_pegawai
+        $this->db->query("
+        SELECT mtp.nominal
+        FROM riwayat_pendidikan_pegawai rpp
+        JOIN master_tunjangan_pendidikan mtp ON rpp.id_jenjang = mtp.id
+        WHERE rpp.id_pegawai = :id_pegawai
+        ORDER BY rpp.id_jenjang DESC
+        LIMIT 1
+    ");
+        $this->db->bind('id_pegawai', $id_pegawai);
+        $pendidikan = $this->db->single();
+        $nominal_pendidikan = $pendidikan ? (float)$pendidikan['nominal'] : 0;
+
+        // Ambil data pegawai untuk menghitung masa kerja
+        $this->db->query("SELECT tmt, id_klasifikasi FROM pegawai WHERE id = :id_pegawai");
+        $this->db->bind('id_pegawai', $id_pegawai);
+        $pegawai = $this->db->single();
+
+        $tmt = new DateTime($pegawai['tmt']);
+        $end = new DateTime($tanggal);
+        $interval = $tmt->diff($end);
+        $jumlah_bulan = ($interval->y * 12) + $interval->m;
+
+        // Ambil bobot per bulan
+        $this->db->query("SELECT bobot FROM master_bobot_masa_kerja WHERE id = :id_klasifikasi");
+        $this->db->bind('id_klasifikasi', $pegawai['id_klasifikasi']);
+        $bobot = $this->db->single();
+        $bobot_per_bulan = $bobot ? (float)$bobot['bobot'] : 0;
+
+        // Hitung total bobot masa kerja
+        $bobot_masa_kerja = $jumlah_bulan * $bobot_per_bulan;
+
+        // $bobot_masa_kerja = $this->getBobotMasaKerja($id_pegawai);
+
+        return [
+            'gaji_pokok' => $total_gaji_pokok,
+            'insentif' => $total_insentif,
+            'pendidikan' => $nominal_pendidikan,
+            'bobot_masa_kerja' => $bobot_masa_kerja,
+            'bobot_per_bulan' => $bobot_per_bulan,
+            'jumlah_bulan' => $jumlah_bulan
+        ];
+    }
+
+    private function hitungSelisihBulan($tmt, $tanggal_input)
+    {
+        $start = new DateTime($tmt);
+        $end = new DateTime($tanggal_input);
+        $interval = $start->diff($end);
+        return ($interval->y * 12) + $interval->m;
+    }
+
+    public function getBobotMasaKerja($id_pegawai)
+    {
+        // Ambil data TMT dan ID klasifikasi dari tabel pegawai
+        $sql = "SELECT tmt, id_klasifikasi FROM pegawai WHERE id = :id_pegawai";
+        $this->db->query($sql);
+        $this->db->bind('id_pegawai', $id_pegawai);
+        $pegawai = $this->db->single();
+
+        if (!$pegawai) {
+            return 0;
+        }
+
+        // Hitung masa kerja dalam bulan dari TMT
+        $now = new DateTime();
+        $tmt = new DateTime($pegawai['tmt']);
+        $interval = $tmt->diff($now);
+        $masaKerjaBulan = ($interval->y * 12) + $interval->m;
+
+        // Ambil bobot dari master_bobot_masa_kerja berdasarkan id_klasifikasi
+        $sql = "SELECT bobot FROM master_bobot_masa_kerja WHERE id = :id_klasifikasi";
+        $this->db->query($sql);
+        $this->db->bind('id_klasifikasi', $pegawai['id_klasifikasi']);
+        $bobot = $this->db->single();
+
+        if ($bobot) {
+            return $masaKerjaBulan * $bobot['bobot'];
+        } else {
+            return 0;
+        }
+    }
+
+    
+
+
+    // public function getBobotMasaKerja($tmt)
+    // {
+    //     $now = new DateTime();
+    //     $tmtDate = new DateTime($tmt);
+    //     $interval = $tmtDate->diff($now);
+    //     $masaKerjaBulan = ($interval->y * 12) + $interval->m;
+
+    //     // Siapkan query ambil nilai bobot berdasarkan masa kerja bulan
+    //     $sql = "SELECT bobot 
+    //         FROM master_bobot_masa_kerja 
+    //         WHERE :masa_kerja BETWEEN range_bulan_mulai AND range_bulan_sampai 
+    //         LIMIT 1";
+
+    //     $this->db->query($sql);
+    //     $this->db->bind('masa_kerja', $masaKerjaBulan);
+    //     $data = $this->db->single(); // menggunakan metode single() sesuai struktur kamu
+
+    //     if ($data) {
+    //         return $masaKerjaBulan * $data['nilai_bobot'];
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+
+
+
+
+    // public function getTemplateGajiByPegawai($idPegawai)
+    // {
+    //     // ambil data pegawai
+    //     $this->db->query("SELECT * FROM pegawai WHERE id = :id");
+    //     $this->db->bind(':id', $idPegawai);
+    //     $pegawai = $this->db->single();
+
+    //     // ambil gaji pokok & insentif
+    //     $this->db->query("SELECT gaji_pokok, insentif FROM template_gaji_jabatan WHERE id_jabatan_bidang = :id_jabatan");
+    //     $this->db->bind(':id_jabatan', $pegawai['id_jabatan_bidang']);
+    //     $gaji = $this->db->single();
+
+    //     // ambil tunjangan pendidikan
+    //     $this->db->query("SELECT nilai_tunjangan FROM master_tunjangan_pendidikan WHERE id_pendidikan = :id_pendidikan");
+    //     $this->db->bind(':id_pendidikan', $pegawai['id_pendidikan']);
+    //     $pendidikan = $this->db->single();
+
+    //     // ambil bobot masa kerja
+    //     $this->db->query("SELECT nilai_bobot FROM master_bobot_masa_kerja WHERE :masa_kerja BETWEEN min_masa_kerja AND max_masa_kerja");
+    //     $this->db->bind(':masa_kerja', $pegawai['masa_kerja']);
+    //     $bobot = $this->db->single();
+
+    //     return [
+    //         'gaji_pokok' => $gaji['gaji_pokok'] ?? 0,
+    //         'insentif' => $gaji['insentif'] ?? 0,
+    //         'tunjangan_pendidikan' => $pendidikan['nilai_tunjangan'] ?? 0,
+    //         'bobot_masa_kerja' => $bobot['nilai_bobot'] ?? 0
+    //     ];
+    // }
 }

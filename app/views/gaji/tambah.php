@@ -6,7 +6,7 @@
 
         <form action="<?= BASEURL; ?>/gaji/tambah" method="POST">
             <div class="container mt-2">
-            <div class="form-group row">
+                <div class="form-group row">
                     <label for="tanggal" class="col-sm-2 col-form-label">TANGGAL</label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" id="tanggal" name="tanggal" placeholder="Masukkan Tanggal" required>
@@ -40,6 +40,7 @@
                     <label for="bobot_masa_kerja" class="col-sm-2 col-form-label">Bobot Masa Kerja</label>
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="bobot_masa_kerja" name="bobot_masa_kerja" placeholder="Masukkan Bobot Masa Kerja">
+                        <small id="info_bobot" class="form-text text-muted mt-1"></small>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -66,3 +67,28 @@
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('id_pegawai').addEventListener('change', function() {
+        const idPegawai = this.value;
+
+        if (idPegawai) {
+            fetch('<?= BASEURL ?>/gaji/getTemplateByPegawai/' + idPegawai)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('gaji_pokok').value = data.gaji_pokok || 0;
+                    document.getElementById('insentif').value = data.insentif || 0;
+                    document.getElementById('pendidikan').value = data.pendidikan || 0;
+                    document.getElementById('bobot_masa_kerja').value = data.bobot_masa_kerja || 0;
+
+                    // Tambahkan informasi perhitungan bobot
+                    if (data.bobot_per_bulan && data.jumlah_bulan) {
+                        document.getElementById('info_bobot').innerText = `(${data.bobot_per_bulan} × ${data.jumlah_bulan} bulan)`;
+                    } else {
+                        document.getElementById('info_bobot').innerText = '';
+                    }
+                })
+                .catch(err => console.error('Gagal mengambil data:', err));
+        }
+    });
+</script>

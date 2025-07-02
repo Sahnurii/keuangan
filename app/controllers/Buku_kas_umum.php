@@ -1,8 +1,8 @@
 <?php
 
-class Buku_kas_umum extends Controller
+class Buku_kas_umum extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {

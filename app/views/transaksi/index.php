@@ -21,8 +21,8 @@
                         <div class="col-sm-10">
                             <select class="form-control" id="tipe_buku_umum" name="tipe_buku" required>
                                 <option value="" selected disabled>-- Pilih Tipe Buku --</option>
-                                <option value="Bank">Bank</option>
                                 <option value="Kas">Kas</option>
+                                <option value="Bank">Bank</option>
                                 <option value="Pajak">Pajak</option>
                             </select>
                         </div>
@@ -60,7 +60,8 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Kategori</label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="nama_kategori" id="nama_kategori_umum">
+                            <select class="form-control" name="id_kategori" id="id_kategori_umum" required>
+
                                 <!-- JS akan isi berdasarkan tipe -->
                             </select>
                         </div>
@@ -68,7 +69,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nominal</label>
                         <div class="col-sm-10">
-                            <input type="number" name="nominal_transaksi" class="form-control" required>
+                            <input type="number" name="nominal_transaksi" class="form-control" step="0.01" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block mb-4">Simpan Transaksi Umum</button>
@@ -86,9 +87,19 @@
                         <div class="col-sm-10">
                             <select class="form-control" id="tipe_buku_pajak" name="tipe_buku" required>
                                 <option value="" selected disabled>-- Pilih Tipe Buku --</option>
-                                <option value="Bank">Bank</option>
                                 <option value="Kas">Kas</option>
+                                <option value="Bank">Bank</option>
                                 <option value="Pajak">Pajak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Sumber Saldo</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="sumber_saldo" name="sumber_saldo" required>
+                                <option value="" selected disabled>-- Pilih Sumber Saldo --</option>
+                                <option value="Kas">Kas</option>
+                                <option value="Bank">Bank</option>
                             </select>
                         </div>
                     </div>
@@ -133,13 +144,22 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Jenis Transaksi</label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="tipe_kategori">
+                            <select class="form-control" name="tipe_kategori" id="tipe_kategori_pajak">
                                 <option value="">-- Pilih Jenis --</option>
                                 <option value="Pemasukan">Pemasukan</option>
                                 <option value="Pengeluaran">Pengeluaran</option>
                             </select>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Kategori</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="id_kategori" id="id_kategori_pajak" required>
+                                <!-- akan diisi secara dinamis oleh JS -->
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Keterangan</label>
                         <div class="col-sm-10">
@@ -149,13 +169,13 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nominal Transaksi</label>
                         <div class="col-sm-10">
-                            <input type="number" name="nominal_transaksi" id="nominal_pajak" class="form-control" readonly>
+                            <input type="number" name="nominal_transaksi" id="nominal_pajak" class="form-control" step="0.01" readonly>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Nilai Pajak</label>
                         <div class="col-sm-10">
-                            <input type="number" name="nilai_pajak" id="nilai_pajak" class="form-control" readonly>
+                            <input type="number" name="nilai_pajak" id="nilai_pajak" class="form-control" step="0.01" readonly>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-danger btn-block mb-4">Simpan Transaksi Pajak</button>
@@ -172,6 +192,8 @@
 <script>
     // Fungsi fetch nomor bukti otomatis
     function fetchNoBukti(tipeBuku, tanggal) {
+        const sumberSaldo = document.getElementById('sumber_saldo')?.value || '';
+
         const url = tipeBuku === 'Pajak' ?
             `<?= BASEURL; ?>/transaksi/getNomorBuktiPajak/${tipeBuku}/${tanggal}` :
             `<?= BASEURL; ?>/transaksi/getNomorBukti/${tipeBuku}/${tanggal}`;
@@ -238,25 +260,31 @@
         }
     });
 
-
     // Dropdown kategori berdasarkan tipe kategori (Pemasukan/Pengeluaran)
-    document.getElementById('tipe_kategori_umum').addEventListener('change', function() {
-        const tipe = this.value;
-        const kategoriDropdown = document.getElementById('nama_kategori_umum');
-
+    function updateKategoriDropdown(tipeKategori, targetDropdownId) {
         let options = `<option value="">-- Pilih Kategori --</option>`;
-        if (tipe === 'Pemasukan') {
+        if (tipeKategori === 'Pemasukan') {
             <?php foreach ($data['pemasukan'] as $kat) : ?>
-                options += `<option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>`;
+                options += `<option value="<?= $kat['id']; ?>"><?= $kat['nama_kategori']; ?></option>`;
             <?php endforeach; ?>
-        } else if (tipe === 'Pengeluaran') {
+        } else if (tipeKategori === 'Pengeluaran') {
             <?php foreach ($data['pengeluaran'] as $kat) : ?>
-                options += `<option value="<?= $kat['nama_kategori']; ?>"><?= $kat['nama_kategori']; ?></option>`;
+                options += `<option value="<?= $kat['id']; ?>"><?= $kat['nama_kategori']; ?></option>`;
             <?php endforeach; ?>
         }
+        document.getElementById(targetDropdownId).innerHTML = options;
+    }
 
-        kategoriDropdown.innerHTML = options;
+    // Event untuk form umum
+    document.getElementById('tipe_kategori_umum').addEventListener('change', function() {
+        updateKategoriDropdown(this.value, 'id_kategori_umum');
     });
+
+    // Event untuk form pajak
+    document.getElementById('tipe_kategori_pajak').addEventListener('change', function() {
+        updateKategoriDropdown(this.value, 'id_kategori_pajak');
+    });
+
 
     // Fungsi hitung nilai pajak otomatis
     function hitungPajak() {
@@ -274,10 +302,10 @@
     document.getElementById('no_bukti_transaksi').addEventListener('change', function() {
         const transaksiId = this.value;
 
-        fetch(`<?= BASEURL; ?>/transaksi_pajak/getNominalById/${transaksiId}`)
+        fetch(`<?= BASEURL; ?>/transaksi/getNominalById/${transaksiId}`)
             .then(response => response.json())
             .then(data => {
-                if (data?.nominal) {
+                if (data && data.nominal !== undefined && data.nominal !== null) {
                     document.getElementById('nominal_pajak').value = data.nominal;
                     hitungPajak(); // panggil ulang fungsi hitung
                 } else {
@@ -285,6 +313,7 @@
                     document.getElementById('nilai_pajak').value = '';
                 }
             })
+
             .catch(error => {
                 console.error('Gagal fetch nominal transaksi:', error);
             });

@@ -1,8 +1,8 @@
 <?php
 
-class Buku_pajak extends Controller
+class Buku_pajak extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {
@@ -29,6 +29,7 @@ class Buku_pajak extends Controller
             if (!isset($transaksiGroup[$no])) {
                 $transaksiGroup[$no] = [
                     'id' => $row['id'],
+                    'tipe_buku' => $row['tipe_buku'],
                     'tanggal' => $row['tanggal'],
                     'no_bukti' => $row['no_bukti'],
                     'keterangan' => $row['keterangan'],
@@ -37,7 +38,7 @@ class Buku_pajak extends Controller
                         'PPh21' => ['Pemasukan' => 0, 'Pengeluaran' => 0],
                         'PPh22' => ['Pemasukan' => 0, 'Pengeluaran' => 0],
                         'PPh23' => ['Pemasukan' => 0, 'Pengeluaran' => 0],
-                        'PPh 4(2)' => ['Pemasukan' => 0, 'Pengeluaran' => 0],
+                        'Pph4(2)Final' => ['Pemasukan' => 0, 'Pengeluaran' => 0],
                     ]
                 ];
             }
@@ -88,9 +89,11 @@ class Buku_pajak extends Controller
 
     public function edit($id)
     {
-        $data['Pajak'] = $this->model('Pajak_model')->getTransaksiById($id);
         $data['judul'] = 'Edit Pajak';
+        $data['transaksi_pajak'] = $this->model('Pajak_model')->getTransaksiPajakByIdGabungan($id);
 
+        $data['no_bukti_transaksi'] = $this->model('Pajak_model')->getAllNoBuktiTransaksi();
+        $data['jenis_pajak'] = $this->model('Pajak_model')->getAllJenisPajak();
         $data['pemasukan'] = $this->model('Kategori_model')->getKategoriByTipe('Pemasukan');
         $data['pengeluaran'] = $this->model('Kategori_model')->getKategoriByTipe('Pengeluaran');
 
@@ -99,10 +102,11 @@ class Buku_pajak extends Controller
         $this->view('templates/footer');
     }
 
+
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if ($this->model('Pajak_model')->editDataTransaksi($_POST) > 0) {
+            if ($this->model('Pajak_model')->editDataTransaksiPajakGabungan($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
                 Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/buku_pajak');

@@ -43,7 +43,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary" id="tes">Filter</button>
                         <a href="<?= BASEURL; ?>/laporan/cetak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
-                        class="btn btn-success ml-2" target="_blank">CETAK</a>
+                            class="btn btn-success ml-2" target="_blank">CETAK</a>
                     </div>
                 </div>
             </form>
@@ -52,7 +52,7 @@ $flashData = Flasher::flash();  // Ambil data flash
 
             <!-- End Form Filter -->
             <div class="table-responsive">
-                <div class="mb-3">                    
+                <div class="mb-3">
                     <a href="<?= BASEURL; ?>/transaksi" class="btn btn-primary"><i class="fa fa-edit"></i> TAMBAH</a>
                 </div>
                 <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
@@ -79,19 +79,24 @@ $flashData = Flasher::flash();  // Ambil data flash
                                 <td class="text-center align-content-center"><?= $i++; ?></td>
                                 <td class="text-center align-content-center"><?= tglSingkatIndonesia($transaksi['tanggal']); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
-                                <td class="text-wrap"><?= $transaksi['keterangan']; ?></td>
-                                <td class="align-content-center" style="max-width: 50px;"><?= $transaksi['kategori']; ?></td>
+                                <td class="text-wrap" style="max-width: 250px;"><?= $transaksi['keterangan']; ?></td>
+                                <td class="align-content-center" style="max-width: 50px;"><?= $transaksi['nama_kategori'] ?? '-'; ?></td>
                                 <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="text-center align-content-center" style="width: 10%;"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
                                 <td class="saldo-cell text-right" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
                                 <td class="text-center align-content-center">
-                                    <a href="<?= BASEURL; ?>/buku_kas/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
-                                    <a href="<?= BASEURL; ?>/transaksi/hapusKas/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">
-                                        <i class="fa fa-trash"></i> Hapus
-                                    </a>
+                                    <?php if (strpos($transaksi['no_bukti'], 'BPJ') === 0): ?>
+                                        <span class="badge badge-secondary">Kelola di Pajak</span>
+                                    <?php else: ?>
+                                        <a href="<?= BASEURL; ?>/buku_kas/edit/<?= $transaksi['id']; ?>" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <a href="<?= BASEURL; ?>/transaksi/hapusKas/<?= $transaksi['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">
+                                            <i class="fa fa-trash"></i> Hapus
+                                        </a>
+                                    <?php endif; ?>
                                 </td>
+
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

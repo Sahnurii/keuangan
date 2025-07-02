@@ -6,6 +6,12 @@ function uang_indo($angka)
     return $rupiah;
 }
 
+function uang_indo_v2($angka)
+{
+    $rupiah = "Rp " . number_format($angka);
+    return $rupiah;
+}
+
 function tglIndonesia($str)
 {
     $tr   = trim($str);

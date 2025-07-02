@@ -91,6 +91,16 @@ $flashData = Flasher::flash();  // Ambil data flash
                                 <a href="<?= BASEURL; ?>/gaji/edit/<?= $gaji['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
                                 <a href="<?= BASEURL; ?>/gaji/hapus/<?= $gaji['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">Hapus</a>
                             </td>
+                            <!-- Kolom Status -->
+                            <td>
+                                <?php if ($gaji['status_pembayaran'] == 'paid') : ?>
+                                    <span class="badge badge-success">Paid</span>
+                                <?php else : ?>
+                                    <span class="badge badge-warning">Pending</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Kolom Pembayaran -->
                             <td>
                                 <?php if ($gaji['status_pembayaran'] != 'paid') : ?>
                                     <a href="<?= BASEURL; ?>/gaji/bayar/<?= $gaji['id']; ?>" class="btn btn-success btn-sm">Bayar</a>
@@ -98,6 +108,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                                     <span class="text-success">Sudah Dibayar</span>
                                 <?php endif; ?>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

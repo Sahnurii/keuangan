@@ -59,6 +59,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                     <thead>
                         <tr>
                             <th rowspan="2" width="1%">NO</th>
+                            <th rowspan="2" class="text-center">SUMBER SALDO</th>
                             <th rowspan="2" class="text-center">TANGGAL</th>
                             <th rowspan="2" class="text-center">NO BUKTI</th>
                             <th rowspan="2" class="text-center">URAIAN</th>
@@ -81,13 +82,22 @@ $flashData = Flasher::flash();  // Ambil data flash
                         <?php foreach ($data['transaksi'] as $trx): ?>
                             <tr>
                                 <td class="text-center"><?= $i++; ?></td>
+                                <td class="text-center">
+                                    <?php if (($trx['tipe_buku'] ?? '') === 'Kas'): ?>
+                                        <a href="<?= BASEURL; ?>/buku_kas?bulan=<?= $selectedBulan ?>&tahun=<?= $selectedTahun ?>" class="badge badge-success">Kas</a>
+                                    <?php elseif (($trx['tipe_buku'] ?? '') === 'Bank'): ?>
+                                        <a href="<?= BASEURL; ?>/buku_bank?bulan=<?= $selectedBulan ?>&tahun=<?= $selectedTahun ?>" class="badge badge-info">Bank</a>
+                                    <?php else: ?>
+                                        <span class="badge badge-secondary">Tidak Diketahui</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="text-center"><?= tglSingkatIndonesia($trx['tanggal']); ?></td>
                                 <td class="text-center"><?= $trx['no_bukti']; ?></td>
-                                <td class="text-wrap"><?= $trx['keterangan']; ?></td>
+                                <td class="text-wrap" style="max-width: 250px;"><?= $trx['keterangan']; ?></td>
                                 <!-- <td><?= $trx['kategori']; ?></td> -->
 
                                 <!-- Pemasukan tiap jenis -->
-                                <?php foreach (['PPN', 'PPh 4(2)', 'PPh21', 'PPh22', 'PPh23'] as $jenis): ?>
+                                <?php foreach (['PPN', 'Pph4(2)Final', 'PPh21', 'PPh22', 'PPh23'] as $jenis): ?>
                                     <?php $val = $trx['pajak'][$jenis]['Pemasukan']; ?>
                                     <td class="text-center"><?= $val > 0 ? uang_indo($val) : '-'; ?></td>
                                 <?php endforeach; ?>

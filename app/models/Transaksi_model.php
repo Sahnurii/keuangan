@@ -10,18 +10,27 @@ class Transaksi_model
         $this->db = new Database;
     }
 
+    public function getLastInsertedId()
+    {
+        return $this->db->lastInsertId();
+    }
+
     public function tambahDataTransaksi($data)
     {
-        $query = "INSERT INTO transaksi (tipe_buku, tanggal, no_bukti, keterangan, kategori, tipe_kategori, nominal_transaksi, sumber_saldo) VALUES (:tipe_buku, :tanggal, :no_bukti, :keterangan, :kategori, :tipe_kategori, :nominal_transaksi, :sumber_saldo)";
+        // echo '<pre>';
+        // print_r($data);  // Debug sebelum insert
+        // echo '</pre>';
+        // exit;
+
+        $query = "INSERT INTO transaksi (tipe_buku, tanggal, no_bukti, keterangan, id_kategori, tipe_kategori, nominal_transaksi) VALUES (:tipe_buku, :tanggal, :no_bukti, :keterangan, :id_kategori, :tipe_kategori, :nominal_transaksi)";
         $this->db->query($query);
         $this->db->bind('tipe_buku', $data['tipe_buku']);
         $this->db->bind('tanggal', $data['tanggal']);
         $this->db->bind('no_bukti', $data['no_bukti']);
         $this->db->bind('keterangan', $data['keterangan']);
-        $this->db->bind('kategori', $data['nama_kategori']);
+        $this->db->bind('id_kategori', $data['id_kategori']);
         $this->db->bind('tipe_kategori', $data['tipe_kategori']);
         $this->db->bind('nominal_transaksi', $data['nominal_transaksi']);
-        $this->db->bind('sumber_saldo', $data['sumber_saldo']);
 
         $this->db->execute();
 
@@ -39,9 +48,91 @@ class Transaksi_model
         return $this->db->rowCount();
     }
 
+    // public function getAllTransaksi($bulan, $tahun)
+    // {
+    //     $query = "SELECT * FROM transaksi WHERE MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY DATE(tanggal) ASC";
+    //     $this->db->query($query);
+    //     $this->db->bind('bulan', $bulan);
+    //     $this->db->bind('tahun', $tahun);
+    //     return $this->db->resultSet();
+    // }
+
+    // public function getAllTransaksi($bulan, $tahun)
+    // {
+    //     $query = "SELECT 
+    //             transaksi.*, 
+    //             kategori.nama_kategori 
+    //           FROM transaksi 
+    //           LEFT JOIN kategori ON transaksi.id_kategori = kategori.id
+    //           WHERE MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun
+    //           ORDER BY tanggal ASC";
+
+    //     $this->db->query($query);
+    //     $this->db->bind('bulan', $bulan);
+    //     $this->db->bind('tahun', $tahun);
+    //     return $this->db->resultSet();
+    // }
+
+    // public function getAllTransaksi($bulan, $tahun)
+    // {
+    //     $this->db->query("
+    //     SELECT 
+    //         t.id,
+    //         t.tanggal,
+    //         t.no_bukti,
+    //         t.keterangan,
+    //         k.nama_kategori,
+    //         t.nominal_transaksi,
+    //         t.tipe_kategori,
+    //         t.tipe_buku
+    //     FROM transaksi t
+    //     LEFT JOIN kategori k ON t.id_kategori = k.id
+    //     WHERE MONTH(t.tanggal) = :bulan AND YEAR(t.tanggal) = :tahun
+
+    //     UNION ALL
+
+    //     SELECT 
+    //         tp.id,
+    //         tp.tanggal,
+    //         tp.no_bukti,
+    //         tp.keterangan,
+    //         'Pajak' AS nama_kategori,
+    //         tp.nilai_pajak AS nominal_transaksi,
+    //         tp.tipe_kategori,
+    //         'Pajak' AS tipe_buku
+    //     FROM transaksi_pajak tp
+    //     WHERE MONTH(tp.tanggal) = :bulan AND YEAR(tp.tanggal) = :tahun
+
+    //     ORDER BY tanggal ASC
+    // ");
+    //     $this->db->bind('bulan', $bulan);
+    //     $this->db->bind('tahun', $tahun);
+
+    //     return $this->db->resultSet();
+    // }
+
+
+    // public function getTransaksiByTipeBuku($tipeBuku, $bulan, $tahun)
+    // {
+    //     $query = "SELECT * FROM transaksi WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY DATE(tanggal) ASC";
+    //     $this->db->query($query);
+    //     $this->db->bind('tipe_buku', $tipeBuku);
+    //     $this->db->bind('bulan', $bulan);
+    //     $this->db->bind('tahun', $tahun);
+    //     return $this->db->resultSet();
+    // }
+
     public function getAllTransaksi($bulan, $tahun)
     {
-        $query = "SELECT * FROM transaksi WHERE MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY DATE(tanggal) ASC";
+        $query = "SELECT t.*, k.nama_kategori,
+                     EXISTS (
+                         SELECT 1 FROM transaksi_pajak tp WHERE tp.id_transaksi_sumber = t.id
+                     ) AS is_pajak
+              FROM transaksi t
+              JOIN kategori k ON t.id_kategori = k.id
+              WHERE MONTH(t.tanggal) = :bulan AND YEAR(t.tanggal) = :tahun
+              ORDER BY t.tanggal ASC";
+
         $this->db->query($query);
         $this->db->bind('bulan', $bulan);
         $this->db->bind('tahun', $tahun);
@@ -50,13 +141,24 @@ class Transaksi_model
 
     public function getTransaksiByTipeBuku($tipeBuku, $bulan, $tahun)
     {
-        $query = "SELECT * FROM transaksi WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun ORDER BY DATE(tanggal) ASC";
+        $query = "SELECT 
+            t.*, 
+            k.nama_kategori 
+          FROM transaksi t
+          LEFT JOIN kategori k ON t.id_kategori = k.id
+          WHERE t.tipe_buku = :tipe_buku 
+            AND MONTH(t.tanggal) = :bulan 
+            AND YEAR(t.tanggal) = :tahun
+          ORDER BY t.tanggal ASC";
+
         $this->db->query($query);
         $this->db->bind('tipe_buku', $tipeBuku);
         $this->db->bind('bulan', $bulan);
         $this->db->bind('tahun', $tahun);
+
         return $this->db->resultSet();
     }
+
 
     public function getTransaksiById($id)
     {
@@ -67,16 +169,15 @@ class Transaksi_model
 
     public function editDataTransaksi($data)
     {
-        $query = "UPDATE transaksi SET tipe_buku = :tipe_buku, tanggal = :tanggal, no_bukti = :no_bukti, keterangan = :keterangan, kategori = :kategori, tipe_kategori = :tipe_kategori, nominal_transaksi = :nominal_transaksi, sumber_saldo =:sumber_saldo WHERE id = :id";
+        $query = "UPDATE transaksi SET tipe_buku = :tipe_buku, tanggal = :tanggal, no_bukti = :no_bukti, keterangan = :keterangan, id_kategori = :id_kategori, tipe_kategori = :tipe_kategori, nominal_transaksi = :nominal_transaksi WHERE id = :id";
         $this->db->query($query);
         $this->db->bind('tipe_buku', $data['tipe_buku']);
         $this->db->bind('tanggal', $data['tanggal']);
         $this->db->bind('no_bukti', $data['no_bukti']);
         $this->db->bind('keterangan', $data['keterangan']);
-        $this->db->bind('kategori', $data['kategori']);
+        $this->db->bind('id_kategori', $data['id_kategori']);
         $this->db->bind('tipe_kategori', $data['tipe_kategori']);
         $this->db->bind('nominal_transaksi', $data['nominal_transaksi']);
-        $this->db->bind('sumber_saldo', $data['sumber_saldo']);
         $this->db->bind('id', $data['id']);
 
         $this->db->execute();
@@ -149,7 +250,7 @@ class Transaksi_model
         $this->db->bind('tahun', $tahun);
         return $this->db->resultSet();
     }
-    
+
     public function getSaldoAwal($bulan, $tahun)
     {
         $query = "SELECT SUM(nominal_transaksi) AS saldo_awal 

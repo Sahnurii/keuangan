@@ -30,3 +30,23 @@ $('.tombol-hapus').on('click', function (e) {
         }
     });
 });
+
+$('.tombol-status').on('click', function (e) {
+    e.preventDefault();
+    const href = $(this).attr('href');
+    const status = $(this).data('status');
+    const pesan = (status === 'aktif') ? 'Nonaktifkan pegawai ini?' : 'Aktifkan kembali pegawai ini?';
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: pesan,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.location.href = href;
+        }
+    });
+});

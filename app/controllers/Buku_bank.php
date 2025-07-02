@@ -1,8 +1,8 @@
 <?php
 
-class Buku_bank extends Controller
+class Buku_bank extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {

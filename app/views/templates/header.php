@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="shortcut icon" href="<?= BASEURL; ?>/img/Logo.png" widht="30" height="30">
+    <link rel="shortcut icon" href="<?= BASEURL; ?>/img/Logo.png" width="30" height="30">
     <title>Halaman <?= $data['judul'] ?></title>
 
     <!-- Custom fonts for this template-->
@@ -56,108 +56,170 @@
                     <span>Dashboard</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                MASTER DATA
-            </div>
-
-            <!-- Nav Item - Kategori -->
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/kategori">
-                    <i class="fas fa-fw fa-list"></i>
-                    <span>Data Kategori</span></a>
-            </li>
-
-            <!-- Nav Item - bidang -->
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/bidang">
-                    <i class="fas fa-fw fa-solid fa-sitemap"></i>
-                    <span>Data Bidang</span></a>
-            </li>
-
-            <!-- Nav Item - Pegawai -->
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/pegawai">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Data Pegawai</span></a>
-            </li>
-
-            <!-- Nav Item - Jenis Pajak -->
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/jenis_pajak">
-                    <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                    <span>Jenis Pajak</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                DATA TRANSAKSI
-            </div>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-book"></i>
-                    <span>Buku</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas_umum">KAS UMUM</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas">PEMBANTU KAS</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/buku_bank">PEMBANTU BANK</a>
-                        <a class="collapse-item" href="<?= BASEURL; ?>/buku_pajak">PEMBANTU PAJAK</a>
-                    </div>
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    MASTER DATA
                 </div>
-            </li>
+            <?php endif; ?>
 
-            <!-- Nav Item - Saldo -->
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/saldo">
-                    <i class="fas fa-fw fa-wallet"></i>
-                    <span>Saldo</span></a>
-            </li>
+            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+                <!-- Nav Item - Kategori -->
 
-            <!-- Nav Item - Gaji -->
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/gaji">
-                    <i class="fas fa-fw fa-solid fa-money-bill"></i>
-                    <span>Gaji</span></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/kategori">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Data Kategori</span></a>
+                </li>
+            <?php endif; ?>
 
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                MENU TRANSAKSI
-            </div>
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - bidang -->
 
-            <!-- Nav Item - Menu Transaksi -->
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/transaksi">
-                    <i class="fas fa-fw fa-exchange-alt"></i>
-                    <span>Transaksi</span></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/bidang">
+                        <i class="fas fa-fw fa-solid fa-sitemap"></i>
+                        <span>Data Jabatan & Bidang</span></a>
+                </li>
+            <?php endif; ?>
 
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Pegawai -->
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/pegawai">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Data Pegawai</span></a>
+                </li>
+            <?php endif; ?>
 
-            <!-- Heading -->
-            <?php if ($_SESSION['role'] === 'Admin') : ?>
-            <div class="sidebar-heading">
-                LAPORAN
-            </div>
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Riwayat Pendidikan -->
 
-            <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/riwayat_pendidikan">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Data Riwayat Pendidikan</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Jenis Pajak -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/jenis_pajak">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>Jenis Pajak</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Tunjangan Pendidikan -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/master_tunjangan">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>Tunjangan Pendidikan</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Bobot Masa Kerja -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/master_bobot">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>Bobot Masa Kerja</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Template Gaji Jabatan -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/template_gaji_jabatan">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>Template Gaji Jabatan</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Pengajuan Anggaran -->
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/pengajuan_anggaran">
+                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
+                        <span>Ajukan Anggaran</span></a>
+                </li>
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    DATA TRANSAKSI
+                </div>
+
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                        aria-expanded="true" aria-controls="collapseTwo">
+                        <i class="fas fa-fw fa-book"></i>
+                        <span>Buku</span>
+                    </a>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas_umum">KAS UMUM</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/buku_kas">PEMBANTU KAS</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/buku_bank">PEMBANTU BANK</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/buku_pajak">PEMBANTU PAJAK</a>
+                        </div>
+                    </div>
+                </li>
+
+                <!-- Nav Item - Saldo -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/saldo">
+                        <i class="fas fa-fw fa-wallet"></i>
+                        <span>Saldo</span></a>
+                </li>
+
+                <!-- Nav Item - Gaji -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/gaji">
+                        <i class="fas fa-fw fa-solid fa-money-bill"></i>
+                        <span>Gaji</span></a>
+                </li>
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    MENU TRANSAKSI
+                </div>
+
+                <!-- Nav Item - Menu Transaksi -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/transaksi">
+                        <i class="fas fa-fw fa-exchange-alt"></i>
+                        <span>Transaksi</span></a>
+                </li>
+
+            <?php endif; ?>
+
+            <?php if (in_array($_SESSION['role'], ['Admin', 'Pimpinan'])) : ?>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    LAPORAN
+                </div>
+
+                <!-- Nav Item - Pages Collapse Menu -->
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                         aria-expanded="true" aria-controls="collapsePages">
@@ -179,26 +241,26 @@
                 </li>
             <?php endif; ?>
 
+            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
+                <div class="sidebar-heading">
+                    SETTINGS
+                </div>
 
-            <div class="sidebar-heading">
-                SETTINGS
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link" href="<?= BASEURL; ?>/user">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Users</span></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/user">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Users</span></a>
+                </li>
+            <?php endif; ?>
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
-
 
         </ul>
         <!-- End of Sidebar -->

@@ -3,7 +3,7 @@
 class Bidang_model
 {
 
-    private $table = 'bidang';
+    private $table = 'jabatan_bidang';
     private $db;
 
     public function __construct()
@@ -26,7 +26,7 @@ class Bidang_model
 
     public function hapusDataBidang($id)
     {
-        $query = "DELETE FROM bidang WHERE id= :id";
+        $query = "DELETE FROM " . $this->table . " WHERE id= :id";
         $this->db->query($query);
         $this->db->bind('id', $id);
 
@@ -37,7 +37,7 @@ class Bidang_model
 
     public function tambahDataBidang($data)
     {
-        $query = "INSERT INTO bidang (jabatan, nama_bidang) VALUES (:jabatan, :nama_bidang)";
+        $query = "INSERT INTO jabatan_bidang (jabatan, nama_bidang) VALUES (:jabatan, :nama_bidang)";
         $this->db->query($query);
         $this->db->bind('jabatan', $data['jabatan']);
         $this->db->bind('nama_bidang', $data['nama_bidang']);
@@ -49,7 +49,7 @@ class Bidang_model
 
     public function editDataBidang($data)
     {
-        $query = "UPDATE bidang SET jabatan = :jabatan, nama_bidang = :nama_bidang WHERE id = :id";
+        $query = "UPDATE jabatan_bidang SET jabatan = :jabatan, nama_bidang = :nama_bidang WHERE id = :id";
         $this->db->query($query);
         $this->db->bind('jabatan', $data['jabatan']);
         $this->db->bind('nama_bidang', $data['nama_bidang']);

@@ -1,8 +1,8 @@
 <?php
 
-class Jenis_pajak extends Controller
+class Jenis_pajak extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin'];
 
     public function index()
     {

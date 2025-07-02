@@ -1,8 +1,8 @@
 <?php
 
-class Kategori extends Controller
+class Kategori extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {

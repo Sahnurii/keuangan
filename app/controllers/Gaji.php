@@ -1,8 +1,8 @@
 <?php
 
-class Gaji extends Controller
+class Gaji extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {
@@ -24,6 +24,8 @@ class Gaji extends Controller
 
         // Ambil data gaji berdasarkan filter bulan dan tahun
         $data['gaji'] = $this->model('Gaji_model')->getGajiByBulanTahun($bulan, $tahun);
+        // var_dump($data['gaji']);
+        // exit;
 
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
@@ -37,16 +39,40 @@ class Gaji extends Controller
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // $nipy = $_POST['nipy'];
+            $idPegawai = $_POST['id_pegawai'];
+            $tanggal = $_POST['tanggal'];
 
-            // // Validasi untuk mengecek duplikat data
-            // if ($this->model('Pegawai_model')->cekNipyDuplikat($nipy)) {
-            //     Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan NIPY yang sama', 'error');
-            //     header('Location: ' . BASEURL . '/pegawai');
-            //     exit;
-            // }
-            // Proses data POST
-            if ($this->model('Gaji_model')->tambahGaji($_POST) > 0) {
+            // Ambil data pegawai berdasarkan ID
+            $pegawai = $this->model('Pegawai_model')->getPegawaiById($idPegawai);
+            if (!$pegawai) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data pegawai tidak ditemukan', 'error');
+                header('Location: ' . BASEURL . '/gaji');
+                exit;
+            }
+
+            // Ambil data otomatis
+            $getData = $this->model('Gaji_model')->getDataGajiOtomatis($idPegawai, $tanggal);
+
+            // Jika data tidak lengkap (misalnya template tidak ada)
+            if (!$getData || $getData['gaji_pokok'] === 0 && $getData['insentif'] === 0) {
+                Flasher::setFlash('Gagal Tambah Gaji', 'Komponen gaji tidak lengkap', 'error');
+                header('Location: ' . BASEURL . '/gaji');
+                exit;
+            }
+
+            // Simpan data ke DB
+            $data = [
+                'id_pegawai' => $idPegawai,
+                'tanggal' => $tanggal,
+                'gaji_pokok' => $getData['gaji_pokok'],
+                'insentif' => $getData['insentif'],
+                'pendidikan' => $getData['pendidikan'],
+                'bobot_masa_kerja' => $getData['bobot_masa_kerja'],
+                'beban_kerja' => $_POST['beban_kerja'] ?? 0,
+                'pemotongan' => $_POST['pemotongan'] ?? 0
+            ];
+
+            if ($this->model('Gaji_model')->tambahGaji($data) > 0) {
                 Flasher::setFlash('Tambah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/gaji');
                 exit;
@@ -57,6 +83,7 @@ class Gaji extends Controller
             }
         } else {
             // Tampilkan form tambah
+
             $data['judul'] = 'Tambah Pegawai';
             $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
             $this->view('templates/header', $data);
@@ -64,6 +91,78 @@ class Gaji extends Controller
             $this->view('templates/footer');
         }
     }
+
+    // public function tambah()
+    // {
+    //     $data['title'] = 'Tambah Gaji Pegawai';
+
+    //     // Ambil semua data referensi di awal
+    //     $pegawaiModel = $this->model('Pegawai_model');
+    //     $jabatanModel = $this->model('Bidang_model');
+    //     $templateModel = $this->model('Template_gaji_jabatan_model');
+    //     $tunjanganModel = $this->model('Tunjangan_model');
+    //     $masaKerjaModel = $this->model('Master_bobot_model');
+    //     $gajiModel = $this->model('Gaji_model');
+
+    //     $data['pegawai'] = $pegawaiModel->getAllPegawaiWithJabatanBidang();
+    //     $data['jabatan_bidang'] = $jabatanModel->getAllBidang();
+    //     $data['pendidikan'] = $tunjanganModel->getAllTunjangan();
+    //     $data['masa_kerja'] = $masaKerjaModel->getAllBobot();
+
+    //     // Cek apakah form disubmit
+    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //         $id_pegawai = $_POST['id_pegawai'];
+    //         $id_jabatan_bidang = $_POST['id_jabatan_bidang'];
+    //         $id_pendidikan = $_POST['id_pendidikan'];
+    //         $masa_kerja = $_POST['masa_kerja'];
+
+    //         // Ambil gaji pokok dan insentif berdasarkan jabatan
+    //         $template = $templateModel->getByIdJabatan($id_jabatan_bidang);
+    //         $gaji_pokok = $template ? $template['gaji_pokok'] : 0;
+    //         $insentif = $template ? $template['insentif'] : 0;
+
+    //         // Ambil tunjangan pendidikan
+    //         $tunjangan = $tunjanganModel->getById($id_pendidikan);
+    //         $tunjangan_pendidikan = $tunjangan ? $tunjangan['nilai_tunjangan'] : 0;
+
+    //         // Ambil bobot masa kerja
+    //         $bobot = $masaKerjaModel->getByTahun($masa_kerja);
+    //         $bobot_masa_kerja = $bobot ? $bobot['nilai_bobot'] : 0;
+
+    //         // Hitung total gaji
+    //         $total_gaji = $gaji_pokok + $insentif + $tunjangan_pendidikan + $bobot_masa_kerja;
+
+    //         // Siapkan data untuk insert
+    //         $insertData = [
+    //             'id_pegawai' => $id_pegawai,
+    //             'id_jabatan_bidang' => $id_jabatan_bidang,
+    //             'id_pendidikan' => $id_pendidikan,
+    //             'masa_kerja' => $masa_kerja,
+    //             'gaji_pokok' => $gaji_pokok,
+    //             'insentif' => $insentif,
+    //             'tunjangan_pendidikan' => $tunjangan_pendidikan,
+    //             'bobot_masa_kerja' => $bobot_masa_kerja,
+    //             'total_gaji' => $total_gaji,
+    //         ];
+
+    //         // Simpan ke database
+    //         if ($gajiModel->insert($insertData) > 0) {
+    //             Flasher::setFlash('Berhasil', 'ditambahkan', 'success');
+    //             header('Location: ' . BASEURL . '/gaji');
+    //             exit;
+    //         } else {
+    //             Flasher::setFlash('Gagal', 'ditambahkan', 'danger');
+    //             // Kirim data pegawai terpilih kembali agar tidak kosong di form
+    //             $data['selected'] = $_POST;
+    //         }
+    //     }
+
+    //     // Tampilkan form tambah
+    //     $this->view('templates/header', $data);
+    //     $this->view('gaji/tambah', $data);
+    //     $this->view('templates/footer');
+    // }
+
 
 
     public function edit($id)
@@ -188,5 +287,16 @@ class Gaji extends Controller
 
         http_response_code(200);
         echo 'OK';
+    }
+
+    public function getTemplateByPegawai($id)
+    {
+        // Ambil tanggal hari ini sebagai parameter
+        $tanggal = date('Y-m-d');
+
+        $data = $this->model('Gaji_model')->getDataGajiOtomatis($id, $tanggal);
+
+        // Ubah jadi JSON
+        echo json_encode($data);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-class Saldo extends Controller
+class Saldo extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin'];
 
     public function index()
     {

@@ -9,3 +9,5 @@ require_once 'core/AuthMiddleware.php';
 require_once 'helpers/common.php';
 
 require_once 'config/config.php';
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';

@@ -1,4 +1,4 @@
-<?php 
+<?php
 class App
 {
     protected $controller = 'Auth';
@@ -6,17 +6,22 @@ class App
     protected $params = [];
 
     public function __construct()
-    {   
-        
+    {
+
         $url = $this->parseURL();
-        
+
         // Controller
-        if(is_null($url)){
-            $url[0]= $this->controller;
+        if (is_null($url)) {
+            $url[0] = $this->controller;
         }
         if (file_exists('../app/controllers/' . $url[0] . '.php')) {
             $this->controller = $url[0];
             unset($url[0]);
+        } else {
+            // Jika controller tidak ditemukan
+            $this->controller = 'ErrorController';
+            $this->method = 'notFound';
+            $url = []; // Kosongkan params agar tidak error
         }
 
         require_once '../app/controllers/' . $this->controller . '.php';

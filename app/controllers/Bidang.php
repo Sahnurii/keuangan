@@ -1,8 +1,8 @@
 <?php
 
-class Bidang extends Controller
+class Bidang extends BaseController
 {
-    protected $allowedRoles = ['Admin', 'Petugas', 'Pegawai', 'Pimpinan'];
+    protected $allowedRoles = ['Admin'];
 
     public function index()
     {
@@ -26,12 +26,52 @@ class Bidang extends Controller
         }
     }
 
+    private function formatKata($string)
+    {
+        $kataSambung = ['dan', 'di', 'ke', 'dari', 'yang', 'untuk', 'dengan', 'atau', 'pada'];
+
+        $words = explode(' ', trim($string));
+        $formatted = [];
+
+        foreach ($words as $index => $word) {
+            $startsWithParen = str_starts_with($word, '(');
+            $endsWithParen = str_ends_with($word, ')');
+            $cleanWord = trim($word, '()');
+
+            if (ctype_upper($cleanWord)) {
+                $formattedWord = $cleanWord;
+            } elseif (in_array(strtolower($cleanWord), $kataSambung) && $index != 0) {
+                $formattedWord = strtolower($cleanWord);
+            } else {
+                $formattedWord = ucfirst(strtolower($cleanWord));
+            }
+
+            // Tambahkan kurung hanya jika belum lengkap
+            if ($startsWithParen && $endsWithParen && $word === '(' . $cleanWord . ')') {
+                $formattedWord = '(' . $formattedWord . ')';
+            } elseif ($startsWithParen && !$endsWithParen) {
+                $formattedWord = '(' . $formattedWord;
+            } elseif (!$startsWithParen && $endsWithParen) {
+                $formattedWord = $formattedWord . ')';
+            }
+
+            $formatted[] = $formattedWord;
+        }
+
+        return implode(' ', $formatted);
+    }
+
+
+
+
+
     public function tambah()
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $jabatan = ucwords(strtolower($_POST['jabatan']));
-            $nama_bidang = ucwords(strtolower($_POST['nama_bidang']));
+            $jabatan = $this->formatKata(trim($_POST['jabatan']));
+            $nama_bidang = $this->formatKata(trim($_POST['nama_bidang']));
+
 
             // Validasi untuk mengecek duplikat data
             if ($this->model('Bidang_model')->cekBidangDuplikat($jabatan, $nama_bidang)) {
@@ -78,7 +118,12 @@ class Bidang extends Controller
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if ($this->model('Bidang_model')->editDataBidang($_POST) > 0) {
+            $data = [
+                'id' => $_POST['id'],
+                'jabatan' => $this->formatKata(trim($_POST['jabatan'])),
+                'nama_bidang' => $this->formatKata(trim($_POST['nama_bidang']))
+            ];
+            if ($this->model('Bidang_model')->editDataBidang($data) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
                 Flasher::setFlash('Ubah Data Berhasil', '', 'success');
                 header('Location: ' . BASEURL . '/bidang');
