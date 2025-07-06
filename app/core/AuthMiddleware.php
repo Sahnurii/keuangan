@@ -9,11 +9,10 @@ class AuthMiddleware
         }
 
         // Cek apakah user sudah login
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user'])) {
             // Jangan redirect jika sudah di halaman login (Auth controller)
             $currentController = self::getCurrentController();
-            error_log("Redirecting to: " . BASEURL . '/auth');
-            if ($currentController !== 'Auth') {
+             if ($currentController !== 'Auth') {
                 header('Location: ' . BASEURL . '/auth');
                 exit;
             }
@@ -26,12 +25,12 @@ class AuthMiddleware
             session_start();
         }
 
-        if (!isset($_SESSION['role'])) {
+        if (!isset($_SESSION['user'])) {
             header('Location: ' . BASEURL . '/auth');
             exit;
         }
 
-        if (!in_array($_SESSION['role'], $roles)) {
+        if (!in_array($_SESSION['user']['role'], $roles)) {
             // Jika tidak punya role yang sesuai, lempar ke halaman tidak diizinkan
             header('Location: ' . BASEURL . '/errorcontroller/index');
             exit;

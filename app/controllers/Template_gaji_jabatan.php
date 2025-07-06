@@ -1,7 +1,9 @@
 <?php 
 
-class Template_gaji_jabatan extends Controller
+class Template_gaji_jabatan extends BaseController
 {
+    protected $allowedRoles = ['Admin'];
+    
     public function index()
     {
         $data['judul'] = 'Template Gaji Jabatan';

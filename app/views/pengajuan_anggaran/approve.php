@@ -4,7 +4,7 @@
       <h3 class="card-title text-center text-white">Persetujuan Pengajuan Anggaran</h3>
     </div>
     <div class="card-body">
-      <form action="<?= BASEURL; ?>/pengajuanAnggaran/approve/<?= $data['pengajuan']['id']; ?>" method="post">
+      <form action="<?= BASEURL; ?>/pengajuan_anggaran/approve/<?= $data['pengajuan']['id']; ?>" method="post">
         <div class="form-group">
           <label>Judul</label>
           <input type="text" class="form-control" value="<?= $data['pengajuan']['judul']; ?>" readonly>
@@ -25,7 +25,7 @@
           <label>Status Persetujuan</label>
           <select name="status" class="form-control" required>
             <option value="">-- Pilih Status --</option>
-            <option value="disetujui">Disetujui</option>
+            <option value="diterima">Diterima</option>
             <option value="ditolak">Ditolak</option>
           </select>
         </div>
@@ -38,4 +38,5 @@
       </form>
     </div>
   </div>
+</div>
 </div>

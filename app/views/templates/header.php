@@ -56,7 +56,7 @@
                     <span>Dashboard</span></a>
             </li>
 
-            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -66,7 +66,7 @@
                 </div>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
                 <!-- Nav Item - Kategori -->
 
                 <li class="nav-item">
@@ -76,7 +76,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - bidang -->
 
                 <li class="nav-item">
@@ -86,7 +86,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Pegawai -->
 
                 <li class="nav-item">
@@ -96,7 +96,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Riwayat Pendidikan -->
 
                 <li class="nav-item">
@@ -106,7 +106,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Jenis Pajak -->
 
                 <li class="nav-item">
@@ -116,7 +116,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Tunjangan Pendidikan -->
 
                 <li class="nav-item">
@@ -126,7 +126,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Bobot Masa Kerja -->
 
                 <li class="nav-item">
@@ -136,7 +136,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Template Gaji Jabatan -->
 
                 <li class="nav-item">
@@ -146,7 +146,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin','Pegawai','Pimpinan'])) : ?>
                 <!-- Nav Item - Pengajuan Anggaran -->
 
                 <li class="nav-item">
@@ -156,7 +156,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin', 'Petugas'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -210,7 +210,7 @@
 
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin', 'Pimpinan'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Pimpinan'])) : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider">
 
@@ -241,7 +241,7 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['role'], ['Admin'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
@@ -321,14 +321,14 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Halo, <span style="font-weight: bold;"><?= $_SESSION['nama'] ?> </span></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Halo, <span style="font-weight: bold;"><?= $data['nama_pegawai']; ?></span>
                                 <img class="img-profile rounded-circle"
                                     src="<?= BASEURL; ?>/img/undraw_profile_1.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="<?= BASEURL; ?>/user/edit/<?= $_SESSION['user_id']; ?>">
+                                <a class="dropdown-item" href="<?= BASEURL; ?>/user/edit/<?= $_SESSION['user']['id']; ?>">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>

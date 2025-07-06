@@ -24,6 +24,14 @@ class Pegawai_model
         return $this->db->single();
     }
 
+    public function getNamaById($id)
+    {
+        $this->db->query("SELECT nama FROM " . $this->table . " WHERE id = :id");
+        $this->db->bind('id', $id);
+         return $this->db->single();
+    }
+
+
     public function hapusPegawai($id)
     {
         $this->db->query("DELETE FROM " . $this->table . " WHERE id = :id");

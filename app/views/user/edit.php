@@ -10,15 +10,15 @@ $flashData = Flasher::flash();  // Ambil data flash
         <div class="card-body">
             <form method="POST" action="<?= BASEURL; ?>/user/update/<?= $data['user']['id']; ?>" id="editUserForm">
                 <input type="hidden" name="id" id="id" value="<?= $data['user']['id']; ?>">
-
+                <input type="hidden" name="id_pegawai" value="<?= $data['pegawai']['id']; ?>">
                 <div class="form-group">
-                    <label for="nama">Name:</label>
-                    <input type="text" name="nama" id="nama" class="form-control" value="<?= $data['user']['nama']; ?>" required>
+                    <label for="nama">Nama Pegawai:</label>
+                    <input type="text" id="nama" class="form-control" value="<?= $data['pegawai']['nama']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" class="form-control" value="<?= htmlspecialchars($data['user']['email']); ?>" required>
+                    <label for="email">Email Pegawai:</label>
+                    <input type="email" id="email" class="form-control" value="<?= $data['pegawai']['email']; ?>" readonly>
                 </div>
 
                 <div class="form-group">
@@ -36,17 +36,23 @@ $flashData = Flasher::flash();  // Ambil data flash
                     <input type="password" name="confirm_password" id="confirm_password" class="form-control">
                 </div>
 
-                <div class="form-group row">
-                    <label for="role" class="col-sm-2 col-form-label">Role</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="Admin" <?= $data['user']['role'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
-                            <option value="Petugas" <?= $data['user']['role'] == 'Petugas' ? 'selected' : ''; ?>>Petugas</option>
-                            <option value="Pegawai" <?= $data['user']['role'] == 'Pegawai' ? 'selected' : ''; ?>>Pegawai</option>
-                            <option value="Pimpinan" <?= $data['user']['role'] == 'Pimpinan' ? 'selected' : ''; ?>>Pimpinan</option>
-                        </select>
+                <?php if ($_SESSION['user']['role'] === 'Admin'): ?>
+                    <div class="form-group row">
+                        <label for="role" class="col-sm-2 col-form-label">Role</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" id="role" name="role" required>
+                                <option value="Admin" <?= $data['user']['role'] == 'Admin' ? 'selected' : ''; ?>>Admin</option>
+                                <option value="Petugas" <?= $data['user']['role'] == 'Petugas' ? 'selected' : ''; ?>>Petugas</option>
+                                <option value="Pegawai" <?= $data['user']['role'] == 'Pegawai' ? 'selected' : ''; ?>>Pegawai</option>
+                                <option value="Pimpinan" <?= $data['user']['role'] == 'Pimpinan' ? 'selected' : ''; ?>>Pimpinan</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
+                <?php if ($_SESSION['user']['role'] !== 'Admin'): ?>
+                    <input type="hidden" name="role" value="<?= $data['user']['role']; ?>">
+                <?php endif; ?>
+
 
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>

@@ -11,13 +11,13 @@ $flashData = Flasher::flash();  // Ambil data flash
             <form method="POST" action="<?= BASEURL; ?>/user/tambah" id="tambahUserForm">
 
                 <div class="form-group">
-                    <label for="nama">Name</label>
-                    <input type="text" name="nama" id="nama" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" required>
+                    <label for="id_pegawai">Pegawai</label>
+                    <select name="id_pegawai" id="id_pegawai" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih Pegawai --</option>
+                        <?php foreach ($data['pegawai'] as $p): ?>
+                            <option value="<?= $p['id']; ?>"><?= $p['nama']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">

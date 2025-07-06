@@ -2,10 +2,16 @@
 
 class User extends BaseController
 {
-    protected $allowedRoles = ['Admin'];
+    // protected $allowedRoles = ['Admin'];
 
     public function index()
     {
+
+        if ($_SESSION['user']['role'] !== 'Admin') {
+            header('Location: ' . BASEURL . '/forbidden');
+            exit;
+        }
+
         $userModel = $this->model('User_model');
         $data['users'] = $userModel->getAllUser();
         $data['judul'] = 'Manage Users';
@@ -17,9 +23,21 @@ class User extends BaseController
 
     public function tambah()
     {
+        if ($_SESSION['user']['role'] !== 'Admin') {
+            header('Location: ' . BASEURL . '/forbidden');
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             if ($this->model('User_model')->cekUsernameDuplikat($_POST['username'])) {
                 Flasher::setFlash('Username sudah digunakan.', '', 'error');
+                header('Location: ' . BASEURL . '/user/tambah');
+                exit;
+            }
+
+            if ($this->model('User_model')->cekIdPegawaiDuplikat($_POST['id_pegawai'])) {
+                Flasher::setFlash('Pegawai sudah terdaftar sebagai user.', '', 'error');
                 header('Location: ' . BASEURL . '/user/tambah');
                 exit;
             }
@@ -43,17 +61,43 @@ class User extends BaseController
             }
         }
 
+        $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
+
         $data['judul'] = 'Tambah User';
         $this->view('templates/header', $data);
-        $this->view('user/tambah');
+        $this->view('user/tambah', $data);
         $this->view('templates/footer');
     }
 
     public function edit($id)
     {
-        $data['user'] = $this->model('User_model')->getUserById($id);
-        $data['judul'] = 'Edit User';
+        // $data['user'] = $this->model('User_model')->getUserById($id);
+        $user = $this->model('User_model')->getUserById($id);
+        $data['user'] = $user;
 
+        if (!$user) {
+            // Handle jika user tidak ditemukan
+            Flasher::setFlash('User tidak ditemukan', '', 'danger');
+            header('Location: ' . BASEURL . '/user');
+            exit;
+        }
+        $currentUserId = $_SESSION['user']['id'];
+        $currentUserRole = $_SESSION['user']['role'];
+
+        if ($currentUserRole !== 'Admin' && $currentUserId != $id) {
+            Flasher::setFlash('Anda tidak punya akses untuk edit user ini.', '', 'error');
+            header('Location: ' . BASEURL . '/user');
+            exit;
+        }
+
+        $data['user'] = $user;
+
+        // Ambil data pegawai terkait jika ada
+        $data['pegawai'] = null;
+        if (!empty($user['id_pegawai'])) {
+            $data['pegawai'] = $this->model('Pegawai_model')->getPegawaiById($user['id_pegawai']);
+        }
+        $data['judul'] = 'Edit User';
         $this->view('templates/header', $data);
         $this->view('user/edit', $data);
         $this->view('templates/footer');
@@ -61,6 +105,11 @@ class User extends BaseController
 
     public function hapus($id)
     {
+        if ($_SESSION['user']['role'] !== 'Admin') {
+            header('Location: ' . BASEURL . '/forbidden');
+            exit;
+        }
+
         if ($this->model('User_model')->hapusDataUser($id) > 0) {
             Flasher::setFlash('Hapus Data Berhasil', '', 'success');
             header('Location: ' . BASEURL . '/user');
@@ -74,6 +123,11 @@ class User extends BaseController
 
     public function update($id)
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASEURL . '/forbidden');
+            exit;
+        }
+
         $userModel = $this->model('User_model');
         $existingUser = $userModel->getUserById($id);
         $oldpassword = $existingUser['password'];
@@ -98,13 +152,23 @@ class User extends BaseController
             $_POST['password'] = $oldpassword;
         }
 
+        // 💡 Tambahan validasi role
+        $currentUserRole = $_SESSION['user']['role'];
+        if ($currentUserRole !== 'Admin') {
+            // Non-admin tidak boleh ganti role
+            $_POST['role'] = $existingUser['role'];
+        }
         if ($userModel->updateUser($id, $_POST) > 0) {
             Flasher::setFlash('Berhasil', 'diupdate', 'success');
         } else {
             Flasher::setFlash('Gagal', 'diupdate', 'error');
         }
 
-        header('Location: ' . BASEURL . '/user');
+        if ($_SESSION['user']['role'] === 'Admin') {
+            header('Location: ' . BASEURL . '/user');
+        } else {
+            header('Location: ' . BASEURL . '/dashboard'); // atau halaman lain yang sesuai untuk user biasa
+        }
         exit;
     }
 

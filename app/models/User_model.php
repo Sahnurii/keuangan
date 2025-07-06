@@ -12,7 +12,14 @@ class User_model
 
     public function getAllUser()
     {
-        $this->db->query("SELECT * FROM " . $this->table);
+        $this->db->query("SELECT 
+                        user.id, 
+                        user.username, 
+                        user.role, 
+                        pegawai.nama, 
+                        pegawai.email
+                      FROM user
+                      LEFT JOIN pegawai ON user.id_pegawai = pegawai.id");
         return $this->db->resultSet();
     }
 
@@ -61,13 +68,11 @@ class User_model
         }
 
         $query = "UPDATE {$this->table} 
-                  SET username = :username, nama = :nama, email = :email, role = :role{$setPassword}
+                  SET username = :username, role = :role{$setPassword}
                   WHERE id = :id";
 
         $this->db->query($query);
         $this->db->bind('username', $data['username']);
-        $this->db->bind('nama', $data['nama']);
-        $this->db->bind('email', $data['email']);
         $this->db->bind('role', $data['role']);
         $this->db->bind('id', $id);
 
@@ -100,12 +105,11 @@ class User_model
 
     public function tambahDataUser($data)
     {
-        $query = "INSERT INTO user (username, password, nama, email, role) VALUES (:username, :password, :nama, :email, :role)";
+        $query = "INSERT INTO user (username, password, role, id_pegawai) VALUES (:username, :password, :role, :id_pegawai)";
         $this->db->query($query);
         $this->db->bind('username', $data['username']);
         $this->db->bind('password', $data['password']);
-        $this->db->bind('nama', $data['nama']);
-        $this->db->bind('email', $data['email']);
+        $this->db->bind('id_pegawai', $data['id_pegawai']);
         $this->db->bind('role', $data['role']);
 
         $this->db->execute();
@@ -120,5 +124,14 @@ class User_model
         $this->db->bind('username', $username);
         $result = $this->db->single();
         return $result['total'] > 0; // Mengembalikan true jika ada duplikat
+    }
+
+    public function cekIdPegawaiDuplikat($id_pegawai)
+    {
+        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE id_pegawai = :id_pegawai";
+        $this->db->query($query);
+        $this->db->bind('id_pegawai', $id_pegawai);
+        $result = $this->db->single();
+        return $result['total'] > 0; // true jika id_pegawai sudah digunakan
     }
 }

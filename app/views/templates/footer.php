@@ -66,6 +66,8 @@
  <script src="<?= BASEURL; ?>/js/dist/sweetalert2.all.min.js"></script>
  <!-- Select2 JS -->
  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+ <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?= $_ENV['MIDTRANS_CLIENT_KEY']; ?>"></script>
+
  <script src="<?= BASEURL; ?>/js/script.js"></script>
  <script type="text/javascript">
      window.onload = function() {

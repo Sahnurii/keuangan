@@ -10,4 +10,7 @@ require_once 'helpers/common.php';
 
 require_once 'config/config.php';
 
+require_once 'core/Env.php';    // <-- Tambahkan ini
+Env::load();
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
