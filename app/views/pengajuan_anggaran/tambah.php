@@ -26,7 +26,7 @@
             <input type="file" class="form-control" name="file_rab" id="file_rab" accept=".pdf,.doc,.docx" required>
           </div>
           <button type="submit" class="btn btn-success">Ajukan</button>
-          <a href="<?= BASEURL; ?>/pengajuanAnggaran" class="btn btn-secondary">Kembali</a>
+          <a href="<?= BASEURL; ?>/pengajuan_anggaran" class="btn btn-secondary">Kembali</a>
         </form>
       </div>
     </div>

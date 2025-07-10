@@ -7,7 +7,7 @@
     <meta name="author" content="">
 
     <link rel="shortcut icon" href="<?= BASEURL; ?>/img/Logo.png" width="30" height="30">
-    <title>Halaman <?= $data['judul'] ?></title>
+    <title>Halaman Not Found</title>
 
     <!-- Custom fonts for this template-->
     <link href="<?= BASEURL; ?>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

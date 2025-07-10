@@ -1,10 +1,10 @@
 <?php
 class ErrorController extends Controller
 {
-    public function forbidden()
-    {
-        $this->view('error/forbidden');
-    }
+    // public function forbidden()
+    // {
+    //     $this->view('error/forbidden');
+    // }
 
     public function notFound()
     {

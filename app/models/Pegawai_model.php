@@ -17,6 +17,24 @@ class Pegawai_model
         return $this->db->resultSet();
     }
 
+    public function getAllPegawaiLengkap()
+    {
+        $pegawai = $this->getAllPegawai();
+        foreach ($pegawai as &$pgw) {
+            $pgw['jabatan_bidang'] = $this->getJabatanBidangByPegawaiId($pgw['id']);
+
+            $this->db->query("
+            SELECT rp.*, jp.jenjang AS nama_jenjang
+            FROM riwayat_pendidikan_pegawai rp
+            JOIN master_tunjangan_pendidikan jp ON rp.id_jenjang = jp.id
+            WHERE rp.id_pegawai = :id");
+            $this->db->bind('id', $pgw['id']);
+            $pgw['riwayat_pendidikan'] = $this->db->resultSet();
+        }
+
+        return $pegawai;
+    }
+
     public function getPegawaiById($id)
     {
         $this->db->query("SELECT * FROM " . $this->table . " WHERE id = :id");
@@ -28,17 +46,30 @@ class Pegawai_model
     {
         $this->db->query("SELECT nama FROM " . $this->table . " WHERE id = :id");
         $this->db->bind('id', $id);
-         return $this->db->single();
+        return $this->db->single();
     }
 
 
     public function hapusPegawai($id)
     {
-        $this->db->query("DELETE FROM " . $this->table . " WHERE id = :id");
+        // Hapus riwayat pendidikan
+        $this->db->query("DELETE FROM riwayat_pendidikan_pegawai WHERE id_pegawai = :id");
         $this->db->bind('id', $id);
         $this->db->execute();
+
+        //Hapus juga jabatan
+        $this->db->query("DELETE FROM pegawai_jabatan_bidang WHERE id_pegawai = :id");
+        $this->db->bind('id', $id);
+        $this->db->execute();
+
+        // Baru hapus pegawainya
+        $this->db->query("DELETE FROM pegawai WHERE id = :id");
+        $this->db->bind('id', $id);
+        $this->db->execute();
+
         return $this->db->rowCount();
     }
+
 
     public function tambahPegawai($data)
     {

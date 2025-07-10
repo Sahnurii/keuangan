@@ -12,6 +12,26 @@ $totalPemasukan = $data['total_pemasukan'] ?? 0;
 $totalPengeluaran = $data['total_pengeluaran'] ?? 0;
 $tgl = date('Y-m-d');
 
+
+
+$direktur = null;
+$kabag = null;
+
+foreach ($data['pegawai'] as $pgw) {
+    foreach ($pgw['jabatan_bidang'] as $jab) {
+        if (stripos($jab['jabatan'], 'direktur') !== false) {
+            $direktur = $pgw;
+        } elseif (stripos($jab['jabatan'], 'kabag') !== false && stripos($jab['jabatan'], 'keuangan') !== false) {
+            $kabag = $pgw;
+        }
+    }
+}
+$namaDirektur = $direktur['nama'] ?? 'Direktur';
+$nipyDirektur = $direktur['nipy'] ?? '-';
+
+$namaKabag = $kabag['nama'] ?? 'Kabag. Keuangan';
+$nipyKabag = $kabag['nipy'] ?? '-';
+
 // Membuat instance FPDF
 $pdf = new FPDF('L', 'mm', 'A4');
 $pdf->SetMargins(5, 30, 10);  // Set margin kiri, atas, kanan
@@ -28,7 +48,7 @@ $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(0, 4, 'Izin Pendirian dari Menteri Pendidikan dan Kebudayaan Republik Indonesia', 0, 1, 'C');
 $pdf->Cell(0, 4, 'Nomor : 568/E/O/2014, Tanggal 17 Oktober 2014', 0, 1, 'C');
 $pdf->Cell(0, 4, 'Jl. Malewa Raya Komplek Maming One Residence Kel. Batulicin, Kec. Batulicin, Kab. Tanah Bumbu', 0, 1, 'C');
-$pdf->Cell(0, 4, 'Prov. Kalimantan Selatan Kode Pos: 72273, E-mail: Politeknikbatulicin@gmail.com, Website: www.politeknikbatulicin.ac.id', 0, 1, 'C');
+$pdf->Cell(0, 4, 'Prov. Kalimantan Selatan, Kode Pos: 72273, E-mail: Politeknikbatulicin@gmail.com, Website: www.politeknikbatulicin.ac.id', 0, 1, 'C');
 $pdf->Ln(5); // Tambahkan jarak sebelumnya
 $pdf->SetLineWidth(1.5); // Atur ketebalan garis menjadi 0.5 (default adalah 0.2)
 $pdf->Cell(0, 0, '', 'T', 1, 'C');
@@ -36,11 +56,27 @@ $pdf->SetLineWidth(0.2); // Kembalikan ke ketebalan default jika diperlukan untu
 $pdf->Ln(5); // Tambahkan jarak setelah garis
 
 // Judul Laporan
+
+// Panjang masing-masing kolom
+$colKategoriWidth = 95;
+$colNominalWidth = 40;
+
+// Total tabel: 2 kategori + 2 nominal
+$totalTableWidth = ($colKategoriWidth + $colNominalWidth) * 2; // 270
+
+$pageWidth = $pdf->GetPageWidth(); // Biasanya 297 untuk landscape A4
+$leftMargin = ($pageWidth - $totalTableWidth) / 2; // Misalnya 13.5
+// === Perhitungan posisi tengah untuk tanda tangan 2 kolom ===
+$tandaTanganLebar = 95 * 2; // 190 mm
+$halamanLebar = $pdf->GetPageWidth(); // 297 mm untuk A4 landscape
+$posisiTengah = ($halamanLebar - $tandaTanganLebar) / 2; // misal: 53.5
+
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(0, 10, 'Laporan Pemasukan & Pengeluaran', 0, 1, 'C');
 $pdf->Cell(0, 10, 'Bulan: ' . $bulanNama, 0, 1, 'C');
 $pdf->Ln(10);; // Tabel Rincian Pemasukan dan Pengeluaran
 $pdf->SetFont('Arial', 'B', 10);
+$pdf->SetX($leftMargin);
 $pdf->Cell(135, 10, 'PEMASUKAN', 1, 0, 'C');
 $pdf->Cell(135, 10, 'PENGELUARAN', 1, 1, 'C');
 
@@ -52,6 +88,7 @@ $maxRows = max(count($data['rincian_pemasukan']), count($data['rincian_pengeluar
 // Ambil data pemasukan dan pengeluaran
 $pemasukanKeys = array_keys($data['rincian_pemasukan']);
 $pengeluaranKeys = array_keys($data['rincian_pengeluaran']);
+
 
 // Loop berdasarkan jumlah baris maksimum
 for ($i = 0; $i < $maxRows; $i++) {
@@ -80,6 +117,9 @@ for ($i = 0; $i < $maxRows; $i++) {
         $pdf->AddPage(); // Tambahkan halaman baru jika terlalu panjang
     }
 
+    // Set posisi X ke tengah
+    $pdf->SetX($leftMargin);
+
     // Output kategori pemasukan (MultiCell)
     $x = $pdf->GetX();
     $y = $pdf->GetY();
@@ -102,6 +142,7 @@ for ($i = 0; $i < $maxRows; $i++) {
 
 // Total Pemasukan dan Pengeluaran
 $pdf->SetFont('Arial', 'B', 10);
+$pdf->SetX($leftMargin);
 $pdf->Cell(95, 8, 'Total Pemasukan', 1);
 $pdf->Cell(40, 8, uang_indo($totalPemasukan), 1, 0, 'R');
 $pdf->Cell(95, 8, 'Total Pengeluaran', 1);
@@ -116,40 +157,35 @@ if ($pdf->GetY() + $tandaTanganSpace > $pdf->GetPageHeight() - 10) {
 $pdf->Ln(15); // Jarak atas sebelum tanda tangan
 $pdf->SetFont('Arial', '', 10);
 
+
 // Baris lokasi dan tanggal
-$pdf->Cell(450, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'C');
-$pdf->Ln(10); // Jarak setelah tanggal
+$pdf->SetX($posisiTengah);
+$pdf->Cell(190, 8, 'Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))), 0, 1, 'C');
+$pdf->Ln(7);
 
 // Kolom tanda tangan
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, 'Mengetahui,', 0, 0, 'C'); // Posisi kiri
-$pdf->Cell(90, 8, '', 0, 0, 'C');           // Posisi tengah (kosong)
-$pdf->Cell(90, 8, '', 0, 1, 'C');           // Posisi kanan (kosong)
+$pdf->SetX($posisiTengah);
+$pdf->Cell(95, 8, 'Mengetahui,', 0, 0, 'C'); // Direktur
+$pdf->Cell(95, 8, '', 0, 1, 'C');           // Kabag
 
-// Baris kedua posisi jabatan
-$pdf->Cell(90, 8, 'Direktur,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Kabag. Program dan Keuangan,', 0, 0, 'C');
-$pdf->Cell(90, 8, 'Bendahara Umum,', 0, 1, 'C');
+$pdf->SetX($posisiTengah);
+$pdf->Cell(95, 8, 'Direktur,', 0, 0, 'C');
+$pdf->Cell(95, 8, 'Kabag. Program dan Keuangan,', 0, 1, 'C');
 
-// Tambahkan jarak untuk tanda tangan
-$pdf->Ln(20);
-
-// Baris tanda tangan kosong
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Direktur (kosong untuk tanda tangan)
-$pdf->Cell(90, 8, '', 0, 0, 'C'); // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '', 0, 1, 'C'); // Bendahara Umum
+$pdf->Ln(20); // Jarak tanda tangan
 
 // Baris nama pejabat
 $pdf->SetFont('Arial', 'B', 10);
-$pdf->Cell(90, 8, 'Drs. H. M. Idjra\'i, M.Pd.', 0, 0, 'C'); // Direktur
-$pdf->Cell(90, 8, 'Nurul Hatmah, S.Pd.', 0, 0, 'C');       // Kabag Program dan Keuangan
-$pdf->Cell(90, 8, 'Sugeng Ludiyono, S.E., M.M.', 0, 1, 'C'); // Bendahara Umum
+$pdf->SetX($posisiTengah);
+$pdf->Cell(95, 8, $namaDirektur, 0, 0, 'C');
+$pdf->Cell(95, 8, $namaKabag, 0, 1, 'C');
 
 // Baris NIP pejabat
 $pdf->SetFont('Arial', '', 10);
-$pdf->Cell(90, 8, '19590904 201510 1 003', 0, 0, 'C'); // NIP Direktur
-$pdf->Cell(90, 8, '19911027 202301 2 050', 0, 0, 'C'); // NIP Kabag Program dan Keuangan
-$pdf->Cell(90, 8, '19930914 201910 1 028', 0, 1, 'C'); // NIP Bendahara Umum
+$pdf->SetX($posisiTengah);
+$pdf->Cell(95, 8, 'NIPY. ' . $nipyDirektur, 0, 0, 'C');
+$pdf->Cell(95, 8, 'NIPY. ' . $nipyKabag, 0, 1, 'C');
 
 // Output PDF
 $pdf->Output('I', 'Laporan_Pemasukan_Pengeluaran.pdf');

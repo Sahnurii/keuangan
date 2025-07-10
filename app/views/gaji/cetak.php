@@ -6,11 +6,11 @@ $flashData = Flasher::flash();  // Ambil data flash
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Data Gaji</h3>
+            <h3 class="card-title text-center text-white">LAPORAN GAJI PEGAWAI</h3>
         </div>
 
         <div class="card-body">
-            <form method="GET" action="<?= BASEURL; ?>/gaji/index" class="mb-3">
+            <form method="GET" action="<?= BASEURL; ?>/laporan/cetakGaji" class="mb-3">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="tahun">Pilih Tahun</label>
@@ -48,10 +48,8 @@ $flashData = Flasher::flash();  // Ambil data flash
                     </div>
                 </div>
             </form>
-
+            
             <div class="table-responsive">
-            <a href="<?= BASEURL; ?>/gaji/tambah" class="btn btn-primary mb-3">Tambah Gaji</a>
-
             <table class="table table-bordered table-hover">
                 <thead class="text-center">
                     <tr>
@@ -65,14 +63,29 @@ $flashData = Flasher::flash();  // Ambil data flash
                         <th>Beban Kerja</th>
                         <th>Pemotongan</th>
                         <th>Total Gaji</th>
-                        <th>Aksi</th>
-                        <th>Status</th>
-                        <th>Pembayaran</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php $no = 1;
-                    foreach ($data['gaji'] as $gaji) : ?>
+                    $total_gaji_pokok = 0;
+                    $total_insentif = 0;
+                    $total_bobot_masa_kerja = 0;
+                    $total_pendidikan = 0;
+                    $total_beban_kerja = 0;
+                    $total_pemotongan = 0;
+                    $total_total_gaji = 0;
+
+                    foreach ($data['gaji'] as $gaji) :
+                        $totalGaji = ($gaji['gaji_pokok'] + $gaji['insentif'] + $gaji['bobot_masa_kerja'] + $gaji['pendidikan'] + $gaji['beban_kerja']) - $gaji['pemotongan'];
+
+                        $total_gaji_pokok += $gaji['gaji_pokok'];
+                        $total_insentif += $gaji['insentif'];
+                        $total_bobot_masa_kerja += $gaji['bobot_masa_kerja'];
+                        $total_pendidikan += $gaji['pendidikan'];
+                        $total_beban_kerja += $gaji['beban_kerja'];
+                        $total_pemotongan += $gaji['pemotongan'];
+                        $total_total_gaji += $totalGaji;
+                    ?>
                         <tr class="text-center">
                             <td><?= $no++; ?></td>
                             <td><?= tglSingkatIndonesia($gaji['tanggal']); ?></td>
@@ -88,34 +101,27 @@ $flashData = Flasher::flash();  // Ambil data flash
                                     ($gaji['gaji_pokok'] + $gaji['insentif'] + $gaji['bobot_masa_kerja'] + $gaji['pendidikan'] + $gaji['beban_kerja']) - $gaji['pemotongan']
                                 ); ?>
                             </td>
-                            <td>
-                                <a href="<?= BASEURL; ?>/gaji/edit/<?= $gaji['id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="<?= BASEURL; ?>/gaji/hapus/<?= $gaji['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">Hapus</a>
-                            </td>
-                            <!-- Kolom Status -->
-                            <td>
-                                <?php if ($gaji['status_pembayaran'] == 'paid') : ?>
-                                    <span class="badge badge-success">Paid</span>
-                                <?php else : ?>
-                                    <span class="badge badge-warning">Pending</span>
-                                <?php endif; ?>
-                            </td>
-
-                            <!-- Kolom Pembayaran -->
-                            <td>
-                                <?php if ($gaji['status_pembayaran'] != 'paid') : ?>
-                                    <a href="<?= BASEURL; ?>/gaji/bayar/<?= $gaji['id']; ?>" class="btn btn-success btn-sm">Bayar</a>
-                                <?php else : ?>
-                                    <span class="text-success">Sudah Dibayar</span>
-                                <?php endif; ?>
-                            </td>
-
                         </tr>
                     <?php endforeach; ?>
+                <tfoot>
+                    <tr class="text-center font-weight-bold bg-light">
+                        <td colspan="3">Total</td>
+                        <td><?= uang_indo($total_gaji_pokok); ?></td>
+                        <td><?= uang_indo($total_insentif); ?></td>
+                        <td><?= uang_indo($total_bobot_masa_kerja); ?></td>
+                        <td><?= uang_indo($total_pendidikan); ?></td>
+                        <td><?= uang_indo($total_beban_kerja); ?></td>
+                        <td><?= uang_indo($total_pemotongan); ?></td>
+                        <td><?= uang_indo($total_total_gaji); ?></td>
+                    </tr>
+                </tfoot>
                 </tbody>
             </table>
         </div>
         </div>
+    </div>
+    <div class="card-footer">
+        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
     </div>
 </div>
 </div>

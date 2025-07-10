@@ -18,6 +18,7 @@
                             <option value="" selected disabled>-- Pilih Tipe Buku --</option>
                             <option value="Bank" <?= $data['saldo']['tipe_buku'] === 'Bank' ? 'selected' : ''; ?>>Bank</option>
                             <option value="Kas" <?= $data['saldo']['tipe_buku'] === 'Kas' ? 'selected' : ''; ?>>Kas</option>
+                            <option value="Pajak" <?= $data['saldo']['tipe_buku'] === 'Pajak' ? 'selected' : ''; ?>>Pajak</option>
                         </select>
                     </div>
                 </div>

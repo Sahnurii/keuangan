@@ -35,6 +35,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                     <label for="saldo_awal" class="col-sm-2 col-form-label">SALDO AWAL</label>
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="saldo_awal" name="saldo_awal" step="0.01" placeholder="Masukkan Saldo" required>
+                        <input type="text" class="form-control mt-2" id="saldo_awal_display" readonly style="font-weight:bold; background-color: #f0f0f0;">
                     </div>
                 </div>
                 <div class="form-group row">
@@ -70,4 +71,42 @@ $flashData = Flasher::flash();  // Ambil data flash
             keteranganField.value = ''; // Kosongkan jika tidak ada pilihan
         }
     });
+</script>
+
+<script>
+    function fetchSaldoSebelumnya() {
+        const tipe = document.getElementById('tipe_buku').value;
+        const tanggal = document.getElementById('tanggal').value;
+
+        if (tipe && tanggal) {
+            fetch('<?= BASEURL ?>/saldo/getSaldoSebelumnya', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `tipe_buku=${tipe}&tanggal=${tanggal}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const nominal = data.saldo_akhir || 0;
+                    document.getElementById('saldo_awal').value = nominal;
+                    document.getElementById('saldo_awal_display').value = formatRupiah(nominal);
+                });
+
+        }
+    }
+
+    // Aktifkan saat tipe_buku berubah
+    document.getElementById('tipe_buku').addEventListener('change', fetchSaldoSebelumnya);
+
+    // Aktifkan saat tanggal berubah
+    document.getElementById('tanggal').addEventListener('change', fetchSaldoSebelumnya);
+
+    function formatRupiah(angka) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(angka);
+    }
 </script>

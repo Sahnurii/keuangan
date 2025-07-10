@@ -6,6 +6,9 @@ class Dashboard extends BaseController
 
     public function index()
     {
+        $role = $_SESSION['user']['role'];
+        $idPegawai = $_SESSION['user']['id_pegawai'];
+
         $data['judul'] = 'Dashboard';
         $bulanTahun = $this->model('Transaksi_model')->getUniqueMonthsAndYearsUniversal();
 
@@ -43,7 +46,52 @@ class Dashboard extends BaseController
         $totalKategori = $this->model('Kategori_model')->getTotalKategori();
         $totalBidang = $this->model('Bidang_model')->getTotalBidang();
         $totalPegawai = $this->model('Pegawai_model')->getTotalPegawai();
-        
+
+        $pengajuanByStatus = [
+            'diajukan' => 0,
+            'diterima' => 0,
+            'ditolak'  => 0
+        ];
+
+        // ADMIN: Semua data
+        if ($role === 'Admin') {
+            $totalPengajuan = $this->model('Pengajuan_anggaran_model')->getTotalPengajuan();
+            $rekapPengajuan = $this->model('Pengajuan_anggaran_model')->getRekapTotalPengajuanByStatus();
+            foreach ($rekapPengajuan as $item) {
+                $status = strtolower($item['status']);
+                if (isset($pengajuanByStatus[$status])) {
+                    $pengajuanByStatus[$status] = $item['total'];
+                }
+            }
+            $data['total_pengajuan'] = $totalPengajuan['total'];
+        }
+
+        // PIMPINAN: Rekap per status
+        elseif ($role === 'Pimpinan') {
+            $rekapPengajuan = $this->model('Pengajuan_anggaran_model')->getRekapTotalPengajuanByStatus();
+            foreach ($rekapPengajuan as $item) {
+                $status = strtolower($item['status']);
+                if (isset($pengajuanByStatus[$status])) {
+                    $pengajuanByStatus[$status] = $item['total'];
+                }
+            }
+            $data['total_pengajuan'] = array_sum($pengajuanByStatus);
+        }
+
+        // PETUGAS & PEGAWAI: Berdasarkan user_id sendiri
+        else {
+            $rekapUser = $this->model('Pengajuan_anggaran_model')->getRekapByPegawai($idPegawai);
+            foreach ($rekapUser as $item) {
+                $status = strtolower($item['status']);
+                if (isset($pengajuanByStatus[$status])) {
+                    $pengajuanByStatus[$status] = $item['total'];
+                }
+            }
+            $data['total_pengajuan'] = array_sum($pengajuanByStatus);
+        }
+
+        $data['pengajuan'] = $pengajuanByStatus;
+
 
         $data['tahun'] = $tahun;
         $data['bulan'] = $bulan;
@@ -54,6 +102,10 @@ class Dashboard extends BaseController
         $data['total_kategori'] = $totalKategori['total'];
         $data['total_bidang'] = $totalBidang['total'];
         $data['total_pegawai'] = $totalPegawai['total'];
+
+        $data['grafik_bulanan'] = $this->model('Transaksi_model')->getSummaryBulanan($tahun);
+        $data['komposisi_pemasukan'] = $this->model('Transaksi_model')->getKomposisiPemasukan($bulan, $tahun);
+        $data['komposisi_pengeluaran'] = $this->model('Transaksi_model')->getKomposisiPengeluaran($bulan, $tahun);
 
         $data['judul'] = 'Dashboard';
         $this->view('templates/header', $data);

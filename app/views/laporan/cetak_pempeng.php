@@ -43,68 +43,72 @@
                         </div>
                     </div>
                 </form>
-                <table class="table table-bordered table-hover" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th class="text-center">PEMASUKAN</th>
-                            <th class="text-center">PENGELUARAN</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <!-- Kolom Rincian Pemasukan -->
-                            <td>
-                                <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th>Kategori</th>
-                                            <th>Nominal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($data['rincian_pemasukan'] as $kategori => $nominal) : ?>
-                                            <tr>
-                                                <td class="text-left"><?= $kategori; ?></td>
-                                                <td class="text-right"><?= uang_indo($nominal); ?></td>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="text-center">PEMASUKAN</th>
+                                <th class="text-center">PENGELUARAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <!-- Kolom Rincian Pemasukan -->
+                                <td>
+                                    <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>Kategori</th>
+                                                <th>Nominal</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                        <tr>
-                                            <td class="text-center font-weight-bold">Total Pemasukan</td>
-                                            <td class="text-right font-weight-bold"><?= uang_indo($data['total_pemasukan']); ?></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-
-                            <!-- Kolom Rincian Pengeluaran -->
-                            <td>
-                                <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th>Kategori</th>
-                                            <th>Nominal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($data['rincian_pengeluaran'] as $kategori => $nominal) : ?>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($data['rincian_pemasukan'] as $kategori => $nominal) : ?>
+                                                <tr>
+                                                    <td class="text-left"><?= $kategori; ?></td>
+                                                    <td class="text-right"><?= uang_indo($nominal); ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                             <tr>
-                                                <td class="text-left"><?= $kategori; ?></td>
-                                                <td class="text-right"><?= uang_indo($nominal); ?></td>
+                                                <td class="text-center font-weight-bold">Total Pemasukan</td>
+                                                <td class="text-right font-weight-bold"><?= uang_indo($data['total_pemasukan']); ?></td>
                                             </tr>
-                                        <?php endforeach; ?>
-                                        <tr>
-                                            <td class="text-center font-weight-bold">Total Pengeluaran</td>
-                                            <td class="text-right font-weight-bold"><?= uang_indo($data['total_pengeluaran']); ?></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                        </tbody>
+                                    </table>
+                                </td>
 
+                                <!-- Kolom Rincian Pengeluaran -->
+                                <td>
+                                    <table class="table table-bordered table-sm" style="margin: auto; width: 90%;">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>Kategori</th>
+                                                <th>Nominal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($data['rincian_pengeluaran'] as $kategori => $nominal) : ?>
+                                                <tr>
+                                                    <td class="text-left"><?= $kategori; ?></td>
+                                                    <td class="text-right"><?= uang_indo($nominal); ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            <tr>
+                                                <td class="text-center font-weight-bold">Total Pengeluaran</td>
+                                                <td class="text-right font-weight-bold"><?= uang_indo($data['total_pengeluaran']); ?></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="card-footer">
+        <h5 class="text-center bg-success text-white ">Silahkan Filter Data Terlebih Dahulu Sebelum Mencetak</h5>
     </div>
 </div>
 </div>
@@ -170,4 +174,4 @@
             updateBulan(tahunSelect.value);
         });
     });
-</script> 
+</script>

@@ -38,6 +38,31 @@ class Gaji_model
         return $this->db->rowCount();
     }
 
+    public function getSlipGajiById($id)
+    {
+        $this->db->query("
+        SELECT 
+            gaji.*,
+            pegawai.nama,
+            pegawai.nipy,
+            pegawai.tmt,
+            pegawai.no_rekening,
+            pegawai.bank,
+            jb.jabatan,
+            jb.nama_bidang
+        FROM gaji
+        JOIN pegawai ON gaji.id_pegawai = pegawai.id
+        LEFT JOIN pegawai_jabatan_bidang pjb ON pjb.id_pegawai = pegawai.id AND pjb.tanggal_selesai IS NULL
+        LEFT JOIN jabatan_bidang jb ON pjb.id_jabatan_bidang = jb.id
+        WHERE gaji.id = :id
+        LIMIT 1
+    ");
+        $this->db->bind('id', $id);
+        return $this->db->single();
+    }
+
+
+
     public function getGajiById($id)
     {
         $this->db->query("SELECT gaji.*, pegawai.nama FROM " . $this->table . " JOIN pegawai ON gaji.id_pegawai = pegawai.id WHERE gaji.id = :id");
@@ -96,6 +121,18 @@ class Gaji_model
         $this->db->query("SELECT gaji.*, pegawai.nama FROM gaji 
                       JOIN pegawai ON gaji.id_pegawai = pegawai.id 
                       WHERE MONTH(gaji.tanggal) = :bulan AND YEAR(gaji.tanggal) = :tahun 
+                      ORDER BY gaji.tanggal ASC");
+        $this->db->bind(':bulan', $bulan);
+        $this->db->bind(':tahun', $tahun);
+        return $this->db->resultSet();
+    }
+
+    public function getGajiByBulanTahunPaid($bulan, $tahun)
+    {
+        $this->db->query("SELECT gaji.*, pegawai.nama FROM gaji 
+                      JOIN pegawai ON gaji.id_pegawai = pegawai.id 
+                      WHERE MONTH(gaji.tanggal) = :bulan AND YEAR(gaji.tanggal) = :tahun 
+                      AND gaji.status_pembayaran = 'paid'
                       ORDER BY gaji.tanggal ASC");
         $this->db->bind(':bulan', $bulan);
         $this->db->bind(':tahun', $tahun);

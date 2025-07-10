@@ -97,4 +97,19 @@ class Saldo extends BaseController
             echo json_encode(['status' => 'error', 'message' => 'Metode tidak valid']);
         }
     }
+
+    public function getSaldoSebelumnya()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tipe = $_POST['tipe_buku'];
+            $tanggal = $_POST['tanggal']; // Format: YYYY-MM-DD
+            list($tahun, $bulan, $tgl) = explode('-', $tanggal);
+
+            // Langsung kirim bulan dan tahun inputan ke model
+            $saldoAkhir = $this->model('Saldo_model')->getSaldoAkhirBulanSebelumnya($tipe, $bulan, $tahun);
+
+            // Berikan response JSON
+            echo json_encode(['saldo_akhir' => $saldoAkhir]);
+        }
+    }
 }

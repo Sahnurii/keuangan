@@ -12,10 +12,14 @@ class Pengajuan_anggaran extends BaseController
         $role = $_SESSION['user']['role'];
         $idPegawai = $_SESSION['user']['id_pegawai'];
 
+        $status = $_GET['status'] ?? null;
+        $pengaju = $_GET['pengaju'] ?? null;
+
         if ($role === 'Admin' || $role === 'Pimpinan') {
-            $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getAllPengajuan();
+            $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getFiltered($status, $pengaju);
+            $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
         } else {
-            $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getAllPengajuan($idPegawai);
+            $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getFiltered($status, $idPegawai);
         }
         $this->view('templates/header', $data);
         $this->view('pengajuan_anggaran/index', $data);
@@ -44,12 +48,12 @@ class Pengajuan_anggaran extends BaseController
             $file = $_FILES['file_rab'];
 
             // Validasi ekstensi dan ukuran file
-            $allowedExtensions = ['pdf', 'docx', 'xlsx'];
+            $allowedExtensions = ['pdf', 'xlsx'];
             $maxSize = 2 * 1024 * 1024; // 2MB
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
             if (!in_array($ext, $allowedExtensions) || $file['size'] > $maxSize) {
-                Flasher::setFlash('File tidak valid (PDF/DOCX/XLSX max 2MB)', '', 'error');
+                Flasher::setFlash('File tidak valid (PDF/XLSX max 2MB)', '', 'error');
                 header('Location: ' . BASEURL . '/pengajuan_anggaran/tambah');
                 exit;
             }
@@ -125,8 +129,19 @@ class Pengajuan_anggaran extends BaseController
 
     public function edit($id)
     {
+        $pengajuan = $this->model('Pengajuan_anggaran_model')->getById($id);
+        $role = $_SESSION['user']['role'];
+        $idPegawai = $_SESSION['user']['id_pegawai'];
+
+        // Cek kepemilikan atau role Admin
+        if ($role !== 'Admin' && $pengajuan['id_pegawai'] != $idPegawai) {
+            Flasher::setFlash('Anda tidak memiliki akses ke data ini', '', 'error');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
+
         $data['judul'] = 'Edit Pengajuan';
-        $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getById($id);
+        $data['pengajuan'] = $pengajuan;
 
         $this->view('templates/header', $data);
         $this->view('pengajuan_anggaran/edit', $data);
@@ -135,6 +150,10 @@ class Pengajuan_anggaran extends BaseController
 
     public function update()
     {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: ' . BASEURL . '/forbidden');
+            exit;
+        }
 
         $post = $_POST;
         $role = $_SESSION['user']['role'];
@@ -166,12 +185,12 @@ class Pengajuan_anggaran extends BaseController
             $uploadPath = $uploadDir . $fileName;
 
             // Validasi ekstensi dan ukuran
-            $allowedExtensions = ['pdf', 'docx', 'xlsx'];
+            $allowedExtensions = ['pdf', 'xlsx'];
             $maxSize = 2 * 1024 * 1024;
 
             $ext = strtolower(pathinfo($fileBaru['name'], PATHINFO_EXTENSION));
             if (!in_array($ext, $allowedExtensions) || $fileBaru['size'] > $maxSize) {
-                Flasher::setFlash('File tidak valid (PDF/DOCX/XLSX max 2MB)', '', 'error');
+                Flasher::setFlash('File tidak valid (PDF/XLSX max 2MB)', '', 'error');
                 header('Location: ' . BASEURL . '/pengajuan_anggaran/edit/' . $post['id']);
                 exit;
             }
@@ -212,6 +231,17 @@ class Pengajuan_anggaran extends BaseController
 
     public function delete($id)
     {
+        $pengajuan = $this->model('Pengajuan_anggaran_model')->getById($id);
+        $role = $_SESSION['user']['role'];
+        $idPegawai = $_SESSION['user']['id_pegawai'];
+
+        // Hanya Admin atau pemilik data yang boleh hapus
+        if ($role !== 'Admin' && $pengajuan['id_pegawai'] != $idPegawai) {
+            Flasher::setFlash('Anda tidak berhak menghapus data ini', '', 'error');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
+
         if ($this->model('Pengajuan_anggaran_model')->hapus($id) > 0) {
             Flasher::setFlash('berhasil', 'dihapus', 'success');
         } else {
@@ -219,5 +249,37 @@ class Pengajuan_anggaran extends BaseController
         }
         header('Location: ' . BASEURL . '/pengajuan_anggaran');
         exit;
+    }
+
+    public function cetak($id)
+    {
+        $pengajuan = $this->model('Pengajuan_anggaran_model')->getByIdWithPimpinan($id);
+
+        $idPegawai = $_SESSION['user']['id_pegawai'];
+        $role = $_SESSION['user']['role'];
+
+        if ($pengajuan['id_pegawai'] != $idPegawai && $role !== 'Admin') {
+            Flasher::setFlash('Anda tidak memiliki akses', '', 'error');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
+
+        if ($pengajuan['status'] !== 'diterima') {
+            Flasher::setFlash('Hanya bisa mencetak pengajuan yang sudah disetujui', '', 'error');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
+
+        $data['pengajuan'] = $pengajuan;
+
+        // Ambil view jadi string
+        ob_start();
+        $this->view('pengajuan_anggaran/cetak_rab', $data);
+        $html = ob_get_clean();
+
+        // Render PDF
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output("RAB-{$pengajuan['judul']}.pdf", \Mpdf\Output\Destination::INLINE);
     }
 }

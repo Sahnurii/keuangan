@@ -1,10 +1,11 @@
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">LAPORAN BUKU PEMBANTU KAS</h3>
+            <h3 class="card-title text-center text-white">LAPORAN BUKU PEMBANTU PAJAK</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="<?= BASEURL; ?>/laporan/index" class="mb-3">
+            <!-- Form Filter -->
+            <form method="GET" action="<?= BASEURL; ?>/laporan/cetakPajak" class="mb-3">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="tahun">Pilih Tahun</label>
@@ -36,49 +37,72 @@
                         </select>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="<?= BASEURL; ?>/laporan/cetak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
+                        <button type="submit" class="btn btn-primary" id="tes">Filter</button>
+                        <a href="<?= BASEURL; ?>/laporan/cetakPajak_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
                             class="btn btn-success ml-2" target="_blank">CETAK</a>
                     </div>
                 </div>
             </form>
+
+
+
+            <!-- End Form Filter -->
             <div class="table-responsive">
                 <table id="dataTable" class="table table-bordered table-hover" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th rowspan="2" width="1%" class="align-content-center">NO</th>
-                            <th rowspan="2" class="text-center align-content-center">TANGGAL</th>
-                            <th rowspan="2" class="text-center align-content-center">NO BUKTI</th>
-                            <th rowspan="2" class="text-center align-content-center">URAIAN</th>
-                            <th colspan="3" class="text-center">JENIS</th>
+                            <th rowspan="2" width="1%">NO</th>
+                            <th rowspan="2" class="text-center">TANGGAL</th>
+                            <th rowspan="2" class="text-center">NO BUKTI</th>
+                            <th rowspan="2" class="text-center">URAIAN</th>
+                            <!-- <th rowspan="2" class="text-center">KATEGORI</th> -->
+                            <th colspan="5" class="text-center">PEMASUKAN</th>
+                            <th rowspan="2" class="text-center">PENGELUARAN</th>
+                            <th rowspan="2" class="text-center">SALDO</th>
                         </tr>
                         <tr>
-                            <th class="text-center">PEMASUKAN</th>
-                            <th class="text-center">PENGELUARAN</th>
-                            <th class="text-center">SALDO</th>
+                            <th class="text-center">PPN</th>
+                            <th class="text-center">PPh 4(2) Final</th>
+                            <th class="text-center">PPh21</th>
+                            <th class="text-center">PPh22</th>
+                            <th class="text-center">PPh23</th>
                         </tr>
                     </thead>
                     <tbody id="transaksi-body">
                         <?php $i = 1; ?>
-                        <?php foreach ($data['transaksi'] as $transaksi) : ?>
+                        <?php foreach ($data['transaksi'] as $trx): ?>
                             <tr>
-                                <td class="text-center align-content-center"><?= $i++; ?></td>
-                                <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
-                                <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pemasukan' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td class="text-center align-content-center"><?= $transaksi['tipe_kategori'] === 'Pengeluaran' ? uang_indo($transaksi['nominal_transaksi']) : '-'; ?></td>
-                                <td class="saldo-cell text-right align-content-center" data-nominal="<?= $transaksi['nominal_transaksi']; ?>" data-jenis="<?= $transaksi['tipe_kategori']; ?>"></td>
+                                <td class="text-center"><?= $i++; ?></td>
+                                <td class="text-center"><?= tglSingkatIndonesia($trx['tanggal']); ?></td>
+                                <td class="text-center"><?= $trx['no_bukti']; ?></td>
+                                <td class="text-wrap" style="max-width: 250px;"><?= $trx['keterangan']; ?></td>
+                                <!-- <td><?= $trx['kategori']; ?></td> -->
 
+                                <!-- Pemasukan tiap jenis -->
+                                <?php foreach (['PPN', 'Pph4(2)Final', 'PPh21', 'PPh22', 'PPh23'] as $jenis): ?>
+                                    <?php $val = $trx['pajak'][$jenis]['Pemasukan']; ?>
+                                    <td class="text-center"><?= $val > 0 ? uang_indo($val) : '-'; ?></td>
+                                <?php endforeach; ?>
+
+                                <!-- Total Pengeluaran -->
+                                <?php
+                                $out = array_sum(array_column($trx['pajak'], 'Pengeluaran'));
+                                ?>
+                                <td class="text-center"><?= $out > 0 ? uang_indo($out) : '-'; ?></td>
+
+                                <!-- Kolom Saldo -->
+                                <td rowspan="<?= $rowspan; ?>" class="text-end fw-bold"><?= uang_indo($trx['saldo']); ?></td>
                             </tr>
                         <?php endforeach; ?>
-                    <tfoot id="transaksi-body">
+                    <tfoot>
                         <tr>
-                            <th colspan="6" class="text-right align-content-center">SALDO AKHIR BULAN</th>
-                            <td class="saldo-cell text-right align-content-center"></td>
+                            <th colspan="10" class="text-right">SALDO AKHIR BULAN</th>
+                             <td class="text-right fw-bold"><?= uang_indo($trx['saldo']); ?></td>
                         </tr>
                     </tfoot>
+
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -88,6 +112,7 @@
     </div>
 </div>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -150,4 +175,13 @@
             updateBulan(tahunSelect.value);
         });
     });
+
+    function fetchNoBukti(tipeBuku, tanggal) {
+        fetch(`<?= BASEURL; ?>/transaksi_pajak/getNomorBukti/${tipeBuku}/${tanggal}`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('no_bukti').value = data;
+            })
+            .catch(error => console.error('Error:', error));
+    }
 </script>

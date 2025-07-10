@@ -14,6 +14,30 @@ $role = $_SESSION['user']['role'];
         <div class="mb-3">
           <a href="<?= BASEURL; ?>/pengajuan_anggaran/tambah" class="btn btn-success mb-3">+ Tambah Pengajuan</a>
         </div>
+        <div class="mb-3">
+          <form method="GET" class="form-inline mb-3">
+            <select name="status" class="form-control mr-2">
+              <option value="">-- Filter Status --</option>
+              <option value="diajukan" <?= ($_GET['status'] ?? '') == 'diajukan' ? 'selected' : '' ?>>Diajukan</option>
+              <option value="diterima" <?= ($_GET['status'] ?? '') == 'diterima' ? 'selected' : '' ?>>Diterima</option>
+              <option value="ditolak" <?= ($_GET['status'] ?? '') == 'ditolak' ? 'selected' : '' ?>>Ditolak</option>
+            </select>
+
+            <?php if ($_SESSION['user']['role'] === 'Admin' || $_SESSION['user']['role'] === 'Pimpinan') : ?>
+              <select name="pengaju" class="form-control mr-2">
+                <option value="">-- Semua Pengaju --</option>
+                <?php foreach ($data['pegawai'] as $p) : ?>
+                  <option value="<?= $p['id'] ?>" <?= ($_GET['pengaju'] ?? '') == $p['id'] ? 'selected' : '' ?>>
+                    <?= $p['nama'] ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            <?php endif; ?>
+
+            <button type="submit" class="btn btn-primary">Tampilkan</button>
+            <a href="<?= BASEURL ?>/pengajuan_anggaran" class="btn btn-secondary ml-2">Reset</a>
+          </form>
+        </div>
         <table id="dataTable" class="table table-bordered table-hover">
           <thead>
             <tr class="text-center">
@@ -40,43 +64,45 @@ $role = $_SESSION['user']['role'];
                 <?php if ($role === 'Admin' || $role === 'Pimpinan') : ?>
                   <td><?= $row['nama_pegawai']; ?></td>
                 <?php endif; ?>
-                <td><?= tglBiasaIndonesia($row['tanggal_upload']); ?></td>
+                <td class="text-center"><?= tglBiasaIndonesia($row['tanggal_upload']); ?></td>
                 <td><?= $row['judul']; ?></td>
-                <td><?= uang_indo_v2($row['total_anggaran']); ?></td>
-                <td class="text-center"><span class="text-white badge text-uppercase bg-<?= $row['status'] === 'diterima' ? 'success' : ($row['status'] === 'ditolak' ? 'danger' : 'warning') ?>">
-                    <?= ucfirst($row['status']); ?></span></td>
+                <td><?= uang_indo($row['total_anggaran']); ?></td>
+                <td class="text-center">
+                  <?php
+                  $status = $row['status'];
+                  $class = 'badge-status badge-' . $status;
+                  echo "<span class='{$class}'>" . ucfirst($status) . "</span>";
+                  ?>
+                </td>
                 <td class="text-center">
                   <button class="btn btn-sm btn-info btn-detail" data-toggle="modal" data-target="#detailModal"
                     data-id="<?= $row['id']; ?>"
                     data-judul="<?= $row['judul']; ?>"
                     data-deskripsi="<?= htmlspecialchars($row['deskripsi']); ?>"
-                    data-total="<?= uang_indo_v2($row['total_anggaran']); ?>"
+                    data-total="<?= uang_indo($row['total_anggaran']); ?>"
                     data-tanggal_upload="<?= tglBiasaIndonesia($row['tanggal_upload']); ?>"
                     data-tanggal_disetujui="<?= $row['tanggal_disetujui'] ? tglBiasaIndonesia($row['tanggal_disetujui']) : '-'; ?>"
                     data-status="<?= ucfirst($row['status']); ?>"
                     data-catatan="<?= $row['catatan_atasan'] ?? '-'; ?>"
+                    data-disetujui_oleh="<?= $row['nama_pimpinan'] ?? '-' ?>"
                     data-file="<?= BASEURL . '/uploads/rab/' . $row['file_rab']; ?>">
                     Detail
                   </button>
                   <?php if ($role === 'Pimpinan' && $isDiajukan) : ?>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/approve/<?= $row['id']; ?>" class="btn btn-sm btn-primary">Setujui/Tolak</a>
 
-                  <?php elseif ($role === 'Pegawai' && $isOwner && $isDiajukan) : ?>
+                  <?php elseif (in_array($role, ['Pegawai', 'Petugas']) && $isOwner && $isDiajukan) : ?>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/edit/<?= $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/delete/<?= $row['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">Hapus</a>
 
-                  <?php elseif ($role === 'Pegawai' && $isOwner && $row['status'] === 'ditolak') : ?>
+                  <?php elseif (in_array($role, ['Pegawai', 'Petugas']) && $isOwner && $row['status'] === 'ditolak') : ?>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/edit/<?= $row['id']; ?>" class="btn btn-sm btn-secondary">Ajukan Lagi</a>
 
                   <?php elseif ($role === 'Admin') : ?>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/edit/<?= $row['id']; ?>" class="btn btn-sm btn-warning">Edit Status</a>
                     <a href="<?= BASEURL; ?>/pengajuan_anggaran/delete/<?= $row['id']; ?>" class="btn btn-danger btn-sm tombol-hapus">Hapus</a>
-
-                  <?php else : ?>
-                    <span class="text-muted">Sudah diproses</span>
                   <?php endif; ?>
                 </td>
-
               </tr>
             <?php endforeach; ?>
           </tbody>
@@ -110,7 +136,7 @@ $role = $_SESSION['user']['role'];
                     <td id="modalTanggalUpload"></td>
                   </tr>
                   <tr>
-                    <th>Tanggal Disetujui</th>
+                    <th>Tanggal Verifikasi</th>
                     <td id="modalTanggalDisetujui"></td>
                   </tr>
                   <tr>
@@ -122,10 +148,16 @@ $role = $_SESSION['user']['role'];
                     <td id="modalCatatan"></td>
                   </tr>
                   <tr>
+                    <th>Disetujui Oleh</th>
+                    <td id="modalDisetujuiOleh"></td>
+                  </tr>
+                  <tr>
                     <th>File RAB</th>
                     <td><a href="#" id="modalFile" target="_blank" class="btn btn-outline-primary btn-sm">Lihat File</a></td>
                   </tr>
                 </table>
+                <div id="modalLangkahSelanjutnya"></div>
+
               </div>
             </div>
           </div>
@@ -146,7 +178,22 @@ $role = $_SESSION['user']['role'];
         document.getElementById("modalTanggalDisetujui").textContent = this.dataset.tanggal_disetujui;
         document.getElementById("modalStatus").textContent = this.dataset.status;
         document.getElementById("modalCatatan").textContent = this.dataset.catatan;
+        document.getElementById("modalDisetujuiOleh").textContent = this.dataset.disetujui_oleh;
         document.getElementById("modalFile").setAttribute("href", this.dataset.file);
+        // Tampilkan petunjuk jika status = Diterima dan role = Pegawai
+        const langkahSelanjutnya = document.getElementById("modalLangkahSelanjutnya");
+        if (this.dataset.status.toLowerCase() === "diterima" && "<?= $role ?>" === "Pegawai") {
+          langkahSelanjutnya.innerHTML = `
+    <div class="alert alert-info mt-3">
+      <strong>Langkah Selanjutnya:</strong> Silakan cetak Lembar Persetujuan dibawah ini, kemudian serahkan ke Admin Keuangan untuk proses realisasi anggaran.
+      <br>
+      <a href="<?= BASEURL ?>/pengajuan_anggaran/cetak/${this.dataset.id}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">Cetak Lembar Persetujuan</a>
+    </div>
+  `;
+        } else {
+          langkahSelanjutnya.innerHTML = '';
+        }
+
       });
     });
   });

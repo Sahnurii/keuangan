@@ -262,4 +262,56 @@ class Transaksi_model
         $result = $this->db->single();
         return $result['saldo_awal'] ?? 0;
     }
+
+    public function getSummaryBulanan($tahun)
+    {
+        $this->db->query("
+        SELECT 
+            MONTH(tanggal) AS bulan,
+            SUM(CASE WHEN tipe_kategori = 'Pemasukan' THEN nominal_transaksi ELSE 0 END) AS pemasukan,
+            SUM(CASE WHEN tipe_kategori = 'Pengeluaran' THEN nominal_transaksi ELSE 0 END) AS pengeluaran
+        FROM transaksi
+        WHERE YEAR(tanggal) = :tahun
+        GROUP BY MONTH(tanggal)
+        ORDER BY bulan
+    ");
+        $this->db->bind('tahun', $tahun);
+        return $this->db->resultSet();
+    }
+
+    public function getKomposisiPemasukan($bulan, $tahun)
+    {
+        $this->db->query("
+        SELECT 
+            k.nama_kategori AS kategori,
+            SUM(t.nominal_transaksi) AS total
+        FROM transaksi t
+        JOIN kategori k ON t.id_kategori = k.id
+        WHERE MONTH(t.tanggal) = :bulan
+          AND YEAR(t.tanggal) = :tahun
+          AND t.tipe_kategori = 'Pemasukan'
+        GROUP BY k.nama_kategori
+    ");
+        $this->db->bind('bulan', $bulan);
+        $this->db->bind('tahun', $tahun);
+        return $this->db->resultSet();
+    }
+
+    public function getKomposisiPengeluaran($bulan, $tahun)
+    {
+        $this->db->query("
+        SELECT 
+            k.nama_kategori AS kategori,
+            SUM(t.nominal_transaksi) AS total
+        FROM transaksi t
+        JOIN kategori k ON t.id_kategori = k.id
+        WHERE MONTH(t.tanggal) = :bulan
+          AND YEAR(t.tanggal) = :tahun
+          AND t.tipe_kategori = 'Pengeluaran'
+        GROUP BY k.nama_kategori
+    ");
+        $this->db->bind('bulan', $bulan);
+        $this->db->bind('tahun', $tahun);
+        return $this->db->resultSet();
+    }
 }

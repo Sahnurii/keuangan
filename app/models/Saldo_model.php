@@ -130,4 +130,110 @@ class Saldo_model
         $result = $this->db->single();
         return $result['jumlah'] > 0; // Mengembalikan `true` jika sudah ada data
     }
+
+    // public function getSaldoAkhirBulanSebelumnya($tipe_buku, $bulan, $tahun)
+    // {
+    //     // Hitung bulan & tahun sebelumnya
+    //     $tanggalSebelumnya = date_create("$tahun-$bulan-01");
+    //     date_sub($tanggalSebelumnya, date_interval_create_from_date_string("1 month"));
+    //     $bulanLalu = $tanggalSebelumnya->format('m');
+    //     $tahunLalu = $tanggalSebelumnya->format('Y');
+
+    //     // Ambil saldo awal bulan lalu
+    //     $saldo = $this->getSaldoAwalByTipeBukuDanTanggal($tipe_buku, $bulanLalu, $tahunLalu);
+    //     $saldo_awal = $saldo && isset($saldo['saldo_awal']) ? $saldo['saldo_awal'] : 0;
+
+    //     // Ambil transaksi bulan lalu
+    //     if ($tipe_buku === 'Pajak') {
+    //         $this->db->query("
+    //         SELECT t.tipe_kategori, p.nilai_pajak AS nominal
+    //         FROM transaksi_pajak p
+    //         JOIN transaksi t ON p.id_transaksi_sumber = t.id
+    //         WHERE MONTH(t.tanggal) = :bulan AND YEAR(t.tanggal) = :tahun
+    //     ");
+    //         $this->db->bind('bulan', $bulanLalu);
+    //         $this->db->bind('tahun', $tahunLalu);
+    //     } else {
+    //         $this->db->query("
+    //         SELECT tipe_kategori, nominal_transaksi AS nominal
+    //         FROM transaksi
+    //         WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun
+    //     ");
+    //         $this->db->bind('tipe_buku', $tipe_buku);
+    //         $this->db->bind('bulan', $bulanLalu);
+    //         $this->db->bind('tahun', $tahunLalu);
+    //     }
+
+    //     $transaksi = $this->db->resultSet();
+
+    //     // Hitung saldo akhir
+    //     foreach ($transaksi as $trx) {
+    //         if ($trx['tipe_kategori'] === 'Pemasukan') {
+    //             $saldo_awal += $trx['nominal'];
+    //         } elseif ($trx['tipe_kategori'] === 'Pengeluaran') {
+    //             $saldo_awal -= $trx['nominal'];
+    //         }
+    //     }
+
+    //     return $saldo_awal;
+    // }
+
+    public function getSaldoAkhirBulanSebelumnya($tipe_buku, $bulan, $tahun)
+    {
+        // Hitung bulan & tahun sebelumnya
+        $tanggalSebelumnya = date_create("$tahun-$bulan-01");
+        date_sub($tanggalSebelumnya, date_interval_create_from_date_string("1 month"));
+        $bulanLalu = $tanggalSebelumnya->format('m');
+        $tahunLalu = $tanggalSebelumnya->format('Y');
+
+        // Ambil saldo awal bulan lalu
+        $saldo = $this->getSaldoAwalByTipeBukuDanTanggal($tipe_buku, $bulanLalu, $tahunLalu);
+        $saldo_awal = $saldo && isset($saldo['saldo_awal']) ? $saldo['saldo_awal'] : 0;
+
+        // Ambil transaksi sesuai tipe buku
+        if ($tipe_buku === 'Pajak') {
+            // Khusus pajak ambil nilai_pajak
+            $this->db->query("
+            SELECT t.tipe_kategori, p.nilai_pajak
+            FROM transaksi_pajak p
+            JOIN transaksi t ON p.id_transaksi_pembayaran = t.id
+            WHERE MONTH(t.tanggal) = :bulan AND YEAR(t.tanggal) = :tahun
+        ");
+            $this->db->bind('bulan', $bulanLalu);
+            $this->db->bind('tahun', $tahunLalu);
+
+            $transaksi = $this->db->resultSet();
+
+            // Perhitungan berdasarkan nilai_pajak
+            foreach ($transaksi as $trx) {
+                if ($trx['tipe_kategori'] === 'Pemasukan') {
+                    $saldo_awal += (float)$trx['nilai_pajak'];
+                } elseif ($trx['tipe_kategori'] === 'Pengeluaran') {
+                    $saldo_awal -= (float)$trx['nilai_pajak'];
+                }
+            }
+        } else {
+            // Untuk kas & bank
+            $this->db->query("
+            SELECT tipe_kategori, nominal_transaksi AS nominal
+            FROM transaksi
+            WHERE tipe_buku = :tipe_buku AND MONTH(tanggal) = :bulan AND YEAR(tanggal) = :tahun
+        ");
+            $this->db->bind('tipe_buku', $tipe_buku);
+            $this->db->bind('bulan', $bulanLalu);
+            $this->db->bind('tahun', $tahunLalu);
+
+            $transaksi = $this->db->resultSet();
+
+            foreach ($transaksi as $trx) {
+                if ($trx['tipe_kategori'] === 'Pemasukan') {
+                    $saldo_awal += (float)$trx['nominal'];
+                } elseif ($trx['tipe_kategori'] === 'Pengeluaran') {
+                    $saldo_awal -= (float)$trx['nominal'];
+                }
+            }
+        }
+
+        return $saldo_awal;
+    }
 }

@@ -23,7 +23,7 @@
     <link href="<?= BASEURL; ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
-
+    <link href="<?= BASEURL; ?>/css/stylebadge.css" rel="stylesheet" />
 
 
 
@@ -66,93 +66,165 @@
                 </div>
             <?php endif; ?>
 
+            <!-- Nav Item - Pages Collapse Menu MASTER TRANSAKSI -->
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                        <i class="fas fa-fw fa-list"></i>
+                        <span>Master Data Transaksi</span>
+                    </a>
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/kategori">Data Kategori</a>
+                            <?php endif; ?>
+
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/jenis_pajak">Jenis Pajak</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endif; ?>
+
+
+            <!-- Nav Item - Pages Collapse Menu MASTER PEGAWAI -->
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
+                        aria-expanded="true" aria-controls="collapseThree">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Master Data Pegawai</span>
+                    </a>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/pegawai">Data Pegawai</a>
+                            <?php endif; ?>
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/riwayat_pendidikan">Data Riwayat Pendidikan</a>
+                            <?php endif; ?>
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/master_tunjangan">Tunjangan Pendidikan</a>
+                            <?php endif; ?>
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/bidang">Data Jabatan & Bidang</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endif; ?>
+
+
+            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                <!-- Nav Item - Pages Collapse Menu MASTER GAJI -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+                        aria-expanded="true" aria-controls="collapseFour">
+                        <i class="fas fa-fw fa-book"></i>
+                        <span>Master Data Gaji</span>
+                    </a>
+                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/master_bobot">Bobot Masa Kerja</a>
+                            <?php endif; ?>
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/template_gaji_jabatan">Template Gaji Jabatan</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </li>
+            <?php endif; ?>
+
             <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
                 <!-- Nav Item - Kategori -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/kategori">
                         <i class="fas fa-fw fa-list"></i>
                         <span>Data Kategori</span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - bidang -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/bidang">
                         <i class="fas fa-fw fa-solid fa-sitemap"></i>
                         <span>Data Jabatan & Bidang</span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Pegawai -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/pegawai">
                         <i class="fas fa-fw fa-users"></i>
                         <span>Data Pegawai</span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Riwayat Pendidikan -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/riwayat_pendidikan">
                         <i class="fas fa-fw fa-users"></i>
                         <span>Data Riwayat Pendidikan</span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Jenis Pajak -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/jenis_pajak">
                         <i class="fas fa-fw fa-file-invoice-dollar"></i>
                         <span>Jenis Pajak</span></a>
-                </li>
+                </li> -->
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Tunjangan Pendidikan -->
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/master_tunjangan">
+                <!-- <li class="nav-item"> -->
+                <!-- <a class="nav-link" href="<?= BASEURL; ?>/master_tunjangan">
                         <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Tunjangan Pendidikan</span></a>
+                        <span>Tunjangan Pendidikan</span></a> -->
                 </li>
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Bobot Masa Kerja -->
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/master_bobot">
+                <!-- <li class="nav-item"> -->
+                <!-- <a class="nav-link" href="<?= BASEURL; ?>/master_bobot">
                         <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Bobot Masa Kerja</span></a>
+                        <span>Bobot Masa Kerja</span></a> -->
                 </li>
             <?php endif; ?>
 
             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                 <!-- Nav Item - Template Gaji Jabatan -->
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/template_gaji_jabatan">
                         <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Template Gaji Jabatan</span></a>
+                        <span>Template Gaji Jabatan</span></a> -->
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['user']['role'], ['Admin','Pegawai','Pimpinan'])) : ?>
+            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Pegawai', 'Pimpinan', 'Petugas'])) : ?>
                 <!-- Nav Item - Pengajuan Anggaran -->
 
                 <li class="nav-item">
                     <a class="nav-link" href="<?= BASEURL; ?>/pengajuan_anggaran">
                         <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Ajukan Anggaran</span></a>
+                        <span>Pengajuan Anggaran</span></a>
                 </li>
             <?php endif; ?>
 
@@ -231,11 +303,12 @@
                             <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakKasUmum">Laporan Buku Kas Umum</a>
                             <a class="collapse-item" href="<?= BASEURL; ?>/laporan">Laporan Buku Kas</a>
                             <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakBank">Laporan Buku Bank</a>
-                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Buku Pajak</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakPajak">Laporan Buku Pajak</a>
                             <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Saldo</a>
                             <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakPemasukanDanPengeluaran">Laporan Pemasukan <br> dan Pengeluaran</a>
-                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Gaji Pegawai</a>
-                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakSaldo">Laporan Slip Pembayaran <br> Gaji Pegawai</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetakGaji">Laporan Gaji Pegawai</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetak_slip">Laporan Slip Pembayaran <br> Gaji Pegawai</a>
+                            <a class="collapse-item" href="<?= BASEURL; ?>/laporan/cetak_pegawai">Laporan Data Pegawai</a>
                         </div>
                     </div>
                 </li>
@@ -322,8 +395,8 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Halo, <span style="font-weight: bold;"><?= $data['nama_pegawai']; ?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="<?= BASEURL; ?>/img/undraw_profile_1.svg">
+                                    <img class="img-profile rounded-circle"
+                                        src="<?= BASEURL; ?>/img/undraw_profile_1.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

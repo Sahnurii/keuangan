@@ -1,0 +1,39 @@
+
+  .badge-status {
+    padding: 0.4em 0.8em;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    display: inline-block;
+  }
+
+  .badge-diajukan {
+    background-color: #ffc107;
+    color: #000;
+    animation: blink 1s infinite;
+    border: 1px solid #ff9800;
+  }
+
+  .badge-diterima::before {
+    content: "✔ ";
+  }
+
+  .badge-ditolak::before {
+    content: "✖ ";
+  }
+
+  .badge-diterima {
+    background-color: #46e06a;
+    color: #fff;
+  }
+
+  .badge-ditolak {
+    background-color: #f2394b;
+    color: #fff;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0.6;
+    }
+  }
+

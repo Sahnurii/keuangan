@@ -1,10 +1,16 @@
+<?php
+$flashData = Flasher::flash();  // Ambil data flash
+?>
+
+<div class="flash-data" data-flashdata='<?= json_encode($flashData); ?>'></div>
 <div class="container-fluid">
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">LAPORAN SALDO</h3>
+            <h3 class="card-title text-center text-white">LAPORAN SLIP GAJI PEGAWAI</h3>
         </div>
+
         <div class="card-body">
-            <form method="GET" action="<?= BASEURL; ?>/laporan/cetakSaldo" class="mb-3">
+            <form method="GET" action="<?= BASEURL; ?>/laporan/cetak_slip" class="mb-3">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="tahun">Pilih Tahun</label>
@@ -24,9 +30,9 @@
                             <?php
                             $selectedBulan = $_GET['bulan'] ?? $data['bulan'];
                             foreach ($data['bulan_tahun'] as $tahun => $bulanList) :
-                                if ($tahun == $selectedTahun) {
+                                if ($tahun == $selectedTahun) { // Hanya tampilkan bulan untuk tahun yang dipilih
                                     foreach ($bulanList as $bulan) :
-                                        $bulanStr = str_pad($bulan, 2, '0', STR_PAD_LEFT);
+                                        $bulanStr = str_pad($bulan, 2, '0', STR_PAD_LEFT); // Format dua digit
                                         $selected = $selectedBulan == $bulanStr ? 'selected' : '';
                                         echo "<option value='$bulanStr' $selected>" . ucfirst(strftime('%B', strtotime("$tahun-$bulan-01"))) . "</option>";
                                     endforeach;
@@ -36,32 +42,36 @@
                         </select>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <a href="<?= BASEURL; ?>/laporan/cetakSaldo_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
-                            class="btn btn-success ml-2" target="_blank">CETAK</a>
+                        <button type="submit" class="btn btn-primary" id="tes">Filter</button>
                     </div>
                 </div>
             </form>
+            
             <div class="table-responsive">
-                <table class="table table-bordered table-hover" style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th class="text-center">BUKU KAS</th>
-                            <th class="text-center">BUKU BANK</th>
-                            <th class="text-center">BUKU KAS UMUM</th>
-                            <th class="text-center">BUKU PAJAK</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Kas']); ?></td>
-                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Bank']); ?></td>
-                            <td class="text-center"> <?= uang_indo($data['saldo_akhir']['Kas Umum']); ?></td>
-                            <td class="text-center"><?= uang_indo($data['saldo_akhir']['Pajak']); ?></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table id="dataTable" class="table table-bordered table-hover">
+                <thead class="text-center">
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Nama Pegawai</th>
+                        <th>Cetak SLIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $no = 1;
+                    foreach ($data['gaji'] as $gaji) :
+                        $totalGaji = ($gaji['gaji_pokok'] + $gaji['insentif'] + $gaji['bobot_masa_kerja'] + $gaji['pendidikan'] + $gaji['beban_kerja']) - $gaji['pemotongan'];
+                    ?>
+                        <tr class="text-center">
+                            <td><?= $no++; ?></td>
+                            <td><?= tglSingkatIndonesia($gaji['tanggal']); ?></td>
+                            <td><?= $gaji['nama']; ?></td>
+                            <td><a href="<?= BASEURL; ?>/laporan/slip/<?= $gaji['id']; ?>" class="btn btn-info btn-sm" target="_blank">Slip</a></td>
+                            </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
         </div>
     </div>
     <div class="card-footer">

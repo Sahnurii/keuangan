@@ -34,7 +34,7 @@
           <textarea name="catatan_atasan" class="form-control" rows="3"></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Simpan</button>
-        <a href="<?= BASEURL; ?>/pengajuanAnggaran" class="btn btn-secondary">Kembali</a>
+        <a href="<?= BASEURL; ?>/pengajuan_anggaran" class="btn btn-secondary">Kembali</a>
       </form>
     </div>
   </div>

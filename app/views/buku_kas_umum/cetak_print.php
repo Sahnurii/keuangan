@@ -192,32 +192,45 @@ $html .= '<table width="100%" border="0" cellpadding="5" cellspacing="0">
     </tr>
 </table>';
 
+$direktur = null;
+$kabag = null;
+
+foreach ($data['pegawai'] as $pgw) {
+    foreach ($pgw['jabatan_bidang'] as $jab) {
+        if (stripos($jab['jabatan'], 'direktur') !== false) {
+            $direktur = $pgw;
+        } elseif (stripos($jab['jabatan'], 'kabag') !== false && stripos($jab['jabatan'], 'keuangan') !== false) {
+            $kabag = $pgw;
+        }
+    }
+}
+$namaDirektur = $direktur['nama'] ?? 'Direktur';
+$nipyDirektur = $direktur['nipy'] ?? '-';
+
+$namaKabag = $kabag['nama'] ?? 'Kabag. Keuangan';
+$nipyKabag = $kabag['nipy'] ?? '-';
+
 $html .= '<br><br><table class="signature-table" width="100%" border="0" cellpadding="5" align="center">
     <tr>
-        <td></td>
         <td></td>
         <td align="center">Tanah Bumbu, ' . tglIndonesia(date('d F Y', strtotime($tgl))) . '</td>
     </tr>
     <tr>
         <td align="center">Mengetahui,</td>
-        <td></td>
         <td align="center"></td>
     </tr>
     <tr>
         <td align="center">Direktur,</td>
         <td align="center">Kabag. Program dan Keuangan,</td>
-        <td align="center">Bendahara Umum,</td>
     </tr>
-    <tr><td colspan="3" height="100"></td></tr> <!-- Jarak untuk tanda tangan -->
+    <tr><td colspan="2" height="100"></td></tr> <!-- Jarak untuk tanda tangan -->
     <tr>
-        <td align="center"><strong>Drs. H. M. Idjra\'i, M.Pd.</strong></td>
-        <td align="center"><strong>Nurul Hatmah, S.Pd.</strong></td>
-        <td align="center"><strong>Sugeng Ludiyono, S.E., M.M.</strong></td>
+        <td align="center"><strong>' . $namaDirektur . '</strong></td>
+        <td align="center"><strong>' . $namaKabag . '</strong></td>
     </tr>
     <tr>
-        <td align="center">19590904 201510 1 003</td>
-        <td align="center">19911027 202301 2 050</td>
-        <td align="center">19930914 201910 1 028</td>
+        <td align="center">NIPY. ' . $nipyDirektur . '</td>
+        <td align="center">NIPY. ' . $nipyKabag . '</td>
     </tr>
 </table>';
 

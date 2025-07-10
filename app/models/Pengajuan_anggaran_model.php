@@ -128,7 +128,9 @@ class Pengajuan_anggaran_model
     {
         if ($data['status'] === 'diajukan') {
             $query = "UPDATE {$this->table} 
-                  SET status = :status, tanggal_disetujui = NULL 
+                  SET status = :status, 
+                  tanggal_disetujui = NULL,
+                  id_atasan = NULL 
                   WHERE id = :id";
             $this->db->query($query);
             $this->db->bind('status', $data['status']);
@@ -144,5 +146,90 @@ class Pengajuan_anggaran_model
 
         $this->db->execute();
         return $this->db->rowCount();
+    }
+
+    public function getTotalPengajuan()
+    {
+        $this->db->query("SELECT COUNT(*) as total FROM {$this->table}");
+        return $this->db->single();
+    }
+
+
+    public function getRekapTotalPengajuanByStatus()
+    {
+        $this->db->query("
+        SELECT 
+            status, 
+            COUNT(*) as total 
+        FROM {$this->table} 
+        GROUP BY status
+    ");
+        return $this->db->resultSet();
+    }
+
+    public function getRekapByPegawai($idPegawai)
+    {
+        $this->db->query("
+        SELECT status, COUNT(*) as total 
+        FROM {$this->table} 
+        WHERE id_pegawai = :id_pegawai 
+        GROUP BY status
+    ");
+        $this->db->bind('id_pegawai', $idPegawai);
+        return $this->db->resultSet();
+    }
+
+    public function getFiltered($status = null, $idPegawai = null)
+    {
+        $query = "SELECT pa.*, p.nama AS nama_pegawai,
+                at.nama AS nama_pimpinan
+              FROM {$this->table} pa
+              JOIN pegawai p ON pa.id_pegawai = p.id
+              LEFT JOIN pegawai at ON pa.id_atasan = at.id
+              WHERE 1=1";
+
+        if ($status) {
+            $query .= " AND pa.status = :status";
+        }
+        if ($idPegawai) {
+            $query .= " AND pa.id_pegawai = :id_pegawai";
+        }
+
+        $this->db->query($query);
+
+        if ($status) {
+            $this->db->bind('status', $status);
+        }
+        if ($idPegawai) {
+            $this->db->bind('id_pegawai', $idPegawai);
+        }
+
+        return $this->db->resultSet();
+    }
+
+    public function getByIdWithPimpinan($id)
+    {
+        $this->db->query("
+        SELECT 
+            pa.*, 
+            p.nama AS nama_pimpinan, 
+            p.nipy AS nipy_pimpinan, 
+            jb_pimpinan.jabatan AS jabatan_pimpinan,
+            peg.nama AS nama_pegawai,
+            peg.nipy AS nipy_pegawai,
+            jb_pengaju.jabatan AS jabatan_pengaju
+        FROM pengajuan_anggaran pa
+        JOIN pegawai p ON p.id = pa.id_atasan
+        LEFT JOIN pegawai_jabatan_bidang pjb_pimpinan ON pjb_pimpinan.id_pegawai = p.id AND pjb_pimpinan.tanggal_selesai IS NULL
+        LEFT JOIN jabatan_bidang jb_pimpinan ON jb_pimpinan.id = pjb_pimpinan.id_jabatan_bidang
+        
+        JOIN pegawai peg ON peg.id = pa.id_pegawai
+        LEFT JOIN pegawai_jabatan_bidang pjb_pengaju ON pjb_pengaju.id_pegawai = peg.id AND pjb_pengaju.tanggal_selesai IS NULL
+        LEFT JOIN jabatan_bidang jb_pengaju ON jb_pengaju.id = pjb_pengaju.id_jabatan_bidang
+        
+        WHERE pa.id = :id
+    ");
+        $this->db->bind('id', $id);
+        return $this->db->single();
     }
 }
