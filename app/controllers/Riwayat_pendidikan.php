@@ -61,6 +61,7 @@ class Riwayat_pendidikan extends BaseController
     {
         $data['pendidikan'] = $this->model('Riwayat_pendidikan_model')->getRiwayatPendidikanById($id);
         $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
+        $data['jenjang'] = $this->model('Tunjangan_model')->getAllTunjangan();
         $data['judul'] = 'Edit Riwayat Pendidikan';
 
         $this->view('templates/header', $data);
@@ -74,7 +75,7 @@ class Riwayat_pendidikan extends BaseController
             $data = [
                 'id'             => $_POST['id'],
                 'id_pegawai'     => $_POST['id_pegawai'],
-                'jenjang'        => $_POST['jenjang'],
+                'id_jenjang'        => $_POST['id_jenjang'],
                 'gelar'          => $_POST['gelar'],
                 'program_studi'  => $_POST['program_studi'],
                 'nama_kampus'    => $_POST['nama_kampus']

@@ -2,7 +2,7 @@
 
 class Saldo extends BaseController
 {
-    protected $allowedRoles = ['Admin'];
+    protected $allowedRoles = ['Admin', 'Petugas'];
 
     public function index()
     {

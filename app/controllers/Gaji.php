@@ -60,23 +60,23 @@ class Gaji extends BaseController
             }
 
             // Ambil data otomatis
-            $getData = $this->model('Gaji_model')->getDataGajiOtomatis($idPegawai, $tanggal);
+            // $getData = $this->model('Gaji_model')->getDataGajiOtomatis($idPegawai, $tanggal);
 
             // Jika data tidak lengkap (misalnya template tidak ada)
-            if (!$getData || $getData['gaji_pokok'] === 0 && $getData['insentif'] === 0) {
-                Flasher::setFlash('Gagal Tambah Gaji', 'Komponen gaji tidak lengkap', 'error');
-                header('Location: ' . BASEURL . '/gaji');
-                exit;
-            }
+            // if (!$getData || $getData['gaji_pokok'] === 0 && $getData['insentif'] === 0) {
+            //     Flasher::setFlash('Gagal Tambah Gaji', 'Komponen gaji tidak lengkap', 'error');
+            //     header('Location: ' . BASEURL . '/gaji');
+            //     exit;
+            // }
 
             // Simpan data ke DB
             $data = [
                 'id_pegawai' => $idPegawai,
                 'tanggal' => $tanggal,
-                'gaji_pokok' => $getData['gaji_pokok'],
-                'insentif' => $getData['insentif'],
-                'pendidikan' => $getData['pendidikan'],
-                'bobot_masa_kerja' => $getData['bobot_masa_kerja'],
+                'gaji_pokok' => $_POST['gaji_pokok'],
+                'insentif' => $_POST['insentif'],
+                'pendidikan' => $_POST['pendidikan'],
+                'bobot_masa_kerja' => $_POST['bobot_masa_kerja'],
                 'beban_kerja' => $_POST['beban_kerja'] ?? 0,
                 'pemotongan' => $_POST['pemotongan'] ?? 0
             ];

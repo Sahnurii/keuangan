@@ -25,7 +25,7 @@ $role = $_SESSION['user']['role'];
 
             <?php if ($_SESSION['user']['role'] === 'Admin' || $_SESSION['user']['role'] === 'Pimpinan') : ?>
               <select name="pengaju" class="form-control mr-2">
-                <option value="">-- Semua Pengaju --</option>
+                <option value="">-- Semua Pengusul --</option>
                 <?php foreach ($data['pegawai'] as $p) : ?>
                   <option value="<?= $p['id'] ?>" <?= ($_GET['pengaju'] ?? '') == $p['id'] ? 'selected' : '' ?>>
                     <?= $p['nama'] ?>
@@ -43,7 +43,7 @@ $role = $_SESSION['user']['role'];
             <tr class="text-center">
               <th>No</th>
               <?php if ($role === 'Admin' || $role === 'Pimpinan') : ?>
-                <th>Pengaju</th>
+                <th>Nama Pengusul</th>
               <?php endif; ?>
               <th>Tanggal Upload</th>
               <th>Judul</th>
@@ -182,7 +182,7 @@ $role = $_SESSION['user']['role'];
         document.getElementById("modalFile").setAttribute("href", this.dataset.file);
         // Tampilkan petunjuk jika status = Diterima dan role = Pegawai
         const langkahSelanjutnya = document.getElementById("modalLangkahSelanjutnya");
-        if (this.dataset.status.toLowerCase() === "diterima" && "<?= $role ?>" === "Pegawai") {
+        if (this.dataset.status.toLowerCase() === "diterima" && ["Pegawai", "Petugas"].includes("<?= $role ?>")) {
           langkahSelanjutnya.innerHTML = `
     <div class="alert alert-info mt-3">
       <strong>Langkah Selanjutnya:</strong> Silakan cetak Lembar Persetujuan dibawah ini, kemudian serahkan ke Admin Keuangan untuk proses realisasi anggaran.

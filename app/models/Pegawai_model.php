@@ -44,7 +44,7 @@ class Pegawai_model
 
     public function getNamaById($id)
     {
-        $this->db->query("SELECT nama FROM " . $this->table . " WHERE id = :id");
+        $this->db->query("SELECT nama, jenis_kelamin FROM " . $this->table . " WHERE id = :id");
         $this->db->bind('id', $id);
         return $this->db->single();
     }

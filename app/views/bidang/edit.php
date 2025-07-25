@@ -3,7 +3,7 @@
     <!-- Horizontal Form -->
     <div class="card card-info">
         <div class="card-header bg-primary">
-            <h3 class="card-title text-center text-white">Edit Data Bidang</h3>
+            <h3 class="card-title text-center text-white">Edit Data Jabatan dan Bidang</h3>
         </div>
         <!-- /.card-header -->
 

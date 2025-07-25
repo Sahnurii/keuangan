@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="card card-info">
-        <div class="card-header bg-warning">
+        <div class="card-header bg-primary">
             <h3 class="card-title text-white">Edit Riwayat Pendidikan</h3>
         </div>
         <div class="card-body">
@@ -19,8 +19,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="jenjang">Jenjang</label>
-                    <input type="text" class="form-control" id="jenjang" name="jenjang" value="<?= $data['pendidikan']['jenjang']; ?>" required>
+                    <label for="id_jenjang">Jenjang</label>
+                    <select class="form-control" id="id_jenjang" name="id_jenjang" required>
+                        <?php foreach ($data['jenjang'] as $jenjang): ?>
+                            <option value="<?= $jenjang['id']; ?>"
+                                <?= $jenjang['id'] == $data['pendidikan']['id_jenjang'] ? 'selected' : ''; ?>>
+                                <?= $jenjang['jenjang']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -39,7 +46,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan Perubahan</button>
-                <a href="<?= BASEURL; ?>/riwayatpendidikan" class="btn btn-secondary">Batal</a>
+                <a href="<?= BASEURL; ?>/riwayat_pendidikan" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

@@ -66,11 +66,12 @@ class Jenis_model
         return $this->db->single();
     }
 
-    public function cekJenisPajakDuplikat($tarif_pajak)
+    public function cekJenisPajakDuplikat($tarif_pajak, $tipe)
     {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE tarif_pajak = :tarif_pajak";
+        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE tarif_pajak = :tarif_pajak AND tipe = :tipe";
         $this->db->query($query);
         $this->db->bind('tarif_pajak', $tarif_pajak);
+        $this->db->bind('tipe', $tipe);
         $result = $this->db->single();
         return $result['total'] > 0; // Mengembalikan true jika ada duplikat
     }

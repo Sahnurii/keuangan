@@ -118,6 +118,16 @@ class Bidang extends BaseController
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $jabatan = $this->formatKata(trim($_POST['jabatan']));
+            $nama_bidang = $this->formatKata(trim($_POST['nama_bidang']));
+
+
+            // Validasi untuk mengecek duplikat data
+            if ($this->model('Bidang_model')->cekBidangDuplikat($jabatan, $nama_bidang)) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan Jabatan dan nama Bidang yang sama', 'error');
+                header('Location: ' . BASEURL . '/bidang');
+                exit;
+            }
             $data = [
                 'id' => $_POST['id'],
                 'jabatan' => $this->formatKata(trim($_POST['jabatan'])),

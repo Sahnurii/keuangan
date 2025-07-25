@@ -134,7 +134,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="h4 font-weight-bold text-info text-uppercase mb-3">
-                                BIDANG</div>
+                                JABATAN & BIDANG</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800"> <?php echo $data['total_bidang']; ?>
                             </div>
                         </div>
@@ -245,7 +245,7 @@ $flashData = Flasher::flash();  // Ambil data flash
 
     </div>
 
-    <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Pimpinan'])) : ?>
+    <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Pimpinan', 'Petugas'])) : ?>
     <!-- Chart Area -->
     <div class="row">
         <!-- Grafik Line -->
@@ -392,28 +392,28 @@ $flashData = Flasher::flash();  // Ambil data flash
                     datasets: [{
                         data: dataKategori,
                         backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '70%',
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                const label = data.labels[tooltipItem.index] || '';
-                                const value = data.datasets[0].data[tooltipItem.index] || 0;
-                                const formatted = 'Rp ' + Number(value).toLocaleString('id-ID', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                });
-                                return label + ': ' + formatted;
-                            }
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            const label = data.labels[tooltipItem.index] || '';
+                            const value = data.datasets[0].data[tooltipItem.index] || 0;
+                            const formatted = 'Rp ' + Number(value).toLocaleString('id-ID', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            return label + ': ' + formatted;
                         }
                     }
                 }
-            });
-        <?php endif; ?>
+            }
+        });
+    <?php endif; ?>
 
         <?php if (!empty($data['komposisi_pengeluaran'])): ?>
             const labelPengeluaran = <?= json_encode(array_column($data['komposisi_pengeluaran'], 'kategori')) ?>;

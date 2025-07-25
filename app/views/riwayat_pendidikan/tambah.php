@@ -42,7 +42,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Simpan</button>
-                <a href="<?= BASEURL; ?>/riwayatpendidikan" class="btn btn-secondary">Batal</a>
+                <a href="<?= BASEURL; ?>/riwayat_pendidikan" class="btn btn-secondary">Batal</a>
             </form>
         </div>
     </div>

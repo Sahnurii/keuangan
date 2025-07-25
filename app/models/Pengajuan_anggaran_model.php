@@ -232,4 +232,17 @@ class Pengajuan_anggaran_model
         $this->db->bind('id', $id);
         return $this->db->single();
     }
+
+    public function getDiterimaPimpinanOnly()
+    {
+        $query = "SELECT pa.*, p.nama AS nama_pegawai, at.nama AS nama_pimpinan
+              FROM {$this->table} pa
+              JOIN pegawai p ON pa.id_pegawai = p.id
+              LEFT JOIN pegawai at ON pa.id_atasan = at.id
+              WHERE pa.status = 'diterima'
+              ORDER BY pa.tanggal_disetujui DESC";
+
+        $this->db->query($query);
+        return $this->db->resultSet();
+    }
 }

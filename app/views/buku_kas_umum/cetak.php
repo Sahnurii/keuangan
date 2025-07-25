@@ -62,7 +62,7 @@
                         <?php $i = 1; ?>
                         <?php foreach ($data['transaksi'] as $transaksi) : ?>
                             <tr>
-                                <td class="align-content-center"><?= $i++; ?></td>
+                                <td class="text-center align-content-center"><?= $i++; ?></td>
                                 <td class="text-center align-content-center"><?= date('d M Y', strtotime($transaksi['tanggal'])); ?></td>
                                 <td class="text-center align-content-center"><?= $transaksi['no_bukti']; ?></td>
                                 <td class="text-wrap" style="max-width: 200px;"><?= $transaksi['keterangan']; ?></td>

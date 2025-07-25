@@ -30,8 +30,8 @@ class Kategori extends BaseController
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nama_kategori = $_POST['nama_kategori'];
-            $tipe_kategori = $_POST['tipe_kategori'];
+            $nama_kategori = trim($_POST['nama_kategori']);
+            $tipe_kategori = trim($_POST['tipe_kategori']);
 
             // Validasi untuk mengecek duplikat data
             if ($this->model('Kategori_model')->cekKategoriDuplikat($nama_kategori, $tipe_kategori)) {
@@ -71,6 +71,14 @@ class Kategori extends BaseController
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nama_kategori = trim($_POST['nama_kategori']);
+            $tipe_kategori = trim($_POST['tipe_kategori']);
+
+            if ($this->model('Kategori_model')->cekKategoriDuplikat($nama_kategori, $tipe_kategori)) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan nama dan tipe kategori yang sama', 'error');
+                header('Location: ' . BASEURL . '/kategori');
+                exit;
+            }
             if ($this->model('Kategori_model')->editDataKategori($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
                 Flasher::setFlash('Ubah Data Berhasil', '', 'success');

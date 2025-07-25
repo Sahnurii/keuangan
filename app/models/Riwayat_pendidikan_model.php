@@ -29,13 +29,25 @@ class Riwayat_pendidikan_model
         return $this->db->resultSet();
     }
 
-
     public function getRiwayatPendidikanById($id)
     {
-        $this->db->query("SELECT * FROM " . $this->table . " WHERE id=:id");
+        $this->db->query("
+        SELECT r.*, p.nama AS nama_pegawai, tj.jenjang AS nama_jenjang
+        FROM riwayat_pendidikan_pegawai r
+        JOIN pegawai p ON r.id_pegawai = p.id
+        JOIN master_tunjangan_pendidikan tj ON r.id_jenjang = tj.id
+        WHERE r.id = :id
+    ");
         $this->db->bind('id', $id);
         return $this->db->single();
     }
+
+    // public function getRiwayatPendidikanById($id)
+    // {
+    //     $this->db->query("SELECT * FROM " . $this->table . " WHERE id=:id");
+    //     $this->db->bind('id', $id);
+    //     return $this->db->single();
+    // }
 
     public function hapusDataRiwayatPendidikan($id)
     {

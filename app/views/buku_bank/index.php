@@ -42,8 +42,10 @@ $flashData = Flasher::flash();  // Ambil data flash
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary" id="tes">Filter</button>
+                         <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                         <a href="<?= BASEURL; ?>/laporan/cetakBank_print?tahun=<?= $selectedTahun; ?>&bulan=<?= $selectedBulan; ?>"
                             class="btn btn-success ml-2" target="_blank">CETAK</a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </form>

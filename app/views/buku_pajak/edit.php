@@ -12,13 +12,14 @@ $flashData = Flasher::flash();
         <form action="<?= BASEURL; ?>/buku_pajak/update" method="POST" id="form_transaksi_pajak">
             <input type="hidden" name="id" value="<?= $data['transaksi_pajak']['id']; ?>">
             <input type="hidden" name="id_transaksi_pembayaran" value="<?= $data['transaksi_pajak']['id_transaksi_pembayaran']; ?>">
+            <input type="hidden" name="tipe_buku" value="<?= $data['transaksi_pajak']['tipe_buku']; ?>">
 
             <div class="container mt-2">
                 <!-- Tipe Buku -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Tipe Buku</label>
                     <div class="col-sm-10">
-                        <select class="form-control" id="tipe_buku_pajak" name="tipe_buku" required>
+                        <select class="form-control" id="tipe_buku_pajak" name="tipe_buku" disabled>
                             <option value="Kas" <?= $data['transaksi_pajak']['tipe_buku'] === 'Kas' ? 'selected' : '' ?>>Kas</option>
                             <option value="Bank" <?= $data['transaksi_pajak']['tipe_buku'] === 'Bank' ? 'selected' : '' ?>>Bank</option>
                             <option value="Pajak" <?= $data['transaksi_pajak']['tipe_buku'] === 'Pajak' ? 'selected' : '' ?>>Pajak</option>

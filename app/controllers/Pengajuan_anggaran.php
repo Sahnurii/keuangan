@@ -1,5 +1,7 @@
 <?php
 
+use Endroid\QrCode\Builder\Builder;
+
 class Pengajuan_anggaran extends BaseController
 {
     protected $allowedRoles = ['Admin', 'Pimpinan', 'Pegawai', 'Petugas'];
@@ -25,6 +27,24 @@ class Pengajuan_anggaran extends BaseController
         $this->view('pengajuan_anggaran/index', $data);
         $this->view('templates/footer');
     }
+
+    public function history()
+    {
+        $role = $_SESSION['user']['role'];
+        if ($role !== 'Pimpinan') {
+            Flasher::setFlash('Akses ditolak.', '', 'danger');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
+
+        $data['judul'] = 'Histori Pengajuan Anggaran Disetujui';
+        $data['pengajuan'] = $this->model('Pengajuan_anggaran_model')->getDiterimaPimpinanOnly();
+
+        $this->view('templates/header', $data);
+        $this->view('pengajuan_anggaran/histori', $data);
+        $this->view('templates/footer');
+    }
+
 
     public function tambah()
     {
@@ -270,9 +290,29 @@ class Pengajuan_anggaran extends BaseController
             exit;
         }
 
+        // 1️⃣ Generate QR Code
+        $qrPath = 'qrcode/pengajuan_' . $id . '.png';
+        $fullPath = __DIR__ . '/../../public/' . $qrPath;
+
+        if (!file_exists($fullPath)) {
+            $result = Builder::create()
+                ->data(BASEURL . '/verifikasi/verrified/' . $id)
+                ->size(300)
+                ->margin(10)
+                ->build();
+
+            if (!is_dir(dirname($fullPath))) {
+                mkdir(dirname($fullPath), 0777, true);
+            }
+
+            file_put_contents($fullPath, $result->getString());
+        }
+
         $data['pengajuan'] = $pengajuan;
+        $data['qr_path'] = $qrPath;
 
         // Ambil view jadi string
+
         ob_start();
         $this->view('pengajuan_anggaran/cetak_rab', $data);
         $html = ob_get_clean();

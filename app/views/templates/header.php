@@ -106,9 +106,6 @@
                                 <a class="collapse-item" href="<?= BASEURL; ?>/riwayat_pendidikan">Data Riwayat Pendidikan</a>
                             <?php endif; ?>
                             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                                <a class="collapse-item" href="<?= BASEURL; ?>/master_tunjangan">Tunjangan Pendidikan</a>
-                            <?php endif; ?>
-                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                                 <a class="collapse-item" href="<?= BASEURL; ?>/bidang">Data Jabatan & Bidang</a>
                             <?php endif; ?>
                         </div>
@@ -128,6 +125,9 @@
                     <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
+                                <a class="collapse-item" href="<?= BASEURL; ?>/master_tunjangan">Tunjangan Pendidikan</a>
+                            <?php endif; ?>
+                            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
                                 <a class="collapse-item" href="<?= BASEURL; ?>/master_bobot">Bobot Masa Kerja</a>
                             <?php endif; ?>
                             <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
@@ -138,83 +138,13 @@
                 </li>
             <?php endif; ?>
 
-            <?php if (in_array($_SESSION['user']['role'], ['Admin', 'Petugas'])) : ?>
-                <!-- Nav Item - Kategori -->
+            <?php if (in_array($_SESSION['user']['role'], ['Pimpinan'])) : ?>
+                <!-- Nav Item - Histori Pengajuan Anggaran -->
 
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/kategori">
-                        <i class="fas fa-fw fa-list"></i>
-                        <span>Data Kategori</span></a>
-                </li> -->
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - bidang -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/bidang">
-                        <i class="fas fa-fw fa-solid fa-sitemap"></i>
-                        <span>Data Jabatan & Bidang</span></a>
-                </li> -->
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Pegawai -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/pegawai">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>Data Pegawai</span></a>
-                </li> -->
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Riwayat Pendidikan -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/riwayat_pendidikan">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>Data Riwayat Pendidikan</span></a>
-                </li> -->
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Jenis Pajak -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/jenis_pajak">
-                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Jenis Pajak</span></a>
-                </li> -->
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Tunjangan Pendidikan -->
-
-                <!-- <li class="nav-item"> -->
-                <!-- <a class="nav-link" href="<?= BASEURL; ?>/master_tunjangan">
-                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Tunjangan Pendidikan</span></a> -->
-                </li>
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Bobot Masa Kerja -->
-
-                <!-- <li class="nav-item"> -->
-                <!-- <a class="nav-link" href="<?= BASEURL; ?>/master_bobot">
-                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Bobot Masa Kerja</span></a> -->
-                </li>
-            <?php endif; ?>
-
-            <?php if (in_array($_SESSION['user']['role'], ['Admin'])) : ?>
-                <!-- Nav Item - Template Gaji Jabatan -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="<?= BASEURL; ?>/template_gaji_jabatan">
-                        <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                        <span>Template Gaji Jabatan</span></a> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASEURL; ?>/pengajuan_anggaran/history">
+                        <i class="fas fa-fw fa-history"></i>
+                        <span>Histori Anggaran diterima</span></a>
                 </li>
             <?php endif; ?>
 
@@ -395,8 +325,14 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Halo, <span style="font-weight: bold;"><?= $data['nama_pegawai']; ?></span>
-                                    <img class="img-profile rounded-circle"
-                                        src="<?= BASEURL; ?>/img/undraw_profile_1.svg">
+                                    <!-- <img class="img-profile rounded-circle"
+                                        src="<?= BASEURL; ?>/img/undraw_profile_1.svg"> -->
+                                    <?php if ($data['jenis_kelamin'] === 'Laki-laki') : ?>
+                                        <img class="img-profile rounded-circle" src="<?= BASEURL ?>/img/undraw_profile_2.svg">
+                                    <?php else : ?>
+                                        <img class="img-profile rounded-circle" src="<?= BASEURL ?>/img/undraw_profile_1.svg">
+                                    <?php endif; ?>
+
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

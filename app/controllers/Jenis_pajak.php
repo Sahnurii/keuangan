@@ -31,15 +31,14 @@ class Jenis_pajak extends BaseController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tarif_pajak = $_POST['tarif_pajak'];
+            $tipe = $_POST['tipe'];
 
             // Validasi untuk mengecek duplikat data
-            if ($this->model('Jenis_model')->cekJenisPajakDuplikat($tarif_pajak)) {
-                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan Tarif Pajak yang sama', 'error');
+            if ($this->model('Jenis_model')->cekJenisPajakDuplikat($tarif_pajak, $tipe)) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan Tarif Pajak dan Tipe yang sama', 'error');
                 header('Location: ' . BASEURL . '/jenis_pajak');
                 exit;
             }
-
-
             // Proses data POST
             if ($this->model('Jenis_model')->tambahDataJenisPajak($_POST) > 0) {
                 Flasher::setFlash('Tambah Data Berhasil', '', 'success');
@@ -72,6 +71,15 @@ class Jenis_pajak extends BaseController
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tarif_pajak = $_POST['tarif_pajak'];
+            $tipe = $_POST['tipe'];
+
+            // Validasi untuk mengecek duplikat data
+            if ($this->model('Jenis_model')->cekJenisPajakDuplikat($tarif_pajak, $tipe)) {
+                Flasher::setFlash('Tambah Data Gagal', 'Data sudah ada dengan Tarif Pajak dan Tipe yang sama', 'error');
+                header('Location: ' . BASEURL . '/jenis_pajak');
+                exit;
+            }
             if ($this->model('Jenis_model')->editDataJenisPajak($_POST) > 0) {
                 echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
                 Flasher::setFlash('Ubah Data Berhasil', '', 'success');

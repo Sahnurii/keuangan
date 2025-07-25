@@ -104,7 +104,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="status_perkawinan" class="col-sm-2 col-form-label">STATUS</label>
+                    <label for="status_perkawinan" class="col-sm-2 col-form-label">STATUS PERNIKAHAN</label>
                     <div class="col-sm-10">
                         <select class="form-control" id="status_perkawinan" name="status_perkawinan">
                             <option value="" disabled selected>-- Pilih Status --</option>

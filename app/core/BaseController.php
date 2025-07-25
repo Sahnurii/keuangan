@@ -23,6 +23,7 @@ class BaseController extends Controller
         if (isset($_SESSION['user']['id_pegawai'])) {
             $pegawai = $this->model('Pegawai_model')->getNamaById($_SESSION['user']['id_pegawai']);
             $this->data['nama_pegawai'] = $pegawai['nama'] ?? '';
+            $this->data['jenis_kelamin'] = $pegawai['jenis_kelamin'] ?? '';
         }
     }
 }

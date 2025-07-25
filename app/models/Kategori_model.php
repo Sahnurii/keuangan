@@ -81,7 +81,7 @@ class kategori_model
 
     public function cekKategoriDuplikat($nama_kategori, $tipe_kategori)
     {
-        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE nama_kategori = :nama_kategori AND tipe_kategori = :tipe_kategori";
+        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE LOWER(nama_kategori) = LOWER(:nama_kategori) AND tipe_kategori = :tipe_kategori";
         $this->db->query($query);
         $this->db->bind('nama_kategori', $nama_kategori);
         $this->db->bind('tipe_kategori', $tipe_kategori);
