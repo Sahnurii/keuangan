@@ -57,7 +57,7 @@ $html = '<html>
 <hr style="height: 5px; background-color: black; border: none;">
 <div class="spacer"></div>    
 <div class="header" style="font-size: 15pt;">Laporan Buku Pembantu Kas</div>
-    <div class="sub-header" style="font-weight: bold; font-size: 15pt;">Bulan: ' . $bulanNama . '</div>
+    <div class="sub-header" style="font-weight: bold; font-size: 15pt;">Periode: ' . $bulanNama . ' ' . $selectedTahun . '</div>
     <div class="spacer"></div>';
 
     $html .= '<table width="100%">

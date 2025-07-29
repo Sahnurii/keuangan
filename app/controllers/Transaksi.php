@@ -14,7 +14,7 @@
             $data['pemasukan'] = $this->model('Kategori_model')->getKategoriByTipe('Pemasukan');
             $data['pengeluaran'] = $this->model('Kategori_model')->getKategoriByTipe('Pengeluaran');
 
-            $data['no_bukti_transaksi'] = $this->model('Pajak_model')->getAllNoBuktiTransaksi();
+            $data['no_bukti_transaksi'] = $this->model('Pajak_model')->getAllNoBuktiTransaksi($tahun);
             $data['jenis_pajak'] = $this->model('Pajak_model')->getAllJenisPajak();
 
             // Menyertakan data ke view

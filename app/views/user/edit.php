@@ -10,15 +10,30 @@ $flashData = Flasher::flash();  // Ambil data flash
         <div class="card-body">
             <form method="POST" action="<?= BASEURL; ?>/user/update/<?= $data['user']['id']; ?>" id="editUserForm">
                 <input type="hidden" name="id" id="id" value="<?= $data['user']['id']; ?>">
-                <input type="hidden" name="id_pegawai" value="<?= $data['pegawai']['id']; ?>">
+
+                <?php if ($_SESSION['user']['role'] === 'Admin'): ?>
+                    <div class="form-group">
+                        <label for="id_pegawai">Pilih Pegawai:</label>
+                        <select name="id_pegawai" id="id_pegawai" class="form-control select2" required>
+                            <option value="" disabled>-- Pilih Pegawai --</option>
+                            <?php foreach ($data['pegawailist'] as $p): ?>
+                                <option value="<?= $p['id']; ?>" <?= $p['id'] == $data['pegawai']['id'] ? 'selected' : ''; ?>>
+                                    <?= $p['nama']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                <?php endif; ?>
                 <div class="form-group">
                     <label for="nama">Nama Pegawai:</label>
-                    <input type="text" id="nama" class="form-control" value="<?= $data['pegawai']['nama']; ?>" readonly>
+                    <!-- <input type="text" id="nama" class="form-control" value="<?= $data['pegawai']['nama']; ?>" readonly> -->
+                    <input type="text" id="nama" class="form-control" value="<?= !empty($data['pegawai']) ? $data['pegawai']['nama'] : 'Pegawai tidak ditemukan'; ?>" readonly>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email Pegawai:</label>
-                    <input type="email" id="email" class="form-control" value="<?= $data['pegawai']['email']; ?>" readonly>
+                    <!-- <input type="email" id="email" class="form-control" value="<?= $data['pegawai']['email']; ?>" readonly> -->
+                    <input type="email" id="email" class="form-control" value="<?= !empty($data['pegawai']) ? $data['pegawai']['email'] : 'Email tidak ditemukan'; ?>" readonly>
                 </div>
 
                 <div class="form-group">
@@ -51,6 +66,7 @@ $flashData = Flasher::flash();  // Ambil data flash
                 <?php endif; ?>
                 <?php if ($_SESSION['user']['role'] !== 'Admin'): ?>
                     <input type="hidden" name="role" value="<?= $data['user']['role']; ?>">
+                    <input type="hidden" name="id_pegawai" value="<?= $data['pegawai']['id']; ?>">
                 <?php endif; ?>
 
 

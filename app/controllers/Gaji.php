@@ -94,7 +94,7 @@ class Gaji extends BaseController
             // Tampilkan form tambah
 
             $data['judul'] = 'Tambah Gaji';
-            $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
+            $data['pegawai'] = $this->model('Pegawai_model')->getPegawaiAktif();
             $this->view('templates/header', $data);
             $this->view('gaji/tambah', $data);
             $this->view('templates/footer');

@@ -61,7 +61,7 @@ class User extends BaseController
             }
         }
 
-        $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai();
+        $data['pegawai'] = $this->model('Pegawai_model')->getPegawaiAktif();
 
         $data['judul'] = 'Tambah User';
         $this->view('templates/header', $data);
@@ -98,6 +98,7 @@ class User extends BaseController
             $data['pegawai'] = $this->model('Pegawai_model')->getPegawaiById($user['id_pegawai']);
         }
         $data['judul'] = 'Edit User';
+        $data['pegawailist'] = $this->model('Pegawai_model')->getPegawaiAktif();
         $this->view('templates/header', $data);
         $this->view('user/edit', $data);
         $this->view('templates/footer');
@@ -131,6 +132,12 @@ class User extends BaseController
         $userModel = $this->model('User_model');
         $existingUser = $userModel->getUserById($id);
         $oldpassword = $existingUser['password'];
+
+        if ($userModel->cekIdPegawaiDuplikat($_POST['id_pegawai'], $id)) {
+            Flasher::setFlash('Pegawai sudah terdaftar sebagai user.', '', 'error');
+            header('Location: ' . BASEURL . '/user/edit/' . $id);
+            exit;
+        }
 
         if ($_POST['username'] !== $existingUser['username']) {
             if ($userModel->cekUsernameDuplikat($_POST['username'])) {

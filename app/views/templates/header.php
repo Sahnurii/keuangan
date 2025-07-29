@@ -22,7 +22,7 @@
     <link href="<?= BASEURL; ?>/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="<?= BASEURL; ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="<?= BASEURL ?>/css/select2.min.css" rel="stylesheet" />
     <link href="<?= BASEURL; ?>/css/stylebadge.css" rel="stylesheet" />
 
 

@@ -35,6 +35,14 @@
   margin: 0 0 35px 0;
   font-family: 'Montserrat',sans-serif;
 }
+
+.select2-container {
+    width: 100% !important;
+}
+.select2-selection {
+    height: 38px !important; /* agar sama seperti .form-control Bootstrap */
+}
+
 .field{
   position: relative;
   height: 45px;

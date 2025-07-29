@@ -42,6 +42,12 @@ class Pegawai_model
         return $this->db->single();
     }
 
+    public function getPegawaiAktif()
+    {
+        $this->db->query("SELECT * FROM pegawai WHERE status_aktif = 'Aktif'");
+        return $this->db->resultSet();
+    }
+
     public function getNamaById($id)
     {
         $this->db->query("SELECT nama, jenis_kelamin FROM " . $this->table . " WHERE id = :id");

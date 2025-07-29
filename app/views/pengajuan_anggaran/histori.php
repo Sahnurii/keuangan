@@ -34,7 +34,8 @@ $role = $_SESSION['user']['role'];
                                 <td class="text-center"><?= tglBiasaIndonesia($row['tanggal_upload']); ?></td>
                                 <td class="text-center"><?= tglBiasaIndonesia($row['tanggal_disetujui']); ?></td>
                                 <td style="text-align: center;">
-                                    <img class="border border-primary rounded p-1" src="<?= BASEURL ?>/uploads/ttd/ttd-pimpinan.png" alt="Tanda Tangan" style="width: 120px; height: auto; margin: 10px 0;"><br>
+                                    <img class="border border-secondary rounded p-1" src="<?= BASEURL ?>/qrcode/pengajuan_<?= $row['id']; ?>.png" alt="QR Code" style="width: 100px; height: 100px;"><br>
+                                    <small><a href="<?= BASEURL ?>/verifikasi/verrified/<?= $row['id']; ?>" target="_blank">Lihat Detail</a></small>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

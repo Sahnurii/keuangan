@@ -7,7 +7,7 @@
             <form action="<?= BASEURL; ?>/riwayat_pendidikan/tambah" method="POST">
                 <div class="form-group">
                     <label for="id_pegawai">Nama Pegawai</label>
-                    <select class="form-control" id="id_pegawai" name="id_pegawai" required>
+                    <select class="form-control select2" id="id_pegawai" name="id_pegawai" required>
                         <option value="" disabled selected>-- Pilih Pegawai --</option>
                         <?php foreach ($data['pegawai'] as $pegawai): ?>
                             <option value="<?= $pegawai['id']; ?>"><?= $pegawai['nama']; ?></option>

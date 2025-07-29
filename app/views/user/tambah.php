@@ -12,7 +12,7 @@ $flashData = Flasher::flash();  // Ambil data flash
 
                 <div class="form-group">
                     <label for="id_pegawai">Pegawai</label>
-                    <select name="id_pegawai" id="id_pegawai" class="form-control" required>
+                    <select name="id_pegawai" id="id_pegawai" class="form-control select2" required>
                         <option value="" disabled selected>-- Pilih Pegawai --</option>
                         <?php foreach ($data['pegawai'] as $p): ?>
                             <option value="<?= $p['id']; ?>"><?= $p['nama']; ?></option>

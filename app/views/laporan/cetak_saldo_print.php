@@ -61,7 +61,7 @@ $pdf->Ln(5); // Tambahkan jarak setelah garis
 // Judul
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(0, 10, 'Laporan Saldo', 0, 1, 'C');
-$pdf->Cell(0, 10, 'Bulan : ' . $bulanNama, 0, 1, 'C');
+$pdf->Cell(0, 10, 'Periode : ' . $bulanNama. ' ' . $selectedTahun, 0, 1, 'C');
 $pdf->Ln(10);
 
 // Informasi

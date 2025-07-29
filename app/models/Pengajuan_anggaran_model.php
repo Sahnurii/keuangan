@@ -194,6 +194,9 @@ class Pengajuan_anggaran_model
         if ($idPegawai) {
             $query .= " AND pa.id_pegawai = :id_pegawai";
         }
+        $query .= " ORDER BY 
+                CASE WHEN pa.status = 'Diajukan' THEN 0 ELSE 1 END,
+                pa.tanggal_upload DESC";
 
         $this->db->query($query);
 

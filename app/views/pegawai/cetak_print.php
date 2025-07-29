@@ -1,4 +1,5 @@
 <h3 style="text-align: center; margin-top: 0; margin-bottom: 5px;">LAPORAN DATA PEGAWAI</h3>
+<p style="text-align: center; margin: 0; font-size: 11pt;"><em>Periode: Semua Waktu</em></p>
 <br><br><br>
 
 <table>

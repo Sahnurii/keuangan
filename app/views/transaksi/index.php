@@ -60,7 +60,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Kategori</label>
                         <div class="col-sm-10">
-                            <select class="form-control" name="id_kategori" id="id_kategori_umum" required>
+                            <select class="form-control select2" name="id_kategori" id="id_kategori_umum" required>
 
                                 <!-- JS akan isi berdasarkan tipe -->
                             </select>
@@ -121,7 +121,7 @@
                             <select class="form-control select2" id="no_bukti_transaksi" name="id_transaksi" required>
                                 <option value="" selected disabled>-- Pilih Transaksi --</option>
                                 <?php foreach ($data['no_bukti_transaksi'] as $trx) : ?>
-                                    <option value="<?= $trx['id']; ?>"><?= $trx['no_bukti']; ?> - <?= $trx['keterangan']; ?> - <?= $trx['nominal_transaksi']; ?></option>
+                                    <option value="<?= $trx['id']; ?>"><?= tglSingkatIndonesia($trx['tanggal']); ?> - <?= $trx['no_bukti']; ?> - <?= $trx['keterangan']; ?> - <?= uang_indo($trx['nominal_transaksi']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -286,42 +286,36 @@
     });
 
 
-    // Fungsi hitung nilai pajak otomatis
-    function hitungPajak() {
-        const tarif = parseFloat(document.getElementById('id_jenis_pajak').selectedOptions[0]?.dataset.tarif || 0);
-        const nominal = parseFloat(document.getElementById('nominal_pajak').value || 0);
-        const pajak = (nominal * tarif / 100).toFixed(2);
-        document.getElementById('nilai_pajak').value = pajak;
-    }
+    // // Fungsi hitung nilai pajak otomatis
+    // function hitungPajak() {
+    //     const tarif = parseFloat(document.getElementById('id_jenis_pajak').selectedOptions[0]?.dataset.tarif || 0);
+    //     const nominal = parseFloat(document.getElementById('nominal_pajak').value || 0);
+    //     const pajak = (nominal * tarif / 100).toFixed(2);
+    //     document.getElementById('nilai_pajak').value = pajak;
+    // }
 
-    // Hitung ulang pajak saat jenis pajak atau nominal berubah
-    document.getElementById('id_jenis_pajak').addEventListener('change', hitungPajak);
-    document.getElementById('nominal_pajak').addEventListener('input', hitungPajak);
+    // // Hitung ulang pajak saat jenis pajak atau nominal berubah
+    // document.getElementById('id_jenis_pajak').addEventListener('change', hitungPajak);
+    // document.getElementById('nominal_pajak').addEventListener('input', hitungPajak);
 
-    // Ambil nominal dari transaksi utama saat No Bukti Transaksi dipilih
-    document.getElementById('no_bukti_transaksi').addEventListener('change', function() {
-        const transaksiId = this.value;
+    // // Ambil nominal dari transaksi utama saat No Bukti Transaksi dipilih
+    // document.getElementById('no_bukti_transaksi').addEventListener('change', function() {
+    //     const transaksiId = this.value;
 
-        fetch(`<?= BASEURL; ?>/transaksi/getNominalById/${transaksiId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.nominal !== undefined && data.nominal !== null) {
-                    document.getElementById('nominal_pajak').value = data.nominal;
-                    hitungPajak(); // panggil ulang fungsi hitung
-                } else {
-                    document.getElementById('nominal_pajak').value = '';
-                    document.getElementById('nilai_pajak').value = '';
-                }
-            })
+    //     fetch(`<?= BASEURL; ?>/transaksi/getNominalById/${transaksiId}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data && data.nominal !== undefined && data.nominal !== null) {
+    //                 document.getElementById('nominal_pajak').value = data.nominal;
+    //                 hitungPajak(); // panggil ulang fungsi hitung
+    //             } else {
+    //                 document.getElementById('nominal_pajak').value = '';
+    //                 document.getElementById('nilai_pajak').value = '';
+    //             }
+    //         })
 
-            .catch(error => {
-                console.error('Gagal fetch nominal transaksi:', error);
-            });
-    });
-
-
-    // Inisialisasi Select2 (jika Anda pakai)
-    $(document).ready(function() {
-        $('.select2').select2();
-    });
+    //         .catch(error => {
+    //             console.error('Gagal fetch nominal transaksi:', error);
+    //         });
+    // });
 </script>

@@ -27,8 +27,9 @@ $flashData = Flasher::flash();  // Ambil data flash
                         <?php foreach ($data['users'] as $user): ?>
                             <tr>
                                 <td><?= htmlspecialchars($user['username']); ?></td>
-                                <td><?= htmlspecialchars($user['nama']); ?></td>
-                                <td><?= htmlspecialchars($user['email']); ?></td>
+                                <!-- <td><?= htmlspecialchars($user['nama']); ?></td> -->
+                                <td><?= $user['nama'] ? htmlspecialchars($user['nama']) : '<i class="text-danger">Pegawai tidak ditemukan</i>'; ?></td>
+                                <td><?= $user['email'] ? htmlspecialchars($user['email']) : '<i class="text-danger">Email tidak ditemukan</i>'; ?></td>
                                 <td><?= htmlspecialchars($user['role']); ?></td>
                                 <td class="text-center">
                                     <a href="<?= BASEURL; ?>/user/edit/<?= $user['id']; ?>" class="btn btn-warning btn-sm">

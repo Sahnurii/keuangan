@@ -68,10 +68,11 @@ class User_model
         }
 
         $query = "UPDATE {$this->table} 
-                  SET username = :username, role = :role{$setPassword}
+                  SET id_pegawai = :id_pegawai, username = :username, role = :role{$setPassword}
                   WHERE id = :id";
 
         $this->db->query($query);
+        $this->db->bind('id_pegawai', $data['id_pegawai']);
         $this->db->bind('username', $data['username']);
         $this->db->bind('role', $data['role']);
         $this->db->bind('id', $id);
@@ -126,11 +127,21 @@ class User_model
         return $result['total'] > 0; // Mengembalikan true jika ada duplikat
     }
 
-    public function cekIdPegawaiDuplikat($id_pegawai)
+    public function cekIdPegawaiDuplikat($id_pegawai, $excludeUserId = null)
     {
         $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE id_pegawai = :id_pegawai";
+
+        if ($excludeUserId !== null) {
+            $query .= " AND id != :exclude_id";
+        }
+
         $this->db->query($query);
         $this->db->bind('id_pegawai', $id_pegawai);
+
+        if ($excludeUserId !== null) {
+            $this->db->bind('exclude_id', $excludeUserId);
+        }
+
         $result = $this->db->single();
         return $result['total'] > 0; // true jika id_pegawai sudah digunakan
     }

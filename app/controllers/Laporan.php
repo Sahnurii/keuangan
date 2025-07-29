@@ -904,7 +904,7 @@ class Laporan extends BaseController
     .spacer { margin-top: 10px; }
     table { border-collapse: collapse; width: 100%; font-size: 9pt; table-layout: fixed; margin-top: 10px; }
     th, td { border: 1px solid #000; padding: 4px; word-wrap: break-word; }
-    th { background-color:rgb(64, 136, 244); text-align: center; vertical-align: middle; }
+    th { background-color: #ccc; text-align: center; vertical-align: middle; }
     ul { margin: 0; padding-left: 15px; }
     .kop td {
     border: none !important;

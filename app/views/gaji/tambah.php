@@ -15,7 +15,7 @@
                 <div class="form-group row">
                     <label for="id_pegawai" class="col-sm-2 col-form-label">Nama Pegawai</label>
                     <div class="col-sm-10">
-                        <select class="form-control" id="id_pegawai" name="id_pegawai" required>
+                        <select class="form-control select2" id="id_pegawai" name="id_pegawai" required>
                             <option value="" disabled selected>Pilih Pegawai</option>
                             <?php foreach ($data['pegawai'] as $p) : ?>
                                 <option value="<?= $p['id']; ?>"><?= $p['nama']; ?></option>

@@ -130,6 +130,26 @@ class Pengajuan_anggaran extends BaseController
             ];
 
             if ($this->model('Pengajuan_anggaran_model')->setujui($id, $data)) {
+                // Tambahan: hanya generate QR code jika status == 'diterima'
+                if ($_POST['status'] === 'diterima') {
+                    $qrPath = 'qrcode/pengajuan_' . $id . '.png';
+                    $fullPath = __DIR__ . '/../../public/' . $qrPath;
+
+                    if (!file_exists($fullPath)) {
+                        $result = Builder::create()
+                            ->data(BASEURL . '/verifikasi/verrified/' . $id)
+                            ->size(300)
+                            ->margin(10)
+                            ->build();
+
+                        if (!is_dir(dirname($fullPath))) {
+                            mkdir(dirname($fullPath), 0777, true);
+                        }
+
+                        file_put_contents($fullPath, $result->getString());
+                    }
+                }
+
                 Flasher::setFlash('Pengajuan berhasil diperbarui', '', 'success');
             } else {
                 Flasher::setFlash('Gagal memperbarui pengajuan', '', 'error');
@@ -194,6 +214,14 @@ class Pengajuan_anggaran extends BaseController
             header('Location: ' . BASEURL . '/pengajuan_anggaran');
             exit;
         }
+        // Hapus QR code lama jika ada
+        $qrPath = 'qrcode/pengajuan_' . $post['id'] . '.png';
+        $fullQrPath = __DIR__ . '/../../public/' . $qrPath;
+
+        if (file_exists($fullQrPath)) {
+            unlink($fullQrPath);
+        }
+
         $uploadDir = 'uploads/rab/';
         $fileBaru = $_FILES['file_rab'];
         $fileName = $post['file_rab_lama']; // default
@@ -294,23 +322,14 @@ class Pengajuan_anggaran extends BaseController
         $qrPath = 'qrcode/pengajuan_' . $id . '.png';
         $fullPath = __DIR__ . '/../../public/' . $qrPath;
 
-        if (!file_exists($fullPath)) {
-            $result = Builder::create()
-                ->data(BASEURL . '/verifikasi/verrified/' . $id)
-                ->size(300)
-                ->margin(10)
-                ->build();
-
-            if (!is_dir(dirname($fullPath))) {
-                mkdir(dirname($fullPath), 0777, true);
-            }
-
-            file_put_contents($fullPath, $result->getString());
-        }
-
         $data['pengajuan'] = $pengajuan;
         $data['qr_path'] = $qrPath;
 
+        if (!file_exists($fullPath)) {
+            Flasher::setFlash('QR Code belum tersedia. Silakan hubungi admin.', '', 'error');
+            header('Location: ' . BASEURL . '/pengajuan_anggaran');
+            exit;
+        }
         // Ambil view jadi string
 
         ob_start();

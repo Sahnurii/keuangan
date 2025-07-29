@@ -73,7 +73,7 @@ $posisiTengah = ($halamanLebar - $tandaTanganLebar) / 2; // misal: 53.5
 
 $pdf->SetFont('Arial', 'B', 14);
 $pdf->Cell(0, 10, 'Laporan Pemasukan & Pengeluaran', 0, 1, 'C');
-$pdf->Cell(0, 10, 'Bulan: ' . $bulanNama, 0, 1, 'C');
+$pdf->Cell(0, 10, 'Periode: ' . $bulanNama. ' ' . $selectedTahun, 0, 1, 'C');
 $pdf->Ln(10);; // Tabel Rincian Pemasukan dan Pengeluaran
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetX($leftMargin);

@@ -41,6 +41,10 @@
 
  <!-- Bootstrap core JavaScript-->
  <script src="<?= BASEURL; ?>/vendor/jquery/jquery.min.js"></script>
+
+ <!-- Select2 JS -->
+ <script src="<?= BASEURL ?>/js/select2.min.js"></script>
+
  <script src="<?= BASEURL; ?>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
  <!-- Core plugin JavaScript-->
@@ -51,7 +55,7 @@
 
  <!-- Page level plugins -->
  <script src="<?= BASEURL; ?>/vendor/chart.js/Chart.min.js"></script>
- 
+
  <!-- Page level custom scripts -->
  <!-- <script src="<?= BASEURL; ?>/js/demo/chart-area-demo.js"></script> -->
  <!-- <script src="<?= BASEURL; ?>/js/demo/chart-pie-demo.js"></script> -->
@@ -64,8 +68,6 @@
  <!-- Page level custom scripts -->
  <script src="<?= BASEURL; ?>/js/demo/datatables-demo.js"></script>
  <script src="<?= BASEURL; ?>/js/dist/sweetalert2.all.min.js"></script>
- <!-- Select2 JS -->
- <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
  <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="<?= $_ENV['MIDTRANS_CLIENT_KEY']; ?>"></script>
 
  <script src="<?= BASEURL; ?>/js/script.js"></script>
@@ -91,6 +93,61 @@
          e = e < 10 ? '0' + e : e;
          return e;
      }
+ </script>
+ <!-- <script>
+     $(document).ready(function() {
+         $('.select2').select2({
+             placeholder: '-- Pilih --',
+             allowClear: true,
+             width: '100%'
+         });
+     });
+ </script> -->
+ <script>
+     $(document).ready(function() {
+         // Inisialisasi Select2
+         $('.select2').select2({
+             placeholder: "-- Pilih --",
+             width: '100%',
+             allowClear: true
+         });
+
+         // Change listener untuk No Bukti Transaksi (Pakai jQuery, bukan native)
+         if ($('#no_bukti_transaksi').length > 0) {
+             $('#no_bukti_transaksi').on('change', function() {
+                 const transaksiId = $(this).val();
+
+                 if (!transaksiId) return;
+
+                 fetch(`<?= BASEURL; ?>/transaksi/getNominalById/${transaksiId}`)
+                     .then(response => response.json())
+                     .then(data => {
+                         if (data && data.nominal !== undefined && data.nominal !== null) {
+                             $('#nominal_pajak').val(data.nominal);
+                             hitungPajak();
+                         } else {
+                             $('#nominal_pajak').val('');
+                             $('#nilai_pajak').val('');
+                         }
+                     })
+                     .catch(error => {
+                         console.error('Gagal fetch nominal transaksi:', error);
+                     });
+             });
+         }
+         // Hitung pajak saat jenis pajak berubah
+         if ($('#id_jenis_pajak').length > 0) {
+             $('#id_jenis_pajak').on('change', hitungPajak);
+         }
+
+         function hitungPajak() {
+             const tarif = parseFloat($('#id_jenis_pajak option:selected').data('tarif') || 0);
+             const nominal = parseFloat($('#nominal_pajak').val() || 0);
+             const pajak = (nominal * tarif / 100).toFixed(2);
+             $('#nilai_pajak').val(pajak);
+         }
+     });
+  
  </script>
  </body>
 

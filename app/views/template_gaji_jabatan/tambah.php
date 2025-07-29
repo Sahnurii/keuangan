@@ -8,7 +8,7 @@
                 <div class="form-group row">
                     <label for="id_jabatan_bidang" class="col-sm-2 col-form-label">Jabatan & Bidang</label>
                     <div class="col-sm-10">
-                        <select name="id_jabatan_bidang" class="form-control" required>
+                        <select name="id_jabatan_bidang" class="form-control select2" required>
                             <option value="">-- Pilih Jabatan & Bidang --</option>
                             <?php foreach ($data['bidang'] as $row): ?>
                                 <option value="<?= $row['id']; ?>"><?= $row['jabatan']; ?> - <?= $row['nama_bidang']; ?></option>

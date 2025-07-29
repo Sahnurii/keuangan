@@ -44,7 +44,7 @@ $html = '
 
 <div class="spacer"></div>    
 <div class="header" style="font-size: 15pt;">LAPORAN GAJI PEGAWAI</div>
-    <div class="sub-header" style="font-weight: bold; font-size: 15pt;">Bulan: ' . $bulanNama . '</div>
+    <div class="sub-header" style="font-weight: bold; font-size: 15pt;">Periode: ' . $bulanNama . ' ' . $tahun . '</div>
     <div class="spacer"></div>';
 
 $html .= '<table width="100%">

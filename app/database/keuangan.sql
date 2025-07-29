@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 06, 2025 at 09:24 AM
+-- Generation Time: Jul 29, 2025 at 02:06 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -50,9 +50,12 @@ INSERT INTO `gaji` (`id`, `tanggal`, `id_pegawai`, `gaji_pokok`, `insentif`, `bo
 (20, '2025-07-04', 15, '10000000.00', '5000000.00', '1104000.00', '200000.00', '0.00', '0.00', 'paid', 'GJ-20', 'b75df7d9-4149-405d-ac0f-d1f3eeaeaf25'),
 (21, '2025-07-04', 19, '3286000.00', '1100000.00', '165000.00', '200000.00', '0.00', '0.00', 'paid', 'GJ-21-1751622200', 'a38edb2f-bddd-46bb-a7d4-5fb9298c05d8'),
 (22, '2025-07-03', 17, '7500000.00', '4000000.00', '1024000.00', '400000.00', '0.00', '0.00', 'paid', 'GJ-22', '541e875b-2d2e-4ddc-9aa9-ca70421caac0'),
-(31, '2025-08-01', 15, '5000000.00', '0.00', '1112000.00', '200000.00', '0.00', '0.00', 'pending', NULL, NULL),
-(32, '2025-07-05', 20, '3286000.00', '800000.00', '148500.00', '200000.00', '0.00', '0.00', 'pending', 'GJ-32-1751700956', '44d5e0df-14c3-4eb9-b8a9-33b4fd577c67'),
-(33, '2025-07-04', 16, '7500000.00', '4000000.00', '136000.00', '200000.00', '2000000.00', '1000000.00', 'paid', 'GJ-33-1751701655', '122424e6-d64f-473b-b46c-ffdae6a0117b');
+(31, '2025-08-01', 15, '5000000.00', '0.00', '1112000.00', '200000.00', '0.00', '0.00', 'paid', 'GJ-31-1751899439', 'e45fec6c-9325-43f0-adbd-1e93dd1e0355'),
+(32, '2025-07-05', 20, '3286000.00', '800000.00', '148500.00', '200000.00', '0.00', '0.00', 'pending', 'GJ-32-1753285025', 'adaf6688-156f-44e2-a184-db05d7e3898e'),
+(33, '2025-07-04', 16, '7500000.00', '4000000.00', '136000.00', '200000.00', '2000000.00', '1000000.00', 'paid', 'GJ-33-1751701655', '122424e6-d64f-473b-b46c-ffdae6a0117b'),
+(34, '2025-07-07', 18, '3286000.00', '2000000.00', '379500.00', '400000.00', '0.00', '0.00', 'pending', NULL, NULL),
+(35, '2025-08-01', 16, '7500000.00', '4000000.00', '144000.00', '200000.00', '20000.00', '0.00', 'pending', NULL, NULL),
+(38, '2025-07-01', 24, '5400000.00', '250000.00', '357500.00', '400000.00', '50000.00', '100000.00', 'paid', 'GJ-38-1752583295', '00bce659-15ca-46c0-82be-46adad35d9a8');
 
 -- --------------------------------------------------------
 
@@ -142,7 +145,8 @@ INSERT INTO `jenis_pajak` (`id`, `tarif_pajak`, `tipe`) VALUES
 (1, '5.00', 'PPN'),
 (2, '21.00', 'PPh21'),
 (4, '12.00', 'PPh21'),
-(5, '9.00', 'Pph4(2)Final');
+(5, '9.00', 'Pph4(2)Final'),
+(6, '3.00', 'PPh22');
 
 -- --------------------------------------------------------
 
@@ -161,7 +165,7 @@ CREATE TABLE `kategori` (
 --
 
 INSERT INTO `kategori` (`id`, `nama_kategori`, `tipe_kategori`) VALUES
-(33, 'SPP', 'Pemasukan'),
+(33, 'SPP', 'Pengeluaran'),
 (34, 'Pendaftaran Formulir PMB', 'Pemasukan'),
 (35, 'Registrasi Ulang', 'Pemasukan'),
 (36, 'Magang', 'Pemasukan'),
@@ -208,7 +212,7 @@ INSERT INTO `kategori` (`id`, `nama_kategori`, `tipe_kategori`) VALUES
 (78, 'Pembayaran PKM', 'Pengeluaran'),
 (79, 'Pajak', 'Pemasukan'),
 (80, 'Pajak', 'Pengeluaran'),
-(82, 'awda', 'Pemasukan');
+(88, 'tes', 'Pengeluaran');
 
 -- --------------------------------------------------------
 
@@ -289,12 +293,15 @@ CREATE TABLE `pegawai` (
 --
 
 INSERT INTO `pegawai` (`id`, `nama`, `nipy`, `sk_pengangkatan`, `tmt`, `nomor_induk`, `jenis_nomor_induk`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `no_hp`, `agama`, `status_perkawinan`, `alamat_pegawai`, `keterangan`, `email`, `spk`, `no_rekening`, `bank`, `status_aktif`, `id_klasifikasi`) VALUES
-(15, 'Sahnuri', '12313', '12/adw/', '2014-01-01', '21312', 'NIDK', 'Simpang Empat', '1999-02-01', 'Laki-laki', '1231', 'Islam', 'Menikah', 'adwa', 'awd', 'sanhurimuhammad02@gmail.com', '12/aw/23', '213123', 'KALSEL', 'aktif', 4),
+(15, 'Sahnuri', '12313', '12/adw/', '2014-01-01', '1115038301', 'NUPTK', 'Simpang Empat', '1999-02-01', 'Laki-laki', '1231', 'Islam', 'Menikah', 'adwa', 'awd', 'sanhurimuhammad02@gmail.com', '12/aw/23', '213123', 'KALSEL', 'aktif', 4),
 (16, 'Hasnia', '123123', '12', '2024-01-29', '1231312', 'NIDN', 'awdad', '2005-07-31', 'Laki-laki', '12313', 'Islam', 'Menikah', 'awdawd', 'awdad', 'hasnia@gmail.com', '12/ws/24', '12312', 'kalsel', 'aktif', 4),
 (17, 'Ribut Giyono, S.Pd., M.M.', '196612312014101002', '002/KEP/Y-ES/X/2014', '2014-10-21', '8835450017', 'NIDN', 'Magetan', '1966-06-02', 'Laki-laki', '081288934423', 'Islam', 'Menikah', 'Jl. Samporna RT. 008 Desa Barokah Kec. Simpang Empat Kab. Tanah Bumbu', 'Koord Wadir', 'ribut.giyono69@gmail.com', '-', '9030311004754', 'KALSEL', 'aktif', 4),
-(18, 'Sugeng Ludiyono, S.E., M.M.', '199309142019101028', '010/KEP/Y-WII/X/2019', '2019-10-01', '0', 'NIDN', 'Kotabaru', '1993-09-14', 'Laki-laki', '087821210800', 'Islam', 'Menikah', 'Jl. Poros Sekapuk 2 RT. 009 RW. 003 Desa Sekapuk Kec. Satui Kab. Tanah Bumbu, Kalsel', '-', 'sugengludiyono123@gmail.com', '-', '1370013015710', 'Mandiri', 'aktif', 3),
-(19, 'Nurul Hatmah, S.Pd.', '199110272023012050', '020/KEP/Y-WII/VI/2023', '2023-01-02', '0', 'NIDN', 'Catur Karya', '1991-10-27', 'Perempuan', '081250912681', 'Islam', 'Menikah', 'Jl. Ins-Gub Perumahan Baroqah Indah Rt. 011 Desa Baroqah Kec. Simpang Empat Kab. Tanah Bumbu ', 'TMT Tidak Sesuai SK Yayasan', 'nurulhatmah@gmail.com', '-', '0', 'Mandiri', 'aktif', 3),
-(20, 'Reza Ramadhan, S.Kom.', '199801052023041053', '002/KEP/Y-ES/X/2016', '2023-04-03', '0', 'NIDN', 'Sungai Dua', '1998-01-05', 'Laki-laki', '081234321232', 'Islam', 'Menikah', 'Jl. Raya Serongga KM. 5 Desa Gunung Besar Kec. Simpang Empat Kab. Tanah Bumbu, Kalsel', 'TMT Tidak Sesuai SK Yayasan\r\n\r\n\r\nKoordinator\r\n', 'reza@politeknikbatulicin.ac.id', '-', '0', 'Mandiri', 'aktif', 3);
+(18, 'Sugeng Ludiyono, S.E., M.M.', '199309142019101028', '010/KEP/Y-WII/X/2019', '2019-10-01', '1231232', 'NIDN', 'Kotabaru', '1993-09-14', 'Laki-laki', '087821210800', 'Islam', 'Menikah', 'Jl. Poros Sekapuk 2 RT. 009 RW. 003 Desa Sekapuk Kec. Satui Kab. Tanah Bumbu, Kalsel', '-', 'sugengludiyono123@gmail.com', '-', '1370013015710', 'Mandiri', 'aktif', 3),
+(19, 'Nurul Hatmah, S.Pd.', '199110272023012050', '020/KEP/Y-WII/VI/2023', '2023-01-02', '312313', 'NIDN', 'Catur Karya', '1991-10-27', 'Perempuan', '081250912681', 'Islam', 'Menikah', 'Jl. Ins-Gub Perumahan Baroqah Indah Rt. 011 Desa Baroqah Kec. Simpang Empat Kab. Tanah Bumbu ', 'TMT Tidak Sesuai SK Yayasan', 'nurulhatmah@gmail.com', '-', '123123123', 'Mandiri', 'aktif', 3),
+(20, 'Reza Ramadhan, S.Kom.', '199801052023041053', '002/KEP/Y-ES/X/2016', '2023-04-03', '132123123', 'NIDN', 'Sungai Dua', '1998-01-05', 'Laki-laki', '081234321232', 'Islam', 'Menikah', 'Jl. Raya Serongga KM. 5 Desa Gunung Besar Kec. Simpang Empat Kab. Tanah Bumbu, Kalsel', 'TMT Tidak Sesuai SK Yayasan\r\n\r\n\r\nKoordinator\r\n', 'reza@politeknikbatulicin.ac.id', '-', '0', 'Mandiri', 'aktif', 3),
+(21, 'Drs. H. M. Idjra\'i, M.Pd.', '195909042015101003', '002/KEP/Y-ES/X/2014', '2014-10-21', '9911634926', 'NIDN', 'Kotabaru', '1959-09-04', 'Laki-laki', '081234567890', 'Islam', 'Menikah', 'Jalan Mangga No 30', 'Pelindung', 'm.idjrai69@gmail.com', '-', '2313213231', 'KALSEL', 'aktif', 4),
+(24, 'nuri', '83221321', '23/aw/23', '2020-02-15', '123211423', 'NIDN', 'simpang empat', '2005-02-02', 'Laki-laki', '081237821371231', 'Islam', 'Menikah', 'gg musyawarah', '', 'sanhurimuhammad@gmail.com', '12/pp/2025', '824621321', 'Mandiri', 'aktif', 3),
+(27, 'Ir. Heri Maryadi', '196308302022081046', '016/KEP/Y-WII/VIII/2022', '2021-02-04', '21312', 'NUP', 'Sleman', '1963-08-30', 'Laki-laki', '0834234242', 'Islam', 'Menikah', 'Gg. Mangga no 5', '', 'herimaryadi@gmail.com', '12/Sw/33', '2131231', 'Mandiri', 'aktif', 4);
 
 -- --------------------------------------------------------
 
@@ -316,15 +323,30 @@ CREATE TABLE `pegawai_jabatan_bidang` (
 
 INSERT INTO `pegawai_jabatan_bidang` (`id`, `id_pegawai`, `id_jabatan_bidang`, `tanggal_mulai`, `tanggal_selesai`) VALUES
 (7, 15, 11, '2025-06-29', '2025-07-04'),
-(8, 16, 12, '2025-06-29', NULL),
+(8, 16, 12, '2025-06-29', '2025-07-08'),
 (9, 15, 12, '2025-06-30', '2025-06-30'),
 (10, 15, 12, '2025-06-30', '2025-06-30'),
 (11, 15, 12, '2025-06-30', '2025-06-30'),
 (12, 17, 12, '2025-07-02', NULL),
-(13, 18, 55, '2025-07-02', NULL),
-(14, 19, 59, '2025-07-02', NULL),
+(13, 18, 55, '2025-07-02', '2025-07-08'),
+(14, 19, 59, '2025-07-02', '2025-07-08'),
 (15, 20, 45, '2025-07-02', NULL),
-(16, 15, 37, '2025-07-04', NULL);
+(16, 15, 37, '2025-07-04', '2025-07-08'),
+(17, 15, 18, '2025-07-08', '2025-07-08'),
+(18, 21, 11, '2025-07-08', NULL),
+(19, 15, 11, '2025-07-08', '2025-07-08'),
+(20, 15, 17, '2025-07-08', '2025-07-08'),
+(21, 15, 37, '2025-07-08', NULL),
+(22, 18, 59, '2025-07-08', '2025-07-08'),
+(23, 19, 55, '2025-07-08', '2025-07-08'),
+(24, 19, 59, '2025-07-08', NULL),
+(25, 18, 55, '2025-07-08', NULL),
+(26, 16, 14, '2025-07-08', '2025-07-24'),
+(27, 15, 29, '2025-07-08', NULL),
+(35, 24, 21, '2025-07-15', NULL),
+(36, 24, 22, '2025-07-15', NULL),
+(39, 27, 14, '2025-07-23', NULL),
+(40, 16, 37, '2025-07-23', NULL);
 
 -- --------------------------------------------------------
 
@@ -351,7 +373,11 @@ CREATE TABLE `pengajuan_anggaran` (
 --
 
 INSERT INTO `pengajuan_anggaran` (`id`, `id_pegawai`, `judul`, `deskripsi`, `file_rab`, `total_anggaran`, `status`, `catatan_atasan`, `tanggal_upload`, `tanggal_disetujui`, `id_atasan`) VALUES
-(16, 16, 'PERANG DUNIA KE 2', 'perang nuklir', '1751789544_50-FirstManuscript-473-1-10-20211128.pdf', '90000000000.00', 'diterima', 'AWDOJAWODJWAOP JDAWOPJDOAWPJDOPAWJDOPAWJDAJOWAJDPO WJDOWAJDOAWJD ASJDSKPAOJD AOSJDSPAOJDSPAO JDSAPOJD SAPOJDAOSJDAISPOJ DASPIO JDSAIOJ DASIPO JDSAPOJ ASPIOJ ASPIOJD ASIO JASO JDASO JDASPO JDSAPO JDOPASJ DPOASDJ OASJD IOASJD POASJD IOASD A', '2025-07-06', '2025-07-06', 17);
+(21, 16, 'Kegiatan Akreditasi Teknik Pertambangan', 'Rab untuk kegiatan yang diselenggarakan untuk pengakreditasian kampus politeknik batulicin yang akan dilaksanakan pada tanggal 12 januari 2026 di hari itu akan dihadiri oleh beberapa petinggi kepentingan untuk melakukan pengakreditasian', '1752162663_9JurnalAsrinadiaKurniati.pdf', '5000000.00', 'diterima', '', '2025-07-10', '2025-07-27', 17),
+(22, 20, 'kegiatan akreditasi', 'kegiatan akreditasi', '1752581989_87579-362413-2-PB.pdf', '5000000.00', 'diterima', '', '2025-07-15', '2025-07-27', 17),
+(24, 18, 'Kegiatan Seminar ', 'kegiata seminar', '1753280424_Laporan_Buku_Kas.pdf', '2000000.00', 'diterima', '', '2025-07-23', '2025-07-27', 17),
+(25, 18, 'Pembelian Perlengkapan Praktek', 'untuk keperluan pembelian perlengkapan praktek', '1753280506_Laporan_Buku_Kas_Umum.pdf', '1500000.00', 'diajukan', '', '2025-07-23', NULL, NULL),
+(26, 18, 'Pembelian Buku', 'buku', '1753280859_1800-ArticleText-2906-1-10-202208012.pdf', '500000.00', 'diajukan', '', '2025-07-23', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -381,7 +407,11 @@ INSERT INTO `riwayat_pendidikan_pegawai` (`id`, `id_pegawai`, `id_jenjang`, `gel
 (16, 18, 10, 'Magister Manajemen (M.M.)', 'Manajemen', 'Universitas Pembangunan Nasional \"Veteran\" Yogyakarta  Universitas Islam Indonesia'),
 (17, 19, 9, 'Sarjana Pendidikan (S.Pd.)', 'Pendidikan Bahasa Inggris', 'Universitas Islam Kalimantan Muhammad Arsyad Al Banjari Banjarmasin'),
 (18, 20, 9, 'Sarjana Komputer(S.Kom)', 'Teknologi Informatika', 'Universitas'),
-(19, 16, 9, 'S.Kom', 'Teknik Informatika', 'Universitas Islam Kalimantan Muhammad Arsyad Al Banjari');
+(19, 16, 9, 'S.Kom', 'Teknik Informatika', 'Universitas Islam Kalimantan Muhammad Arsyad Al Banjari'),
+(20, 21, 9, 'Doktorandus (Drs.)', 'Pendidikan Bahasa Inggris', 'Universitas Lambung Mangkurat'),
+(21, 21, 10, 'Magister Pendidikan (M.Pd.)', 'Teknologi Pembelajaran', 'Universitas PGRI Adi Buana Surabaya'),
+(26, 24, 9, 'S.Kom', 'TI', 'UNISKA'),
+(27, 24, 10, 'M.Kom', 'Komputer', 'UNISKA');
 
 -- --------------------------------------------------------
 
@@ -402,9 +432,13 @@ CREATE TABLE `saldo` (
 --
 
 INSERT INTO `saldo` (`id`, `tipe_buku`, `saldo_awal`, `keterangan`, `tanggal`) VALUES
-(50, 'Pajak', '6000000.00', 'Pajak yang belum terbayarkan bulan lalu', '2025-06-01'),
-(51, 'Kas', '10000000.00', 'Sisa Kas Tunai bulan lalu', '2025-06-01'),
-(52, 'Bank', '5000000.00', 'Sisa Uang di Bank bulan lalu', '2025-06-01');
+(53, 'Bank', '10000000.00', 'Sisa Uang di Bank bulan lalu', '2025-07-01'),
+(54, 'Kas', '7000000.00', 'Sisa Kas Tunai bulan lalu', '2025-07-01'),
+(55, 'Pajak', '5000000.00', 'Pajak yang belum terbayarkan bulan lalu', '2025-07-01'),
+(59, 'Kas', '500000.00', 'Sisa Kas Tunai bulan lalu', '2025-06-01'),
+(60, 'Bank', '14145000.00', 'Sisa Uang di Bank bulan lalu', '2025-08-01'),
+(61, 'Kas', '12080000.00', 'Sisa Kas Tunai bulan lalu', '2025-08-01'),
+(62, 'Pajak', '5345000.00', 'Pajak yang belum terbayarkan bulan lalu', '2025-08-01');
 
 -- --------------------------------------------------------
 
@@ -424,12 +458,12 @@ CREATE TABLE `template_gaji_jabatan` (
 --
 
 INSERT INTO `template_gaji_jabatan` (`id`, `id_jabatan_bidang`, `gaji_pokok`, `insentif`) VALUES
-(1, 11, '10000000.00', '5000000.00'),
-(2, 12, '7500000.00', '4000000.00'),
+(1, 11, '5000000.00', '3000000.00'),
+(2, 12, '500000.00', '4000000.00'),
 (3, 13, '4000000.00', '0.00'),
-(5, 14, '7500000.00', '0.00'),
+(5, 14, '5000000.00', '0.00'),
 (6, 55, '3286000.00', '2000000.00'),
-(7, 56, '0.00', '7500000.00'),
+(7, 56, '0.00', '5000000.00'),
 (8, 57, '0.00', '2500000.00'),
 (9, 27, '3286000.00', '600000.00'),
 (10, 45, '3286000.00', '800000.00'),
@@ -438,7 +472,9 @@ INSERT INTO `template_gaji_jabatan` (`id`, `id_jabatan_bidang`, `gaji_pokok`, `i
 (13, 36, '5000000.00', '0.00'),
 (14, 37, '5000000.00', '0.00'),
 (15, 38, '5000000.00', '0.00'),
-(16, 60, '5000000.00', '0.00');
+(16, 60, '5000000.00', '0.00'),
+(17, 21, '3400000.00', '200000.00'),
+(18, 22, '2000000.00', '50000.00');
 
 -- --------------------------------------------------------
 
@@ -462,18 +498,59 @@ CREATE TABLE `transaksi` (
 --
 
 INSERT INTO `transaksi` (`id`, `tipe_buku`, `tanggal`, `no_bukti`, `keterangan`, `id_kategori`, `tipe_kategori`, `nominal_transaksi`) VALUES
-(266, 'Bank', '2025-06-02', 'BPB2', 'RAWWWWWWWW', 52, 'Pemasukan', '760000.45'),
-(267, 'Bank', '2025-06-03', 'BPB3', 'awdadawd', 34, 'Pemasukan', '500000.00'),
-(268, 'Bank', '2025-06-10', 'BPB4', 'awdwa', 36, 'Pemasukan', '50300.25'),
-(269, 'Kas', '2025-06-01', 'BPK1', 'adwad', 39, 'Pengeluaran', '60000.00'),
-(270, 'Kas', '2025-06-03', 'BPK2', 'awdaw', 74, 'Pemasukan', '60000.00'),
-(272, 'Kas', '2025-06-24', 'BPK4', 'pengeluaran lihhhh', 43, 'Pengeluaran', '700000.00'),
-(277, 'Kas', '2025-06-01', 'BPK5', 'DAW', 57, 'Pengeluaran', '5000.00'),
-(281, 'Kas', '2025-06-01', 'BPK7', 'RRRRRRRRRRRRRRRR', 55, 'Pengeluaran', '6000.00'),
-(309, 'Kas', '2025-06-01', 'BPJ1', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 79, 'Pemasukan', '35000.00'),
-(310, 'Bank', '2025-06-02', 'BPJ2', 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 79, 'Pemasukan', '45000.00'),
-(311, 'Kas', '2025-07-01', 'BPJ1', 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC', 80, 'Pengeluaran', '7200.00'),
-(312, 'Bank', '2025-07-02', 'BPJ2', 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD', 79, 'Pemasukan', '159600.09');
+(313, 'Kas', '2025-07-01', 'BPK1', 'Pemasukan pembayaran Magang Mahasiswaaa', 36, 'Pemasukan', '50000.00'),
+(314, 'Kas', '2025-07-02', 'BPK2', 'Pemasukan registrasi ulang Mahasiswa', 35, 'Pemasukan', '6000000.00'),
+(315, 'Kas', '2025-07-04', 'BPK3', 'Dibayarkan Pembelian Konsumsi Rapat Prodi Manufaktur', 42, 'Pengeluaran', '800000.00'),
+(316, 'Kas', '2025-07-09', 'BPK4', 'Pemasukan Pendaftaran PMB ', 34, 'Pemasukan', '700000.00'),
+(317, 'Kas', '2025-07-10', 'BPK5', 'Magang Mahasiswa Semester 5', 36, 'Pemasukan', '800000.00'),
+(318, 'Kas', '2025-07-09', 'BPK6', 'Pembelian ATK kantor ', 39, 'Pengeluaran', '80000.00'),
+(319, 'Kas', '2025-07-11', 'BPK7', 'Biaya Pengembangan IT POLITEKNIK', 50, 'Pengeluaran', '600000.00'),
+(320, 'Kas', '2025-07-11', 'BPK8', 'Dibayarkan Holo 2x4 120 btg', 45, 'Pengeluaran', '700000.00'),
+(321, 'Kas', '2025-07-18', 'BPK9', 'Dibayarkan Pasir sebanyak 5 ret', 45, 'Pengeluaran', '250000.00'),
+(322, 'Kas', '2025-07-11', 'BPK10', 'Dibayarkan Batu Split sebanyak 1 ret', 45, 'Pengeluaran', '500000.00'),
+(323, 'Bank', '2025-07-01', 'BPB1', 'Dana Masuk Hibah dari Perusahaan ( Gaji Ketua Yayasan WII )', 47, 'Pemasukan', '7000000.00'),
+(324, 'Bank', '2025-07-03', 'BPB2', 'Dibayarkan SIAKAD POLIBALI', 48, 'Pengeluaran', '3000000.00'),
+(325, 'Bank', '2025-07-05', 'BPB3', 'Dibayarkan Kepada REZA RAMADHAN (Pembayaran Domain Website Polibali)', 50, 'Pengeluaran', '500000.00'),
+(326, 'Bank', '2025-07-09', 'BPB4', 'Dibayarkan kepada Wadir I pak Ribut Giyono (Uang Harian SPPD ke Bandung)', 53, 'Pengeluaran', '3000000.00'),
+(327, 'Bank', '2025-07-09', 'BPB5', 'Dana masuk dari I KHANIF AZHAR - 2421413029- Teknik Alat Berat 2024 ( Cicil Registrasi )', 35, 'Pemasukan', '4500000.00'),
+(328, 'Bank', '2025-07-08', 'BPB6', 'Dana masuk dari RIZKY NUR FAUZI - 2431401004- Teknik Pertambangan 2024 ( Bayar SPP Semester 1 )', 33, 'Pemasukan', '2500000.00'),
+(329, 'Bank', '2025-07-18', 'BPB7', 'Dibayarkan Kalsibut 120 lembar', 45, 'Pengeluaran', '4000000.00'),
+(330, 'Bank', '2025-07-09', 'BPB8', 'Dibayarkan Semen 50 sak', 45, 'Pengeluaran', '3000000.00'),
+(331, 'Bank', '2025-07-20', 'BPB9', 'Dana masuk dari YEF ANSYARI AHAR - 2334431011- Non Reg-Teknik Perkapalan 2023 (Bayar SPP Semester 3)', 33, 'Pemasukan', '4500000.00'),
+(332, 'Bank', '2025-07-16', 'BPB10', 'dibayarkan biaya internet dan telepon politeknik', 44, 'Pengeluaran', '1200000.00'),
+(333, 'Kas', '2025-07-11', 'BPJ1', 'Diterimakan pajak PPh 22 3% pembelian Holo 2x4 120 btg', 79, 'Pemasukan', '21000.00'),
+(334, 'Kas', '2025-07-14', 'BPJ2', 'Dibayarkan pajak PPh 22 3% pembelian Holo 2x4 120 btg', 80, 'Pengeluaran', '21000.00'),
+(335, 'Kas', '2025-07-11', 'BPJ3', 'Diterimakan Pajak Batu Split PPh22 3%', 79, 'Pemasukan', '15000.00'),
+(336, 'Kas', '2025-07-11', 'BPJ4', 'Dibayarkan Pajak Batu Split PPh22 3%', 80, 'Pengeluaran', '15000.00'),
+(337, 'Bank', '2025-07-09', 'BPJ5', 'Diterimakan Pajak Semen 50 Sak PPh22 3%', 79, 'Pemasukan', '90000.00'),
+(338, 'Bank', '2025-07-19', 'BPJ6', 'Dibayarkan Pajak Semen 50 sak PPh22 3%', 80, 'Pengeluaran', '90000.00'),
+(339, 'Bank', '2025-07-18', 'BPJ7', 'Diterimakan Pajak Kalsibut 120 Lembar PPh22 3%', 79, 'Pemasukan', '120000.00'),
+(340, 'Bank', '2025-07-11', 'BPJ8', 'awdadawdawda', 79, 'Pemasukan', '225000.00'),
+(341, 'Kas', '2025-08-02', 'BPK1', 'Pembayaran SPP', 33, 'Pemasukan', '5000000.00'),
+(342, 'Bank', '2025-08-01', 'BPB1', 'Pemasukan Gaji dari yayasan', 47, 'Pemasukan', '600000.00'),
+(343, 'Kas', '2025-08-01', 'BPJ1', 'Diterimakan Pajak', 79, 'Pemasukan', '300.00'),
+(344, 'Bank', '2025-08-01', 'BPJ2', 'Diterimakan Pajak PPh22', 79, 'Pemasukan', '180.00'),
+(345, 'Kas', '2025-06-06', 'BPK1', 'tes', 34, 'Pemasukan', '12000000.00'),
+(346, 'Kas', '2025-05-01', 'BPK1', 'w', 79, 'Pemasukan', '1.00'),
+(347, 'Kas', '2025-04-01', 'BPK1', 'aw', 52, 'Pemasukan', '5000.00'),
+(348, 'Kas', '2025-03-01', 'BPK1', 'awd', 37, 'Pemasukan', '9000000.00'),
+(349, 'Kas', '2025-02-07', 'BPK1', 'awda', 47, 'Pemasukan', '15000000.00'),
+(350, 'Kas', '2025-01-10', 'BPK1', 'awdaw', 34, 'Pemasukan', '50000.00'),
+(351, 'Kas', '2026-01-10', 'BPK1', 'awd', 47, 'Pemasukan', '6000000.00'),
+(352, 'Kas', '2026-01-15', 'BPK2', 'pengeluaran', 39, 'Pengeluaran', '50000.00'),
+(353, 'Kas', '2025-07-17', 'BPK11', 'pemasukan spp', 33, 'Pemasukan', '9000000.00'),
+(354, 'Bank', '2025-07-02', 'BPB11', 'pengeluaran', 43, 'Pengeluaran', '300000.00'),
+(355, 'Kas', '2025-07-01', 'BPJ9', 'dibayarkan pajak ', 33, 'Pemasukan', '2500.00'),
+(356, 'Kas', '2025-08-02', 'BPK2', 'Pembayaran Mahasiswa Untuk Tugas Akhir Semester 5', 37, 'Pemasukan', '800000.00'),
+(357, 'Kas', '2025-08-06', 'BPK3', 'Pembayaran Registrasi Ulang Mahasiswa Semester 3', 35, 'Pemasukan', '1200000.00'),
+(358, 'Bank', '2025-08-21', 'BPB3', 'Pembelian Perlengkapan Kantor Tenaga Kependidikan', 39, 'Pengeluaran', '500000.00'),
+(359, 'Bank', '2025-08-06', 'BPB4', 'Pemasukan Pendaftaran Mahasiswa Baru', 34, 'Pemasukan', '5000000.00'),
+(360, 'Bank', '2025-08-09', 'BPB5', 'Dibayarkan Hosting untuk Website Kampus', 50, 'Pengeluaran', '8000000.00'),
+(361, 'Kas', '2025-08-01', 'BPJ3', 'Diterimakan Pajak ppn 5% untuk holo 2x4 120 batang', 79, 'Pemasukan', '35000.00'),
+(362, 'Kas', '2025-07-01', 'BPK12', 'Pemasukan', 37, 'Pemasukan', '500000.00'),
+(363, 'Kas', '2024-12-27', 'BPK1', 'BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', 47, 'Pemasukan', '500000.00'),
+(364, 'Kas', '2026-01-16', 'BPK3', 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 34, 'Pemasukan', '30000.00'),
+(365, 'Kas', '2025-07-27', 'BPJ10', 'diterimakan pajak ppn 5%', 79, 'Pemasukan', '400000.00');
 
 -- --------------------------------------------------------
 
@@ -496,10 +573,19 @@ CREATE TABLE `transaksi_pajak` (
 --
 
 INSERT INTO `transaksi_pajak` (`id`, `id_transaksi_sumber`, `id_transaksi_pembayaran`, `id_jenis_pajak`, `tipe_buku`, `nominal_transaksi`, `nilai_pajak`) VALUES
-(58, 272, 309, 1, 'Pajak', '700000.00', '35000.00'),
-(59, 267, 310, 5, 'Pajak', '500000.00', '45000.00'),
-(60, 270, 311, 4, 'Pajak', '60000.00', '7200.00'),
-(61, 266, 312, 2, 'Pajak', '760000.45', '159600.09');
+(62, 320, 333, 6, 'Pajak', '700000.00', '21000.00'),
+(63, 320, 334, 6, 'Pajak', '700000.00', '21000.00'),
+(64, 322, 335, 6, 'Pajak', '500000.00', '15000.00'),
+(65, 322, 336, 6, 'Pajak', '500000.00', '15000.00'),
+(66, 330, 337, 6, 'Pajak', '3000000.00', '90000.00'),
+(67, 330, 338, 6, 'Pajak', '3000000.00', '90000.00'),
+(68, 329, 339, 6, 'Pajak', '4000000.00', '120000.00'),
+(69, 331, 340, 1, 'Pajak', '4500000.00', '225000.00'),
+(70, 342, 343, 1, 'Pajak', '6000.00', '300.00'),
+(71, 342, 344, 6, 'Pajak', '6000.00', '180.00'),
+(72, 352, 355, 1, 'Pajak', '50000.00', '2500.00'),
+(73, 320, 361, 1, 'Pajak', '700000.00', '35000.00'),
+(74, 360, 365, 1, 'Pajak', '8000000.00', '400000.00');
 
 -- --------------------------------------------------------
 
@@ -525,7 +611,9 @@ INSERT INTO `user` (`id`, `username`, `password`, `role`, `id_pegawai`) VALUES
 (15, 'pimpinan', '$2y$10$rwxwZWGBcgbeqGKKwbxv2e5iU83LDCYg0JnQVnTPyGSJKacno7Gge', 'Pimpinan', 17),
 (16, 'petugas', '$2y$10$hzA8nW1B72R2TGj7a.KYrOMnhv3lwH4AYsP1Edq541qh0/JMvQ7P2', 'Petugas', 18),
 (17, 'pegawai', '$2y$10$PiRHhIaBQX/OuKOq./EFW.gZ1oJYn548p22w7NyuEUXcfOv8re.Aq', 'Pegawai', 20),
-(18, 'hasnia', '$2y$10$w26A61b62Y8lTDTcTnKUx.VDwePKQcqVTf.r0jba/o6162ULbVxhy', 'Pegawai', 16);
+(18, 'hasnia', '$2y$10$w26A61b62Y8lTDTcTnKUx.VDwePKQcqVTf.r0jba/o6162ULbVxhy', 'Pegawai', 16),
+(19, 'nuri', '$2y$10$OXaYHrIsf4XvOlOjJSY6Du94FsF236/eXkj/ioL6YTyPvrj2Qez4S', 'Pegawai', 24),
+(21, 'pimpinan1', '$2y$10$lsUSK.4IIp2K5x1YD/ABruRFVapiyvb/ykyZYD9rxyl72/B3Y4hjS', 'Pimpinan', 21);
 
 --
 -- Indexes for dumped tables
@@ -629,25 +717,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `jabatan_bidang`
 --
 ALTER TABLE `jabatan_bidang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `jenis_pajak`
 --
 ALTER TABLE `jenis_pajak`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `master_bobot_masa_kerja`
@@ -665,55 +753,55 @@ ALTER TABLE `master_tunjangan_pendidikan`
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `pegawai_jabatan_bidang`
 --
 ALTER TABLE `pegawai_jabatan_bidang`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `pengajuan_anggaran`
 --
 ALTER TABLE `pengajuan_anggaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `riwayat_pendidikan_pegawai`
 --
 ALTER TABLE `riwayat_pendidikan_pegawai`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `saldo`
 --
 ALTER TABLE `saldo`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `template_gaji_jabatan`
 --
 ALTER TABLE `template_gaji_jabatan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=366;
 
 --
 -- AUTO_INCREMENT for table `transaksi_pajak`
 --
 ALTER TABLE `transaksi_pajak`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

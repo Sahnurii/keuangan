@@ -35,27 +35,49 @@
                     <h4 class="mb-0"><i class="fas fa-check-circle"></i> Dokumen RAB Telah Diverifikasi</h4>
                 </div>
                 <div class="card-body text-center">
-                    <p class="lead mb-2">Dokumen pengajuan anggaran dengan judul:</p>
-                    <h5 class="font-weight-bold text-primary mb-3"><?= htmlspecialchars($pengajuan['judul']) ?></h5>
-
-                    <div class="mb-4">
-                        <p class="mb-1">Telah <strong class="text-success">diverifikasi</strong> dan disetujui oleh:</p>
-                        <h6 class="mb-0"><?= htmlspecialchars($pengajuan['nama_pimpinan']) ?></h6>
-                        <small class="text-muted"><?= htmlspecialchars($pengajuan['jabatan_pimpinan']) ?></small>
-                    </div>
-
-                    <div class="my-3">
-                        <p class="mt-2"><strong>Tanggal Verifikasi:</strong> <?= tglLengkapIndonesia(($pengajuan['tanggal_disetujui'])) ?></p>
-                    </div>
-
-                    <hr>
-
-                    <div class="text-left mt-4">
-                        <p><strong>ID Verifikasi:</strong> <?= $pengajuan['id'] ?></p>
-                        <p><strong>Nama Pengusul:</strong> <?= htmlspecialchars($pengajuan['nama_pegawai'] ?? '-') ?></p>
-                        <p><strong>Total Anggaran:</strong> Rp <?= number_format($pengajuan['total_anggaran'] ?? 0, 0, ',', '.') ?></p>
-                    </div>
-
+                    <table class="table mt-4">
+                        <tbody>
+                            <tr>
+                                <th width="40%">Judul Pengajuan</th>
+                                <td>:</td>
+                                <td class="text-primary font-weight-bold"><?= htmlspecialchars($pengajuan['judul']) ?></td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-user-tie"></i> Nama Pimpinan</th>
+                                <td>:</td>
+                                <td><strong><?= htmlspecialchars($pengajuan['nama_pimpinan']) ?></strong></td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-briefcase"></i> Jabatan Pimpinan</th>
+                                <td>:</td>
+                                <td>
+                                    <span class="badge bg-primary text-white px-3 py-2">
+                                        <?= htmlspecialchars($pengajuan['jabatan_pimpinan']) ?>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-calendar-check"></i> Tanggal Verifikasi</th>
+                                <td>:</td>
+                                <td><?= tglLengkapIndonesia(($pengajuan['tanggal_disetujui'])) ?></td>
+                            </tr>
+                            <tr>
+                                <th width="40%">ID Verifikasi</th>
+                                <td>:</td>
+                                <td><?= $pengajuan['id'] ?></td>
+                            </tr>
+                            <tr>
+                                <th>Nama Pengusul</th>
+                                <td>:</td>
+                                <td><?= htmlspecialchars($pengajuan['nama_pegawai'] ?? '-') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Total Anggaran</th>
+                                <td>:</td>
+                                <td><?= uang_indo_v2($pengajuan['total_anggaran']) ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -49,7 +49,7 @@ class Riwayat_pendidikan extends BaseController
             }
         } else {
             $data['judul'] = 'Tambah Riwayat Pendidikan';
-            $data['pegawai'] = $this->model('Pegawai_model')->getAllPegawai(); // untuk select dropdown pegawai
+            $data['pegawai'] = $this->model('Pegawai_model')->getPegawaiAktif(); // untuk select dropdown pegawai
             $data['jenjang'] = $this->model('Tunjangan_model')->getAllTunjangan();
             $this->view('templates/header', $data);
             $this->view('riwayat_pendidikan/tambah', $data);

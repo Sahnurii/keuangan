@@ -270,17 +270,20 @@ class Pajak_model
     //     return $this->db->resultSet();
     // }
 
-    public function getAllNoBuktiTransaksi()
+    public function getAllNoBuktiTransaksi($tahun)
     {
-        $query = "SELECT t.id, t.no_bukti, t.keterangan, t.nominal_transaksi 
+        $query = "SELECT t.id, t.tanggal, t.no_bukti, t.keterangan, t.nominal_transaksi 
               FROM transaksi t
               WHERE t.tipe_buku IN ('Kas', 'Bank')
+              AND YEAR(t.tanggal) = :tahun
               AND NOT EXISTS (
                   SELECT 1 FROM transaksi_pajak tp 
                   WHERE tp.id_transaksi_pembayaran = t.id
               )
               ORDER BY t.tanggal DESC";
+              
         $this->db->query($query);
+        $this->db->bind('tahun', $tahun);
         return $this->db->resultSet();
     }
 
